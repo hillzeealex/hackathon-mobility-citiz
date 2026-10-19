@@ -4,7 +4,8 @@ import zipfile
 import pandas as pd
 from shapely.geometry import box
 
-from src.ingest.offer import active_services, gtfs_stop_frequencies, pick_weekday, route_mode, trip_departures
+from src.ingest.offer import (active_services, gtfs_stop_frequencies, last_valid_weekday, pick_weekday,
+                              route_mode, trip_departures)
 
 CAL = pd.DataFrame({"service_id": ["sem", "we"], "monday": ["1", "0"], "tuesday": ["1", "0"],
                     "wednesday": ["1", "0"], "thursday": ["1", "0"], "friday": ["1", "0"],
@@ -59,3 +60,25 @@ def test_trip_departures_from_frequencies():
                          "end_time": ["19:00:00", "20:30:00", "06:10:00"], "headway_secs": ["300", "600", "900"]})
     # c : 8 h / 5 min = 96 + 30 min / 10 min = 3 ; d : 10 min / 15 min -> 1 départ minimum
     assert trip_departures(freq).to_dict() == {"c": 99, "d": 1}
+
+
+def test_expired_feed_uses_its_own_validity():
+    trips = pd.DataFrame({"service_id": ["sem"] * 3, "trip_id": ["1", "2", "3"]})
+    day = last_valid_weekday(CAL, CAL_DATES, trips)          # validité jusqu'au 31/12/2030
+    assert day.weekday() == 1 and dt.date(2030, 11, 1) <= day <= dt.date(2030, 12, 31)
+
+
+def test_all_stops_when_no_area(tmp_path):
+    files = {"stops.txt": "stop_id,stop_name,stop_lat,stop_lon\nA,Fort-de-France,14.6,-61.07\n",
+             "routes.txt": "route_id,route_type\nB1,3\n", "trips.txt": "route_id,service_id,trip_id\nB1,sem,b1\n",
+             "calendar.txt": CAL.to_csv(index=False), "stop_times.txt": "trip_id,stop_id\nb1,A\n"}
+    path = tmp_path / "drom__1.zip"
+    with zipfile.ZipFile(path, "w") as z:
+        for name, content in files.items():
+            z.writestr(name, content)
+    from src.national.common import bbox_territory
+    mask = lambda lon, lat: pd.Series(bbox_territory(lon.astype(float).to_numpy(), lat.astype(float).to_numpy()) != "", index=lon.index)  # noqa: E731
+    df, info = gtfs_stop_frequencies(path, None, forced_day="2030-01-01", coord_mask=mask)
+    assert df.passages_jour.tolist() == [1] and info["arrets_zone"] == 1
+    df2, _ = gtfs_stop_frequencies(path, None, forced_day="2030-01-01")   # filtre métropole par défaut : exclu
+    assert df2.empty

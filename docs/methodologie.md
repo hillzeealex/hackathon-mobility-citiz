@@ -218,3 +218,78 @@ en options pour 1 000 habitants, calculé pour comparaison.
 
 Limite : seule la demande des habitants de la zone est comptée. Un point d'offre de la bande tampon de
 800 m, qui dessert aussi des habitants hors métropole, voit sa demande sous-estimée et son R(j) surestimé.
+
+## 5. Niveau 1 : France entière (accessibilité V1)
+
+Chaîne complète : `python -m src.national.build_all`. Elle s'exécute en ≈ 5 min, avec un pic mémoire de
+1,6 Go sur un portable de 8 Go. Les mesures détaillées sont dans `data/processed/national/mesures.json`.
+
+### Méthode
+
+1. **Carreaux.** 2 324 577 carreaux Filosofi (métropole, Martinique, Réunion). Le centroïde se déduit de
+   l'identifiant INSEE (coin sud-ouest + 100 m) : on ne lit pas les polygones. Commune, IRIS et calage sur
+   le recensement suivent les mêmes règles qu'à Grenoble, département par département. Population calée :
+   67,42 millions d'habitants, égale au recensement des départements couverts.
+2. **Offre.** 547 GTFS (12 en erreur, 51 expirés) et tous les GBFS :
+   - **dédoublonnage** par territoire et par mode, à 40 m (150 m pour le train) ;
+   - **passages** sommés au sein d'une même source, puis **maximum entre sources**, car les flux
+     régionaux agrégés (OÙRA, Nouvelle-Aquitaine, Destineo, Korrigo…) reprennent les réseaux locaux ;
+   - **flux expiré** : mardi type pris dans sa propre période de validité ;
+   - **volume** : 577 107 points bruts, 235 855 après fusion ;
+   - **cohérence** : au moins autant d'arrêts que l'agrégat national data.gouv.fr (418 jeux), sauf en
+     Guyane.
+3. **Couverture V1** : KD-tree, rayon de 400 m.
+   - La demande D(j) d'un point d'offre est calculée sur tout le territoire, ce qui rend le 2SFCA exact
+     aux limites de départements.
+   - La couverture et les indicateurs sont calculés département par département.
+4. **Agrégats** : IRIS (48 891), commune, EPCI (1 239) et département, moyennes pondérées par la
+   population.
+
+### Résultats France (V1)
+
+| Indicateur | Valeur |
+|---|---:|
+| Population sans aucune option à 400 m | 24,9 % |
+| Population à 400 m d'un arrêt de transport en commun | 74,9 % |
+| Population à 400 m d'une station Citiz | 5,6 % |
+| Options pondérées accessibles (moyenne par habitant) | 7,2 |
+
+Ces valeurs sont des **bornes hautes**. La V1 mesure à vol d'oiseau ; le biais par rapport à la marche
+réelle est mesuré sur les agglomérations zoomées (niveau 2) puis extrapolé.
+
+### Classement des EPCI : potentiel Citiz
+
+Le classement porte sur les 276 EPCI de plus de 50 000 habitants. Score = moyenne de trois
+rangs-percentiles :
+
+- **densité vécue** : moyenne des densités des carreaux, pondérée par la population, plutôt que
+  population / surface, qui pénalise les EPCI comprenant forêts et montagnes ;
+- **part de ménages sans voiture** ;
+- **autopartage existant pour 10 000 habitants** : moins il y en a, meilleur est le score.
+
+Le risque de vol de véhicules (SSMSI, 2023-2025) est affiché à côté et dans une variante pénalisée
+(`score_avec_risque` = score − 0,25 × rang du risque). **Il n'entre pas dans le score principal.**
+
+**Limite majeure : l'autopartage existant est mal connu en open data.** Hors Citiz, seuls Clem, Rémi,
+Optymo et Leo&Go publient un GBFS exploitable. Getaround, Zity, Free2Move, Communauto, Ubeeqo, Marcel…
+sont absents. Le critère mesure donc « peu d'autopartage *visible* » ; il avantage à tort les grandes
+villes.
+
+### Couverture des DROM
+
+| Territoire | Population au carreau (Filosofi) | Offre de transport (GTFS) | GBFS | Indicateurs par habitant |
+|---|---|---|---|---|
+| Martinique (972) | ✅ 11 222 carreaux | ✅ 3 719 arrêts de bus | 4 stations d'autopartage | ✅ |
+| La Réunion (974) | ✅ 14 773 carreaux | ✅ 5 620 arrêts de bus, téléphérique ; 49 points « tram » (erreur de type chez le producteur : pas de tram à la Réunion) | 36 zones de trottinettes | ✅ |
+| Guadeloupe (971) | ❌ absent de Filosofi | ✅ 1 282 arrêts de bus | 17 zones de trottinettes | ❌ offre seule |
+| Guyane (973) | ❌ absent de Filosofi | ⚠️ 267 arrêts (l'agrégat national en compte 557) | aucun | ❌ offre seule |
+| Mayotte (976) | ❌ absent de Filosofi | ⚠️ 50 arrêts (absent de l'agrégat national) | aucun | ❌ offre seule |
+
+Il n'y a aucune station Citiz dans les DROM. Le classement des EPCI ne couvre donc, pour les DROM, que la
+Martinique et la Réunion.
+
+### Secret statistique (niveau national)
+
+77 % des carreaux (1,8 million, surtout ruraux) comptent moins de 11 ménages : ils ne sont pas affichés.
+Les carreaux affichés regroupent **82 % de la population**. Les autres restent comptés dans les agrégats
+IRIS.

@@ -60,3 +60,13 @@ def test_radius_per_group():
     g = make([("a", "train", 0, 0, 1), ("b", "train", 120, 0, 1), ("c", "bus", 0, 500, 1), ("d", "bus", 120, 500, 1)])
     out, _ = dedup_points(g, radius={"default": 40, "train": 150})
     assert sorted(out.groupby("type").size().to_dict().items()) == [("bus", 2), ("train", 1)]
+
+
+def test_cross_source_max_within_source_sum():
+    # même arrêt : réseau local (2 quais, 60 + 40) et flux régional agrégé (100) -> 100, pas 200
+    g = make([("a", "bus", 0, 0, 60), ("b", "bus", 20, 0, 40), ("c", "bus", 10, 5, 100)])
+    g["source"] = ["local", "local", "regional"]
+    out, _ = dedup_points(g, radius=40, source_col="source")
+    assert len(out) == 1 and out.passages_jour.iloc[0] == 100
+    out2, _ = dedup_points(g, radius=40)
+    assert out2.passages_jour.iloc[0] == 200          # comportement historique (une seule source à Grenoble)

@@ -19,8 +19,10 @@ def demo_data():
 def start() -> AppTest:
     at = AppTest.from_file(APP, default_timeout=120)
     at.run()
-    if at.sidebar.radio and "démonstration" not in at.sidebar.radio[0].value:
-        at.sidebar.radio[0].set_value("Données de démonstration (factices)").run()
+    next(r for r in at.sidebar.radio if r.label == "Niveau d'analyse").set_value("Zoom agglomération").run()
+    src = next(r for r in at.sidebar.radio if r.label == "Jeu de données")
+    if "démonstration" not in src.value:
+        src.set_value("Données de démonstration (factices)").run()
     return at
 
 
@@ -44,3 +46,18 @@ def test_ilp_and_controls():
     scale = next(r for r in at.radio if r.label == "Échelle")
     scale.set_value("Carreaux 200 m").run()
     assert not at.exception, at.exception
+
+
+@pytest.mark.skipif(not (ROOT / "data" / "processed" / "national" / "app" / "epci.parquet").exists(),
+                    reason="fichiers nationaux absents")
+def test_national_view_all_controls():
+    at = AppTest.from_file(APP, default_timeout=180)
+    at.run()
+    assert not at.exception, at.exception
+    next(r for r in at.radio if r.label == "Échelle").set_value("EPCI").run()
+    next(s for s in at.selectbox if s.label == "Indicateur").set_value("score_potentiel_citiz").run()
+    assert not at.exception, at.exception
+    for dep in ("38", "973", "974"):                      # métropole, sans Filosofi, DROM avec Filosofi
+        next(s for s in at.selectbox if s.label == "Département").set_value(dep).run()
+        next(r for r in at.radio if r.label == "Détail").set_value("Carreaux 200 m (≥ 11 ménages)").run()
+        assert not at.exception, (dep, at.exception)

@@ -18,6 +18,7 @@ from pyproj import Transformer
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.data import DEMO, REAL, ROOT, available, load_all  # noqa: E402
+from app.ui import colorize, deck, fmt  # noqa: E402
 from src.optim.costs import co2_avoided_t_per_year, load_costs  # noqa: E402
 from src.optim.optimize import Problem, optimize  # noqa: E402
 
@@ -30,9 +31,6 @@ TYPE_LABELS = {"bus": "Bus", "tram": "Tram", "metro": "Métro", "train": "Train"
                "velo": "Vélo", "trottinette": "Trottinette", "citiz": "Citiz", "autopartage": "Autre autopartage"}
 CAND_LABELS = {"citiz_station": "Station Citiz", "bus_stop": "Arrêt de bus", "bike_station": "Station vélo",
                "free_floating_zone": "Zone free-floating"}
-# Rampe froid -> chaud (bleu -> rouge), lisible en daltonisme léger
-RAMP = np.array([[49, 54, 149], [69, 117, 180], [116, 173, 209], [171, 217, 233], [254, 224, 144],
-                 [253, 174, 97], [244, 109, 67], [215, 48, 39]])
 MIN_MENAGES = 11
 TO_WGS84 = Transformer.from_crs(2154, 4326, always_xy=True)
 
@@ -52,28 +50,15 @@ def problem(folder: str) -> Problem:
     return Problem(d["coverage"], d["cells"].drop(columns="geometry"), d["candidates"].drop(columns="geometry"))
 
 
-def colorize(values: pd.Series) -> list[list[int]]:
-    """Couleur par quantile (robuste aux valeurs extrêmes)."""
-    q = values.rank(pct=True).fillna(0).to_numpy()
-    idx = np.minimum((q * len(RAMP)).astype(int), len(RAMP) - 1)
-    return RAMP[idx].tolist()
-
-
-def view(gdf) -> pdk.ViewState:
-    minx, miny, maxx, maxy = gdf.total_bounds
-    return pdk.ViewState(longitude=(minx + maxx) / 2, latitude=(miny + maxy) / 2, zoom=11.3, pitch=0)
-
-
-def deck(layers, gdf, tooltip) -> pdk.Deck:
-    return pdk.Deck(layers=layers, initial_view_state=view(gdf), map_provider="carto", map_style="light",
-                    tooltip={"html": tooltip, "style": {"fontSize": "12px"}})
-
-
-def fmt(x: float, unit: str = "") -> str:
-    return f"{x:,.0f}".replace(",", " ") + (f" {unit}" if unit else "")
-
-
 # ---------------------------------------------------------------------------------------------
+level = st.sidebar.radio("Niveau d'analyse", ["France entière", "Zoom agglomération"],
+                         help="France : accessibilité V1 (vol d'oiseau) de tous les carreaux habités. "
+                              "Zoom : marche réelle, modèle et optimisation.")
+if level == "France entière":
+    from app.national import render
+    render()
+    st.stop()
+
 folders = {"Données réelles": REAL, "Données de démonstration (factices)": DEMO}
 choices = [k for k, f in folders.items() if available(f)]
 if not choices:

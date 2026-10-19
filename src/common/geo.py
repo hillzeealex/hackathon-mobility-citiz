@@ -30,11 +30,13 @@ def cluster_labels(xy: np.ndarray, radius: float) -> np.ndarray:
 
 
 def dedup_points(gdf: gpd.GeoDataFrame, radius: float | dict, by: str = "type",
-                 sum_cols: tuple[str, ...] = ("capacite", "passages_jour"),
+                 sum_cols: tuple[str, ...] = ("capacite", "passages_jour"), source_col: str | None = None,
                  ) -> tuple[gpd.GeoDataFrame, pd.DataFrame]:
     """Fusionne les points d'un même groupe (`by`, ex. le mode) distants de moins de `radius` mètres.
 
     `radius` : un rayon commun, ou {groupe: rayon} avec la clé "default" pour les autres groupes.
+    `source_col` : si fourni, les `sum_cols` sont sommées au sein d'une même source puis on garde le MAXIMUM
+    entre sources (un flux régional agrégé qui reprend un réseau local ne double pas ses passages).
     `gdf` doit être dans un CRS métrique. Le point fusionné est le barycentre du groupe ;
     les colonnes `sum_cols` sont sommées, les autres prennent la première valeur ;
     `ids_fusionnes` liste les identifiants d'origine. Renvoie (points fusionnés, stats avant/après).
@@ -54,6 +56,11 @@ def dedup_points(gdf: gpd.GeoDataFrame, radius: float | dict, by: str = "type",
                 agg[c] = lambda s: s.sum(min_count=1)  # NaN reste NaN (pas de fréquence pour le GBFS)
         agg.update({"_x": "mean", "_y": "mean"})
         merged = g.groupby("_cl", sort=False).agg(agg)
+        if source_col:
+            for c in sum_cols:
+                if c in g.columns:
+                    per_src = g.groupby(["_cl", source_col], sort=False)[c].sum(min_count=1)
+                    merged[c] = per_src.groupby(level=0).max().reindex(merged.index)
         merged["ids_fusionnes"] = g.groupby("_cl", sort=False)["id"].agg(lambda s: "|".join(map(str, s)))
         merged["n_fusionnes"] = g.groupby("_cl", sort=False).size()
         parts.append(gpd.GeoDataFrame(merged.drop(columns=["_x", "_y"]),
