@@ -1,0 +1,180 @@
+# Sources de données
+
+Généré automatiquement par `download_all.py` le 2026-10-19.
+
+Toutes les données sont ouvertes (Licence Ouverte Etalab / ODbL pour OpenStreetMap).
+
+## Citiz (GBFS, partenaire)
+
+- GBFS - Autopartage Citiz Angers Loire Métropole - citiz-angers-gbfs — <https://backend.citiz.fr/public/provider/7/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Auvergne Rhône Alpes (AURA) - gbfs-citiz-autopartage-aura — <https://backend.citiz.fr/public/provider/5/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Bourgogne Franche-Comté BFC - gbfs-citiz-autopartage-bfc — <https://backend.citiz.fr/public/provider/2/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Développement - gbfs-citiz-dev — <https://backend.citiz.fr/public/provider/12/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Gironde - gbfs — <https://backend.citiz.fr/public/provider/4/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Grand Est - gbfs-citiz-autopartage-grand-est — <https://backend.citiz.fr/public/provider/1/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Grand Poitiers - gbfs-citiz-autopartage-grand-poitiers — <https://backend.citiz.fr/public/provider/9/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Haut de France - gbfs-citiz-autopartage-lille-arras — <https://backend.citiz.fr/public/provider/16/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz La Rochelle - gbfs-citiz-la-rochelle — <https://backend.citiz.fr/public/provider/18/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Métropole de Lyon - Offre et disponibilité temps réel du service Citiz en Autopartage Métropole de Lyon — <https://data.grandlyon.com/files/rdata/lpa_mobilite.donnees/geofencing_zones.json>
+- GBFS - Autopartage Citiz Nantes Métropole - gbfs-citiz-nantes — <https://backend.citiz.fr/public/provider/15/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Occitanie - gbfs-citiz-autopartage-occitanie — <https://backend.citiz.fr/public/provider/8/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Pays Basque AUPA - gbfs-citiz-autopartage-aupa — <https://backend.citiz.fr/public/provider/20/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Provence - gbfs-citiz-autopartage-provence — <https://backend.citiz.fr/public/provider/6/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Rennes Métropole - gbfs-citiz-autopartage-rennes-metropole — <https://backend.citiz.fr/public/provider/19/gbfs/v3.0/geofencing_zones.json>
+
+## Mobilités partagées (GBFS)
+
+- GBFS - Autopartage Clem - GBFS autopartage Clem' — <https://gbfs.clem.mobi/system_information.json>
+- GBFS - Autopartage Getaround France - Flux GBFS France — <https://www.data.gouv.fr/api/1/datasets/r/b9a4aeb4-7689-47ea-83a8-992378985381>
+- GBFS - Autopartage Leo&Go Métropole de Lyon - Véhicules en autopartage LeoandGo dans la Métropole de Lyon - disponibilités temps réel — <https://download.data.grandlyon.com/files/rdata/lag_leoandgo.disponibilite/free_bike_status.json>
+- GBFS - Autopartage Optymo Belfort - Optymo - ALS - Liste et état des stations — <https://data.optymo.fr/als/gbfs.json>
+- GBFS - Autopartage Rémi Région Centre-Val de loire - REMI-GBFS Stations d'autopartage — <https://gbfs.clem.mobi/remi/system_information.json>
+- GBFS - Scooters YEGO Bordeaux - YEGO GBFS Bordeaux  — <https://services.rideyego.com/gbfs/2-2/bordeaux/fr/system_information>
+- GBFS - Scooters YEGO Nice - YEGO GBFS Nice  — <https://services.rideyego.com/gbfs/2-2/nice/fr/system_information>
+- GBFS - Scooters YEGO Paris - YEGO GBFS Paris  — <https://services.rideyego.com/gbfs/2-2/paris/fr/system_information>
+- GBFS - Scooters YEGO Toulouse - YEGO GBFS Toulouse — <https://services.rideyego.com/gbfs/2-2/toulouse/fr/system_information>
+- GBFS - Trottinettes Bird Ajaccio - Bird à Ajaccio - Flux GBFS — <https://mds.bird.co/gbfs/v2/public/provider/bird/ajaccio/free_bike_status.json>
+- GBFS - Trottinettes Bird Bastia - Bird à Bastia - Flux GBFS — <https://mds.bird.co/gbfs/v2/public/provider/bird/bastia/free_bike_status.json>
+- GBFS - Trottinettes Bird Blois - Flux GBFS du service de trottinettes électriques Bird à Blois — <https://mds.bird.co/gbfs/v2/public/provider/bird/blois-france/free_bike_status.json>
+- GBFS - Trottinettes Bird Châlons-en-Champagne - Bird à Châlons-en-Champagne - Flux GBFS — <https://mds.bird.co/gbfs/v2/public/provider/bird/chalonsenchampagne/free_bike_status.json>
+- GBFS - Trottinettes Bird Gap - Bird à Gap - Flux GBFS — <https://mds.bird.co/gbfs/v2/public/provider/bird/gap/free_bike_status.json>
+- GBFS - Trottinettes Bird Laval - Bird à Laval - Flux GBFS — <https://mds.bird.co/gbfs/v2/public/provider/bird/laval/free_bike_status.json>
+- GBFS - Trottinettes Bird Vichy - Bird à Vichy - Flux GBFS — <https://mds.bird.co/gbfs/v2/public/provider/bird/vichy/free_bike_status.json>
+- GBFS - Trottinettes Pony Beauvais - Géolocalisation en temps réel des vélos, vélos à assistance électrique et trottinettes partagés de l’entreprise française pony à Beauvais — <https://proxy.transport.data.gouv.fr/resource/pony-beauvais-gbfs/gbfs.json>
+- GBFS - Trottinettes Pony La Roche-sur-Yon - GBFS Trottinettes Impulsyon — <https://gbfs.getapony.com/v1/La_Roche_Sur_Yon/fr/gbfs.json?key=***>
+- GBFS - VLS AQTA (Auray Quiberon Terre Atlantique) - VLS AQTA (Auray Quiberon Terre Atlantique) — <https://gbfs.partners.fifteen.eu/gbfs/2.2/auray-quiberon/en/gbfs.json>
+- GBFS - VLS Altervélo Saint-Pierre La Réunion (CIVIS) - Vélos à assistance électrique en libre service Saint-Pierre La Réunion CIVIS (Altervélo) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Auch-Vélo’c Grand Auch - GBFS Auch VeloC — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS BYCOR Ouest Rhodanien - VAELS OUEST RHODANIEN BYCOR — <https://www.mobility-parc.net/gbfs/v3/TARARE/system_information.json>
+- GBFS - VLS Brennus à Vélo Grand Sénonais - Données service Brennus à vélo - vélo en libre service — <https://gbfs.partners.fifteen.eu/gbfs/2.2/sens/en/gbfs.json>
+- GBFS - VLS C Vélo Clermont-Ferrand - Etat des stations de Vélos en Libre-Service C.vélo (GBFS) — <https://clermontferrand.publicbikesystem.net/customer/gbfs/v2/gbfs_versions>
+- GBFS - VLS CC des 7 Vallées - Vélos à assistance électrique en libre service dans la communauté de communes des 7 vallées — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS CYCLOlibre Carcassonne - Cyclolibre — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Calivélo communauté d'agglomération du Libournais (La Cali) - API GBFS Ecovelo du réseau vélo de Libourne — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Calivélo communauté d'agglomération du Libournais (La Cali) - API GBFS du réseau vélo de Libourne — <https://api.okina.fr/gateway/nam/gbfs/gbfs/v2/calivelo_ecovelo/vehicle_types>
+- GBFS - VLS Cap Cotentin Vélo - VAELS Cap Cotentin au standard GBFS — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Choletbus 2 Roues Cholet - Choletbus 2 Roues VAELS — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Cité Cycle Saint-Flour - Vélos à assistance électrique en libre service Saint-Flour (Cité Cycle) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Cycl'O Béarn CC du Haut Béarn - VLS OLORON — <https://www.mobility-parc.net/gbfs/v3/OLORON/system_information.json>
+- GBFS - VLS Go'clicot vélo CC du Pays du Coquelicot - VLS PAYS DU COQUELICOT — <https://www.mobility-parc.net/gbfs/v3/COQUELICOT/system_information.json>
+- GBFS - VLS GraouLib' Eurométropole de Metz - gbfs.json — <https://gbfs.partners.fifteen.eu/gbfs/2.2/metz/en/gbfs.json>
+- GBFS - VLS Hoplà CC Plaine d’Estrées - ESTREES SAINT DENIS — <https://www.mobility-parc.net/gbfs/v3/ESTREES/system_information.json>
+- GBFS - VLS IDEcycle Pau - https://gbfs.partners.fifteen.eu/gbfs/pau/gbfs — <https://gbfs.partners.fifteen.eu/gbfs/2.2/pau/en/gbfs.json>
+- GBFS - VLS Impulsyon La Roche Sur Yon - VLS Impulsyon — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Karu'vélo Pointe-à-Pitre La Guadeloupe - Vélos à assistance électrique en libre service Pointe-à-Pitre Guadeloupe (Karu'vélo) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Le Marcel Troyes Champagne Métropole - Données du service de vélos en libre-service "Le Marcel" - Troyes Champagne Métropole — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Le Vélo Baulois La Baule-Escoublac - https://api.gbfs.ecovelo.mobi/labaule/gbfs.json — <https://api.gbfs.v2.2.ecovelo.mobi/fr/vehicle_types.json>
+- GBFS - VLS Le Vélo TBM Bordeaux Métropole - GBFS.json — <https://bdx.mecatran.com/utw/ws/gbfs/bordeaux/v3/system_information.json?apiKey=***>
+- GBFS - VLS LeVélo Marseille - GBFS — <https://gbfs.omega.fifteen.eu/gbfs/2.2/marseille/en/gbfs.json>
+- GBFS - VLS Les petites reines Sables d'Olonne Agglomération - Vélos à assistance électrique en libre service Sables d'Olonne (Les petites reines) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Libélo Valence Romans - GBFS VRM — <https://valence.publicbikesystem.net/customer/gbfs/v2/gbfs_versions>
+- GBFS - VLS Lovélo Rouen - Données statiques et temps réel du service de VLS Lovélo Métropole Rouen Normandie — <https://gbfs.urbansharing.com/lovelolibreservice.fr/system_information.json>
+- GBFS - VLS MontenVélo CC Pays du Mont-Blanc (CCPMB) - Les données du fichier sont les suivantes : géolocalisation en temps réel des vélos à assistance électrique partagés du service MontenVélo sur la Communauté de communes Pays du Mont-Blanc (CCPMB).  — <https://gbfs.partners.fifteen.eu/gbfs/2.2/mont_blanc/en/gbfs.json>
+- GBFS - VLS Naolib Nantes Métropole - https://api.cyclocity.fr/contracts/nantes/gbfs/gbfs.json — <https://api.cyclocity.fr/contracts/nantes/gbfs/v2/gbfs_versions.json>
+- GBFS - VLS Naolib Nantes Métropole - https://api.cyclocity.fr/contracts/nantes/gbfs/v3/gbfs.json — <https://api.cyclocity.fr/contracts/nantes/gbfs/v3/gbfs_versions.json>
+- GBFS - VLS NemoVélo Nîmes Métropole - Vélos à assistance électrique en libre service Nîmes métropole (Nemovelo) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Ogalo Saumur - Vélos à assistance électrique en libre service Saumur (Ogalo Cyclette) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Optymo Belfort - Optymo - VLS - Liste et état des stations — <https://data.optymo.fr/vls/system_information.json>
+- GBFS - VLS Périvélo Grand Périgueux - API GBFS Ecovelo du réseau vélo de Périgueux — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Périvélo Grand Périgueux - API GBFS du réseau vélo de Périgueux — <https://api.okina.fr/gateway/nam/gbfs/gbfs/v2/perivelo_ecovelo/vehicle_types>
+- GBFS - VLS R'Houle ports de Piriac-sur-Mer et de La Turballe - Vélos à assistance électrique en libre service des ports de Piriac-sur-Mer et de La Turballe (R'Houle) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Rubis'Vélo Grand Bourg Agglomération - Rubis'Vélo - Vélos à assistance électrique en libre-service de Grand Bourg Agglomération — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS STAR Rennes - Fichier gbfs.json — <https://eu.ftp.opendatasoft.com/star/gbfs/gbfs.json>
+- GBFS - VLS Semo CA Seine-Eure - Vélo à assistance électrique en libre service — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Tanlib Niort - Vélos en Libre Service Tanlib — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Tarbes Lourdes Pyrénées (TLP) - TLP Mobilités — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Tempo Vélo Agen - GBFS Tempo Vélo — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Ti Vélo Pays de Landerneau-Daoulas - GBFS v2.2 - États des vélos en libre-service — <https://gbfs.partners.fifteen.eu/gbfs/2.2/landerneau/en/gbfs.json>
+- GBFS - VLS Transvilles Valenciennes - Vélos en libre-service du réseau Transvilles au format GBFS — <https://stables.donkey.bike/api/public/gbfs/2/donkey_valenciennes/en/system_information.json>
+- GBFS - VLS V'lille Lille - GBFS - V'lille — <https://media.ilevia.fr/opendata/station_status.json>
+- GBFS - VLS VELPAR CC Pays de l'Arbresle - VLS DE L'ARBRESLE — <https://www.mobility-parc.net/gbfs/v3/ARBRESLE/system_information.json>
+- GBFS - VLS Vel'in Grand Calais (SITAC) - Vel'in — <https://stce.transdev-hdf.fr/gbfs/system_information.php>
+- GBFS - VLS Velonecy Grand Annecy - Flux GBFS Vélonecy — <https://gbfs.partners.fifteen.eu/gbfs/2.2/annecy/en/gbfs.json>
+- GBFS - VLS Velopop’ Avignon - fichier gbfs veleo electrique en libre service — <https://gbfs.partners.fifteen.eu/gbfs/2.2/avignon/en/gbfs.json>
+- GBFS - VLS Vernou-en-Sologne (Vernou Vélo) - Vélos à assistance électrique en libre service Venou-en-Sologne (Vernou Vélo) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Vertuose Grand Longwy - GBFS Vertuose — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS ViVélo Vichy Communauté - Vélos en libre service ViVélo — <https://gbfs.partners.fifteen.eu/gbfs/2.2/vichy/en/gbfs.json>
+- GBFS - VLS Viavélo CA Villefranche Beaujolais Saône - GBFS Viavélo — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Vivolt agglomération d'Epinal - Flux GBFS Vilvolt — <https://gbfs.partners.fifteen.eu/gbfs/2.2/epinal/en/gbfs.json>
+- GBFS - VLS Vél'In CC Pays d'Opale - Pays d'Opale — <https://www.mobility-parc.net/gbfs/v3/Opale/system_information.json>
+- GBFS - VLS Vél'Ossau CC Vallée d'Ossau - VLS VALLEE D'OSSAU — <https://www.mobility-parc.net/gbfs/v3/OSSAU/system_information.json>
+- GBFS - VLS VélOstan’lib Nancy - API Cyclocity / JCDecaux Developer — <https://api.cyclocity.fr/contracts/nancy/gbfs/v2/gbfs_versions.json>
+- GBFS - VLS VélYcéo Saint-Nazaire - https://api.gbfs.ecovelo.mobi/velyceo/gbfs.json — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Vélam Amiens - Caractéristiques des vélos — <https://www.data.gouv.fr/api/1/datasets/r/131b5c6f-0325-4020-99c6-7d382e4963a3>
+- GBFS - VLS Vélam Amiens - Disponibilité en temps réel — <https://www.data.gouv.fr/api/1/datasets/r/36ed9ad8-e77f-45c1-b426-1a2b6ec3a2c6>
+- GBFS - VLS Vélam Amiens - Index racine de l'API — <https://api.cyclocity.fr/contracts/amiens/gbfs/v2/gbfs_versions.json>
+- GBFS - VLS Vélam Amiens - Information sur le service Vélam — <https://www.data.gouv.fr/api/1/datasets/r/7179a29a-2ec0-4d66-8474-74354efb0ecd>
+- GBFS - VLS Vélam Amiens - Inventaire des stations — <https://www.data.gouv.fr/api/1/datasets/r/e0a2c6fa-19e7-4197-8484-e9b3ca0eef05>
+- GBFS - VLS Vélhop Strasbourg Eurométropole - https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_ae/gbfs.json — <https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_ae/fr/system_information.json>
+- GBFS - VLS VéliVert Saint-Etienne - Fichier de découverte — <https://gbfs.sigma.fifteen.eu/gbfs/2.2/saint-etienne/en/gbfs.json>
+- GBFS - VLS Vélib Paris et communes limitrophes - Flux GBFS — <https://velib-metropole-opendata.smovengo.cloud/opendata/Velib_Metropole/gbfs.json>
+- GBFS - VLS Vélibleu Grand Chatellerault - GRAND CHATELLERAULT — <https://www.mobility-parc.net/gbfs/v3/CHATELLERAULT/system_information.json>
+- GBFS - VLS Vélibéo CA Bassin de Brive - API GBFS Ecovelo du réseau vélo de Brive — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Vélibéo CA Bassin de Brive - API GBFS du réseau vélo de Brive — <https://api.okina.fr/gateway/nam/gbfs/gbfs/v2/velibeo_ecovelo/vehicle_types>
+- GBFS - VLS Vélo Fluo Grand Est - GBFS Vélo Fluo — <https://gbfs.partners.fifteen.eu/gbfs/2.2/velo-fluo/en/gbfs.json>
+- GBFS - VLS Vélo Modalis CA Royan Atlantique - API GBFS Fifteen du réseau vélo de Royan — <https://gbfs.partners.fifteen.eu/gbfs/2.2/modalis-royan/en/gbfs.json>
+- GBFS - VLS Vélo Modalis Grand Angoulême - API GBFS Fifteen du réseau vélo d'Angoulême — <https://gbfs.partners.fifteen.eu/gbfs/2.2/angouleme/en/gbfs.json>
+- GBFS - VLS Vélo Modalis Grand Cognac Agglomération - API GBFS Fifteen du réseau vélo de Cognac — <https://gbfs.partners.fifteen.eu/gbfs/2.2/velo-modalis/en/gbfs.json>
+- GBFS - VLS Vélo Modalis Saintes Grandes Rives Agglo - API GBFS Fifteen du réseau vélo de Saintes — <https://gbfs.partners.fifteen.eu/gbfs/2.2/saintes/en/gbfs.json>
+- GBFS - VLS Vélo Vallée de Vézère CC Vallée de l'Homme (CCVH) - VLS VALLEE VEZERE — <https://www.mobility-parc.net/gbfs/v3/LASCAUX/system_information.json>
+- GBFS - VLS Vélo d'Aqui Argelès-sur-mer - Vélos à assistance électrique en libre service Argelès-sur-mer (Vélo d'Aqui) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Vélo'Cité Laon - Vélos à assistance électrique en libre service Laon  (Vélo'Cité) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Vélo'v Lyon - gbfs.json — <https://download.data.grandlyon.com/files/rdata/jcd_jcdecaux.jcdvelov/gbfs_versions.json>
+- GBFS - VLS VéloCité Besançon - General Bikeshare Feed Specification (GBFS) v2.3 — <https://api.cyclocity.fr/contracts/besancon/gbfs/v2/gbfs_versions.json>
+- GBFS - VLS VéloCité Mulhouse - m2a_stationsvelocite_gbfs.json — <https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_af/fr/system_information.json>
+- GBFS - VLS VéloMoove Bassin de Pompey - Fichier de découverte — <https://gbfs.partners.fifteen.eu/gbfs/2.2/pompey/en/gbfs.json>
+- GBFS - VLS VéloMoove Bassin de Pompey - Information système — <https://www.data.gouv.fr/api/1/datasets/r/9cff5e9a-8f40-4c93-a36a-a3ee478703d7>
+- GBFS - VLS VéloMoove Bassin de Pompey - Informations tarifaires — <https://www.data.gouv.fr/api/1/datasets/r/5bc7bc88-285c-4cf2-91cf-62999ed993a5>
+- GBFS - VLS VéloMoove Bassin de Pompey - Limites géographiques — <https://www.data.gouv.fr/api/1/datasets/r/af389d13-d0cc-4ee6-ae67-4c8c6e0e74eb>
+- GBFS - VLS VéloMoove Bassin de Pompey - Types de véhicules — <https://www.data.gouv.fr/api/1/datasets/r/9eddda26-e867-4b11-ac69-568a05639f76>
+- GBFS - VLS VéloZef Brest - Url du flux GBFS — <https://gbfs.partners.fifteen.eu/gbfs/2.2/brest/en/gbfs.json>
+- GBFS - VLS Vélolib CU Caen la Mer (Twisto) - https://gbfs.partners.fifteen.eu/gbfs/caen/gbfs.json — <https://gbfs.partners.fifteen.eu/gbfs/2.2/caen/en/gbfs.json>
+- GBFS - VLS Vélomagg Montpellier Méditerranée Métropole - Disponibilité des vélos en libre-service  de Montpellier en temps réel  — <https://gbfs.theta.fifteen.eu/gbfs/2.2/montpellier/en/gbfs.json>
+- GBFS - VLS VélopartaG CC du Gévaudan - VLS DU GEVAUDAN — <https://www.mobility-parc.net/gbfs/v3/GEVAUDAN/system_information.json>
+- GBFS - VLS VélôToulouse Toulouse Métropole - https://api.cyclocity.fr/contracts/toulouse/gbfs/gbfs.json — <https://api.cyclocity.fr/contracts/toulouse/gbfs/v2/gbfs_versions.json>
+- GBFS - VLS Yélo CA La Rochelle - gbfs.json — <https://opendata.agglo-larochelle.fr/d4c/api/datasets/1.0/yelo___disponibilite_des_velos_en_libre_service/alternative_exports/7f0df698-4c17-4d9f-9d7e-49c13a3a6015>
+- GBFS - VLS Zébullo Grand Reims - Fichier d’index GBFS (annuaire des flux) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS vélos partagés Vassivière CC Porte de Vassivière - VLS PORTE DE VASSIVIERE — <https://www.mobility-parc.net/gbfs/v3/VASSIVIERE/system_information.json>
+- GBFS - Vélos Lime Communauté d’Agglomération Sophia Antipolis (CASA) - Lime CASA — <https://data.lime.bike/api/partners/v2/gbfs/casa/system_information>
+- GBFS - Vélos Lime Les Lilas - GBFS Les Lilas — <https://data.lime.bike/api/partners/v2/gbfs/leslilas/system_information>
+- GBFS - Vélos Lime Nogent-sur-Marne - Lime Nogent-sur-Marne — <https://data.lime.bike/api/partners/v2/gbfs/nogent/system_information>
+- GBFS - Vélos Lime Paris - Lime Paris — <https://data.lime.bike/api/partners/v2/gbfs/parisproper/system_information>
+- GBFS - Vélos Lime Paris Saclay - Lime Paris Saclay — <https://data.lime.bike/api/partners/v2/gbfs/paris_saclay/system_information>
+- GBFS - Vélos Pony Marseille - PONY GBFS MARSEILLE — <https://gbfs.getapony.com/v1/Marseille/fr/gbfs.json>
+- GBFS - Vélos Voi Paris - GBFS VOI Paris — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/352/system_information.json>
+- GBFS - Vélos Voi V'lones (Irigny, Saint-Genis-Laval, Charly , Vernaison) - V'Lônes GBFS — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/406/system_information.json>
+- GBFS - Vélos et trottinettes Dott Bordeaux - Tier-Dott Bordeaux GBFS — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott France - Tier-Dott Public GBFS Feed - Bordeaux — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott France - Tier-Dott Public GBFS Feed - Lyon — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott France - Tier-Dott Public GBFS Feed - Ol-vallee — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott France - Tier-Dott Public GBFS Feed - Paris — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott France - Tier-Dott Public GBFS Feed for France — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott Lyon - Tier-Dott Lyon GBFS — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott OL Vallée - Tier-Dott OL Vallée GBFS — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott Paris - Tier-Dott Paris GBFS — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott Syndicat Intercommunal d'Etudes des Mobilités Urbaines Marne-la-Vallée (SIEMU) - Tier-Dott SIEMU GBFS — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Lime Le Havre - GBFS Le Havre — <https://data.lime.bike/api/partners/v2/gbfs/ELB6RY5ANOZLB/system_information>
+- GBFS - Vélos et trottinettes Lime Lille - GBFS Lille — <https://data.lime.bike/api/partners/v2/gbfs/lille/system_information>
+- GBFS - Vélos et trottinettes Lime Marseille - GBFS Marseille — <https://data.lime.bike/api/partners/v2/gbfs/marseille/system_information>
+- GBFS - Vélos et trottinettes Lime Nice - GBFS Nice — <https://data.lime.bike/api/partners/v2/gbfs/nice/system_information>
+- GBFS - Vélos et trottinettes Naolib micromob Nantes (avec stations) - https://api.gbfs.ecovelo.mobi/chantrerie/gbfs.json — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - Vélos et trottinettes Pony Angers - GBFS — <https://proxy.transport.data.gouv.fr/resource/pony-angers-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Bordeaux - GBFS — <https://proxy.transport.data.gouv.fr/resource/pony-bordeaux-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Bourges - Vélos et trottinettes Pony Bourges — <https://proxy.transport.data.gouv.fr/resource/pony-bourges-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Evry - Vélos et trottinettes Pony Evry — <https://proxy.transport.data.gouv.fr/resource/pony-evry-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Hérouville - Vélos et trottinettes Pony Herouville — <https://proxy.transport.data.gouv.fr/resource/pony-herouville-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Limoges - Vélos et trottinettes Pony Limoges — <https://proxy.transport.data.gouv.fr/resource/pony-limoges-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Lorient - Vélos et trottinettes Pony Lorient — <https://proxy.transport.data.gouv.fr/resource/pony-lorient-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Nice - Vélos et trottinettes Pony Nice — <https://proxy.transport.data.gouv.fr/resource/pony-nice-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Pays Basque - Vélos Pony Pays Basque — <https://proxy.transport.data.gouv.fr/resource/pony-pays-basque-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Perpignan - Vélos et trottinettes Pony Perpignan — <https://proxy.transport.data.gouv.fr/resource/pony-perpignan-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Poitiers - Vélos et trottinettes Pony Poitiers — <https://proxy.transport.data.gouv.fr/resource/pony-poitiers-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Voi Grand Paris Seine et Oise - Grand Paris Seine et Oise GBFS — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/422/system_information.json>
+- GBFS - Vélos et trottinettes Voi Grenoble - GBFS VOI Grenoble — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/358/system_information.json>
+- GBFS - Vélos et trottinettes Voi Havre et Octeville-sur-Mer - GBFS Voi Le Havre and Octeville-sur-Mer — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/336/system_information.json>
+- GBFS - Vélos et trottinettes Voi Marseille - GBFS Voi Marseille — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/66/system_information.json>
+- GBFS - Vélos et trottinettes Voi Saint-Quentin-en-Yvelines - GBFS Saint-Quentin-en-Yvelines — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/355/system_information.json>
+
+## Catalogue GBFS
+
+- Catalogue mondial des flux GBFS - MobilityData — <https://raw.githubusercontent.com/MobilityData/gbfs/master/systems.csv>
