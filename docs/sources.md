@@ -175,9 +175,39 @@ Toutes les données sont ouvertes (Licence Ouverte Etalab / ODbL pour OpenStreet
 - GBFS - Vélos et trottinettes Voi Marseille - GBFS Voi Marseille — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/66/system_information.json>
 - GBFS - Vélos et trottinettes Voi Saint-Quentin-en-Yvelines - GBFS Saint-Quentin-en-Yvelines — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/355/system_information.json>
 
+## Transports en commun (GTFS)
+
+- GTFS - Lignes de covoiturage M covoit' Lignes+ - Horaires théoriques M'Covoit Ligne Plus — <https://www.data.gouv.fr/api/1/datasets/r/91dbf9cb-4ab2-42a3-9f40-0791a53d58d2>
+- GTFS - Réseau SNCF TGV, Intercités et TER - https://eu.ftp.opendatasoft.com/sncf/plandata/Export_OpenData_SNCF_GTFS_NewTripId.zip — <https://www.data.gouv.fr/api/1/datasets/r/9ae758ec-cd7a-40cd-a890-bb3963224942>
+- GTFS - Réseau interurbain - Isère (38) - cars Région Isère (38) - Offre théorique au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/40ee9d6c-3bb9-409e-b670-986212de63f2>
+- GTFS - Réseau interurbain Cars Région Express - GTFS Cars Région Express — <https://www.data.gouv.fr/api/1/datasets/r/c379471b-c554-4838-9c00-39d7ced7b53a>
+- GTFS - Réseau urbain TAG - Horaires théoriques du réseau TAG — <https://www.data.gouv.fr/api/1/datasets/r/b6ec7ba4-09bc-46df-b9a1-79a2c2668cf2>
+- GTFS - Téléphérique de la Bastille - Bulles de Grenoble - Horaires théoriques téléphérique de Grenoble — <https://www.data.gouv.fr/api/1/datasets/r/3ec51aee-ce59-4608-b721-faae118ea1d0>
+
+## Arrêts nationaux
+
+- Arrêts de transport en France (agrégat national GTFS, non dédoublonné) - data.gouv.fr — <https://www.data.gouv.fr/api/1/datasets/r/69cf54c6-6591-4920-b1d6-2a5292964606>
+
 ## Catalogue GBFS
 
 - Catalogue mondial des flux GBFS - MobilityData — <https://raw.githubusercontent.com/MobilityData/gbfs/master/systems.csv>
+
+## INSEE
+
+- INSEE BPE 2025 - équipements géolocalisés (commerces, santé, écoles...) — <https://www.insee.fr/fr/statistiques/fichier/8217525/BPE25.parquet>
+- INSEE Filosofi 2021 - population et revenus par carreau de 200 m (GeoPackage) — <https://www.insee.fr/fr/statistiques/fichier/8735162/Filosofi2021_carreaux_200m_gpkg.zip>
+- INSEE Omphale - projections de population 2021-2070 par département et région (tous scénarios) — <https://www.insee.fr/fr/statistiques/fichier/6652134/projdepreg_2021-2070_excel.zip>
+- INSEE Recensement 2023 - Logement par IRIS (dont motorisation des ménages) - France hors Mayotte — <https://www.insee.fr/fr/statistiques/fichier/9061333/base_ic_logement_2023_xlsx.zip>
+- INSEE Recensement 2023 - Logement par IRIS, DOM (Parquet) — <https://api.insee.fr/melodi/file/DS_RP_LOGEMENT_DOM_PRINC_IRIS_2023/PARQUET>
+
+## IGN
+
+- IGN ADMIN EXPRESS COG - limites administratives (communes, EPCI, départements) (ADMIN-EXPRESS-COG_4-0__GPKG_WGS84G_FRA_2026-01-01) — <https://data.geopf.fr/telechargement/download/ADMIN-EXPRESS-COG/ADMIN-EXPRESS-COG_4-0__GPKG_WGS84G_FRA_2026-01-01/ADMIN-EXPRESS-COG_4-0__GPKG_WGS84G_FRA_2026-01-01.7z>
+- IGN CONTOURS IRIS - découpage IRIS (CONTOURS-IRIS_3-0__GPKG_WGS84G_FRA_2026-01-01) — <https://data.geopf.fr/telechargement/download/CONTOURS-IRIS/CONTOURS-IRIS_3-0__GPKG_WGS84G_FRA_2026-01-01/CONTOURS-IRIS_3-0__GPKG_WGS84G_FRA_2026-01-01.7z>
+
+## OpenStreetMap
+
+- OpenStreetMap - rhone-alpes (Geofabrik) — <https://download.geofabrik.de/europe/france/rhone-alpes-latest.osm.pbf>
 
 ## Hypothèses de coût et d'impact (config/costs.yaml)
 

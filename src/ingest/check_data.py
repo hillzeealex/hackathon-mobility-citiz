@@ -274,7 +274,7 @@ def check_ign(raw: Path, rep: Report, attempted: dict, deep: bool) -> None:
     sec = "IGN"
     for key, (label, _coll) in IGN.items():
         files = sorted((raw / "ign" / key).glob("*")) if (raw / "ign" / key).exists() else []
-        files = [f for f in files if not f.name.endswith(".part")]
+        files = [f for f in files if f.is_file() and not f.name.endswith(".part")]  # ignore extracted/ etc.
         if not files:
             rep.add(sec, missing_status("ign", attempted), key, f"absent ({label[:60]})")
             continue
