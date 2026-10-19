@@ -1,15 +1,21 @@
 """
 Export des données nettoyées pour l'équipe -> data/share/
 
-    python scripts/export_share.py                 # GPKG + CSV + GeoJSON + dictionnaire + carte HTML + zip
+    python scripts/export_share.py                 # Grenoble + France entière
+    python scripts/export_share.py --only grenoble # ou --only france
     python scripts/export_share.py --estimate-raw-zone   # taille estimée d'un zip des données BRUTES de la zone
 
-Pour chaque table disponible dans data/processed/ (zone, population, offre, accessibilité) :
+Grenoble (data/share/), pour chaque table de data/processed/ (zone, population, offre, accessibilité) :
   - <table>.gpkg     pour QGIS (Lambert-93, EPSG:2154)
   - <table>.csv      pour Excel (séparateur ;, UTF-8 avec BOM, virgule décimale, latitude/longitude WGS84)
   - <table>.geojson  pour le web (WGS84), seulement s'il fait moins de 50 Mo
-Secret statistique : seuls les carreaux (et IRIS) d'au moins 11 ménages sont exportés.
-Produit aussi DICTIONNAIRE_DONNEES.md, carte_apercu.html (folium) et le zip daté.
+  + carte_apercu.html (folium) + hackathon_grenoble_donnees_propres_AAAAMMJJ.zip
+France entière (data/share/france/), AGRÉGATS seulement (pas de carreaux : trop lourd) :
+  - france_departements / france_epci / france_communes  .gpkg (WGS84, toutes les géométries) + .csv
+  - france_classement_epci.csv (EPCI classés, pour Excel) + carte_france_departements.html
+  + hackathon_france_donnees_propres_AAAAMMJJ.zip
+Secret statistique : seuls les carreaux (et IRIS, communes) d'au moins 11 ménages sont exportés ; effectifs
+des agrégats arrondis à 5. DICTIONNAIRE_DONNEES.md décrit les deux jeux.
 """
 from __future__ import annotations
 
@@ -21,13 +27,17 @@ import zipfile
 from pathlib import Path
 
 import geopandas as gpd
+import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.common.config import ROOT, load_settings, processed, raw  # noqa: E402
 
 SHARE = ROOT / "data" / "share"
+FRANCE = "france"            # sous-dossier de SHARE
+EXPORTS_META = ".exports.json"   # tables exportées par partie (le dictionnaire couvre les deux même si une seule est relancée)
 GEOJSON_MAX = 50 * 1024 ** 2
+RISK_MIN_POP = 10_000        # taux de vols par commune publiés seulement au-delà (petits effectifs : bruit, stigmatisation)
 MIN_MEN = load_settings()["privacy"]["min_households"]
 ROUND_IRIS = 5   # arrondi des effectifs IRIS partagés (anti-recoupement), pas des calculs
 IRIS_COUNT_COLS = ("pop_calee", "ind", "men", "men_pauv", "population", "menages")
@@ -106,6 +116,69 @@ COLUMNS: dict[str, tuple[str, str, str]] = {
 for _t in ("bus", "tram", "train", "telepherique", "velo", "trottinette", "citiz", "metro"):
     COLUMNS[f"n_{_t}_v2"] = (f"Points « {_t} » à 5 min de marche", "points", CALC)
 
+SSMSI = "SSMSI, délinquance enregistrée par commune 2023-2025"
+V1 = "calcul du projet (V1 : 400 m à vol d'oiseau)"
+COLUMNS.update({
+    # France entière (niveau 1) : agrégats de carreaux pondérés par la population calée
+    "dep": ("Code du département", "-", IGN_ADE),
+    "code_epci": ("Numéro SIREN de l'EPCI (intercommunalité)", "-", IGN_ADE),
+    "nom_epci": ("Nom de l'EPCI de la commune", "-", IGN_ADE),
+    "nature": ("Nature de l'EPCI : ME métropole, CU, CA, CC", "-", IGN_ADE),
+    "n_options_moyen": ("Options de mobilité pondérées accessibles à 5 min, moyenne par habitant", "options", V1),
+    "part_pop_sans_option": ("Part de la population sans aucun point d'offre à 5 min", "0-1", V1),
+    "part_pop_avec_tc": ("Part de la population à 5 min d'un arrêt de transport en commun", "0-1", V1),
+    "part_pop_citiz_5min": ("Part de la population à 5 min d'une station Citiz", "0-1", V1),
+    "acces_1000_moyen": ("Options pour 1 000 habitants (2SFCA, tient compte de la demande concurrente), moyenne par habitant",
+                         "options / 1 000 hab.", V1),
+    "citiz_1000_moyen": ("Véhicules Citiz pour 1 000 habitants (2SFCA), moyenne par habitant", "véhicules / 1 000 hab.", V1),
+    "part_menages_sans_voiture": ("Part des ménages sans voiture", "0-1", RP_LOG),
+    "densite_vecue_hab_km2": ("Densité vécue : densité moyenne des carreaux où vivent les habitants (pondérée par la "
+                              "population ; insensible aux espaces vides)", "habitants / km²", CALC),
+    "stations_citiz": ("Stations Citiz (GBFS)", "stations", GBFS),
+    "vehicules_citiz": ("Véhicules Citiz déclarés (capacité des stations)", "véhicules", GBFS),
+    "stations_autres_autopartage": ("Stations d'autres opérateurs d'autopartage publiant un GBFS (Clem, Rémi, Optymo, Leo&Go)",
+                                    "stations", GBFS),
+    "voitures_free_floating": ("Voitures d'autopartage sans station visibles en GBFS (photo du téléchargement)", "voitures", GBFS),
+    "autopartage_10k_hab": ("Autopartage existant connu (stations + voitures free-floating) pour 10 000 hab. — "
+                            "sous-estimé : la plupart des opérateurs ne publient rien", "pour 10 000 hab.", CALC),
+    "citiz_stations_100k_hab": ("Stations Citiz pour 100 000 habitants", "pour 100 000 hab.", CALC),
+    "vols_vehicules_1000": ("Vols de et dans les véhicules et d'accessoires, moyenne annuelle 2023-2025 pour 1 000 hab.",
+                            "faits / an / 1 000 hab.", SSMSI),
+    "degradations_1000": ("Destructions et dégradations volontaires, moyenne annuelle 2023-2025 pour 1 000 hab.",
+                          "faits / an / 1 000 hab.", SSMSI),
+    "score_potentiel_citiz": ("Potentiel Citiz : moyenne des rangs-percentiles (densité vécue ↑, ménages sans voiture ↑, "
+                              "autopartage existant ↓) parmi les EPCI ≥ 50 000 hab.", "0-1", CALC),
+    "score_avec_risque": ("Score de potentiel − 0,25 × rang-percentile des vols liés aux véhicules (variante prudente)", "≈ 0-1", CALC),
+    "rang_potentiel": ("Rang national du potentiel Citiz (1 = plus fort), EPCI ≥ 50 000 hab.", "rang", CALC),
+    "score_potentiel_epci": ("Score de potentiel Citiz de l'EPCI de la commune (vide si EPCI < 50 000 hab.)", "0-1", CALC),
+    "rang_potentiel_epci": ("Rang national de l'EPCI de la commune", "rang", CALC),
+    "score_potentiel_moyen": ("Moyenne, pondérée par la population, du score de potentiel des EPCI classés du département",
+                              "0-1", CALC),
+    "part_pop_epci_classes": ("Part de la population du département vivant dans un EPCI classé (≥ 50 000 hab.)", "0-1", CALC),
+    "meilleur_epci": ("EPCI du département le mieux classé (potentiel Citiz)", "-", CALC),
+    "meilleur_rang": ("Rang national de cet EPCI", "rang", CALC),
+})
+# même nom, sens différent selon la table
+_FR_POP = ("Population calée (Σ des carreaux Filosofi recalés sur le recensement 2023), arrondie à 5", "habitants", CALC)
+_FR_MEN = ("Ménages fiscaux (Σ des carreaux), arrondis à 5", "ménages", FILO)
+_FR_CARR = ("Carreaux habités de 200 m", "carreaux", FILO)
+COLUMNS_BY_TABLE: dict[str, dict[str, tuple[str, str, str]]] = {
+    t: {"population": _FR_POP, "menages": _FR_MEN, "carreaux": _FR_CARR, "nom": (f"Nom officiel ({t.split('_')[-1]})", "-", IGN_ADE),
+        "superficie_km2": ("Superficie (projection équivalente)", "km²", CALC)}
+    for t in ("france_departements", "france_epci", "france_communes", "france_classement_epci")
+}
+COLUMNS_BY_TABLE["france_communes"]["vols_vehicules_1000"] = (
+    COLUMNS["vols_vehicules_1000"][0] + f" — publié seulement pour les communes d'au moins {RISK_MIN_POP:,} hab.".replace(",", " "),
+    *COLUMNS["vols_vehicules_1000"][1:])
+COLUMNS_BY_TABLE["france_communes"]["degradations_1000"] = (
+    COLUMNS["degradations_1000"][0] + f" — idem, communes d'au moins {RISK_MIN_POP:,} hab.".replace(",", " "),
+    *COLUMNS["degradations_1000"][1:])
+
+
+def describe(table: str, col: str) -> tuple[str, str, str] | None:
+    return COLUMNS_BY_TABLE.get(table, {}).get(col) or COLUMNS.get(col)
+
+
 TABLES = {  # nom exporté -> (description, ce qui a été fait)
     "zone_communes": ("Les 49 communes de Grenoble-Alpes-Métropole (périmètre d'étude).", []),
     "population_carreaux": ("Population et caractéristiques socio-économiques par carreau de 200 m.", []),
@@ -115,6 +188,14 @@ TABLES = {  # nom exporté -> (description, ce qui a été fait)
     "offre": ("Tous les points d'offre de mobilité (arrêts TC, stations Citiz, zones Voi) sur la zone + 800 m.", []),
     "acces_carreaux": ("Indicateurs d'accessibilité à 5 min par carreau (phase 3).", []),
     "acces_iris": ("Indicateurs d'accessibilité agrégés par IRIS (phase 3).", []),
+    "france_departements": ("France entière (DROM inclus) : un indicateur par département. Guadeloupe, Guyane et Mayotte : "
+                            "pas de population au carreau (Filosofi), indicateurs vides. Dossier `france/`.", []),
+    "france_epci": ("France entière : toutes les intercommunalités, indicateurs + classement du potentiel Citiz "
+                    "(rang et score seulement pour les EPCI ≥ 50 000 hab.). Dossier `france/`.", []),
+    "france_communes": ("France entière : une ligne par commune habitée d'au moins 11 ménages fiscaux ; contours simplifiés "
+                        "(≈ 100 m). Taux de vols seulement pour les communes ≥ 10 000 hab. Dossier `france/`.", []),
+    "france_classement_epci": ("Classement des EPCI ≥ 50 000 hab. par potentiel Citiz, trié par rang (CSV pour Excel). "
+                               "Dossier `france/`.", []),
 }
 
 
@@ -154,18 +235,23 @@ def round_floats(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def export_table(name: str, g: gpd.GeoDataFrame, log: list) -> dict:
+def export_table(name: str, g: gpd.GeoDataFrame, log: list, sub: str = "", geojson: bool = True) -> dict:
+    folder = SHARE / sub
+    folder.mkdir(parents=True, exist_ok=True)
     g = with_latlon(round_floats(g))
-    info = {"table": name, "lignes": len(g), "colonnes": [c for c in g.columns if c != "geometry"], "fichiers": {}}
-    gp = SHARE / f"{name}.gpkg"
+    info = {"table": name, "dossier": sub, "lignes": len(g), "colonnes": [c for c in g.columns if c != "geometry"],
+            "fichiers": {}}
+    gp = folder / f"{name}.gpkg"
     gp.unlink(missing_ok=True)
     g.to_file(gp, layer=name, driver="GPKG")
     info["fichiers"]["gpkg"] = gp.stat().st_size
-    csv = SHARE / f"{name}.csv"
+    csv = folder / f"{name}.csv"
     pd.DataFrame(g.drop(columns="geometry")).to_csv(csv, sep=";", decimal=",", index=False, encoding="utf-8-sig")
     info["fichiers"]["csv"] = csv.stat().st_size
+    if not geojson:
+        return info
     gj = g.drop(columns=["latitude", "longitude"]).to_crs(4326).to_json(drop_id=True, to_wgs84=True)
-    gj_path = SHARE / f"{name}.geojson"
+    gj_path = folder / f"{name}.geojson"
     if len(gj.encode("utf-8")) < GEOJSON_MAX:
         gj_path.write_text(gj, encoding="utf-8")
         info["fichiers"]["geojson"] = gj_path.stat().st_size
@@ -227,28 +313,87 @@ def cleaning_notes() -> list[str]:
     return notes
 
 
-def write_dictionary(infos: list[dict], log: list) -> Path:
-    lines = ["# Dictionnaire des données — Hackathon Mobility Grenoble (Epitech × Citiz)", "",
+def france_notes() -> list[str]:
+    notes = []
+    rep = processed("national", "agg_rapport.json")
+    if rep.exists():
+        r = json.loads(rep.read_text(encoding="utf-8"))
+        tot = r.get("france", r)
+        if "population" in tot:
+            notes.append(f"**Couverture** : {fr(tot['population'])} habitants calés (carreaux Filosofi 2021 de métropole, "
+                         "Martinique et Réunion). Guadeloupe, Guyane, Mayotte : pas de carreaux Filosofi, donc pas d'indicateur "
+                         "par habitant (lignes vides dans france_departements, absentes de france_communes).")
+    notes += [
+        "**Accessibilité V1** : 400 m **à vol d'oiseau** autour du centroïde de chaque carreau de 200 m, puis moyenne "
+        "pondérée par la population. C'est une **borne haute** : la marche réelle (réseau OSM, V2) est mesurée sur les "
+        "agglomérations zoomées. Mêmes poids de modes et même dédoublonnage que pour Grenoble (`docs/methodologie.md` §4-5).",
+    ]
+    off = processed("national", "offer_rapport.json")
+    if off.exists():
+        o = json.loads(off.read_text(encoding="utf-8"))
+        notes.append(f"**Offre nationale** : {o['flux_gtfs']} GTFS ({o['flux_gtfs_en_erreur']} illisibles ; "
+                     f"{o['flux_gtfs_hors_periode']} expirés, lus sur leur dernier mardi valide) + tous les GBFS de "
+                     "transport.data.gouv.fr, fusionnés puis dédoublonnés par mode (40 m ; trains 150 m) : "
+                     f"{fr(o['points_avant'])} → {fr(o['points_apres'])} points.")
+    notes += [
+        "**Autopartage existant** : seuls Citiz, Clem, Rémi, Optymo et Leo&Go publient un GBFS ; Getaround, Zity, "
+        "Free2Move… sont absents. `autopartage_10k_hab` et donc le potentiel sont **biaisés** dans les grandes villes.",
+        "**Risque de vol** (SSMSI) : faits enregistrés par la police et la gendarmerie, rapportés à la population ; "
+        f"commune : publié seulement à partir de {fr(RISK_MIN_POP)} habitants (au-dessous, quelques faits font varier "
+        "fortement le taux et désigneraient injustement de petites communes). C'est un **critère d'exploitation** "
+        "(coût, assurance) et non un jugement sur les habitants : voir `docs/ethique.md`.",
+        f"**Secret statistique** : communes de moins de {MIN_MEN} ménages fiscaux exclues ; effectifs (`population`, "
+        f"`menages`) de toutes les tables France arrondis à {ROUND_IRIS} près. Aucun carreau n'est exporté au niveau national.",
+        "**Géométries** : WGS84 (EPSG:4326) pour tout le territoire (DROM compris), simplifiées : départements ≈ 200 m, "
+        "EPCI ≈ 300 m, communes ≈ 100 m. À utiliser pour des cartes, pas pour des calculs de surface fins.",
+    ]
+    return notes
+
+
+def load_exports_meta() -> dict:
+    p = SHARE / EXPORTS_META
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+
+
+def write_dictionary(meta: dict[str, list[dict]], log: list) -> Path:
+    lines = ["# Dictionnaire des données — Hackathon Mobility (Epitech × Citiz) : Grenoble et France entière", "",
              f"Généré par `scripts/export_share.py` le {dt.date.today().isoformat()}. "
-             "Méthode détaillée : `docs/methodologie.md` ; sources : `docs/sources.md`.", "",
-             "## Formats", "",
+             "Méthode détaillée : `docs/methodologie.md` ; sources : `docs/sources.md` ; éthique : `docs/ethique.md`.", "",
+             "## Contenu", "",
+             "| Dossier / fichier | Contenu |", "|---|---|",
+             "| `data/share/` | Grenoble-Alpes-Métropole : carreaux, IRIS, communes, offre (+ accessibilité quand elle est calculée) |",
+             "| `data/share/france/` | France entière : **agrégats** par département, EPCI et commune, classement des EPCI |",
+             "| `hackathon_grenoble_donnees_propres_AAAAMMJJ.zip` | tout `data/share/` (hors `france/`) + ce dictionnaire + méthodologie |",
+             "| `hackathon_france_donnees_propres_AAAAMMJJ.zip` | tout `data/share/france/` + ce dictionnaire + méthodologie, éthique |",
+             "", "## Formats", "",
              "| Format | Pour qui | Détails |", "|---|---|---|",
              "| `.csv` | Excel | séparateur `;`, UTF-8 avec BOM, virgule décimale ; colonnes `latitude`/`longitude` en WGS84 (centroïde pour les surfaces), pas de géométrie |",
-             "| `.gpkg` | QGIS | géométries complètes, Lambert-93 (EPSG:2154) |",
-             "| `.geojson` | web, outils en ligne | WGS84 (EPSG:4326), produit si < 50 Mo |",
-             "| `carte_apercu.html` | tout le monde | double-clic : carte interactive de toutes les couches (connexion internet requise pour le fond de carte) |",
-             "", "## Choix de nettoyage", ""] + [f"- {n}" for n in cleaning_notes()] + [""]
-    for info in infos:
-        desc = TABLES.get(info["table"], ("", []))[0]
-        size = ", ".join(f"{k} {fr(v / 1024 ** 2, 1)} Mo" for k, v in info["fichiers"].items())
-        lines += [f"## {info['table']}", "", desc, "", f"**{fr(info['lignes'])} lignes** — fichiers : {size}", "",
-                  "| Colonne | Signification | Unité | Source |", "|---|---|---|---|"]
-        for c in info["colonnes"]:
-            sig, unit, src = COLUMNS.get(c, ("**à documenter**", "", ""))
-            if c not in COLUMNS:
-                log.append(f"colonne non documentée : {info['table']}.{c}")
-            lines.append(f"| `{c}` | {sig} | {unit} | {src} |")
-        lines.append("")
+             "| `.gpkg` | QGIS | géométries complètes : Lambert-93 (EPSG:2154) pour Grenoble, WGS84 (EPSG:4326) pour la France |",
+             "| `.geojson` | web, outils en ligne | WGS84 (EPSG:4326), produit si < 50 Mo (Grenoble seulement) |",
+             "| `carte_apercu.html` | tout le monde | double-clic : carte interactive de Grenoble (connexion internet requise pour le fond de carte) |",
+             "| `france/carte_france_departements.html` | tout le monde | double-clic : carte nationale par département, un indicateur à la fois |",
+             ""]
+    sections = [("grenoble", "Grenoble-Alpes-Métropole", cleaning_notes), ("france", "France entière (niveau 1)", france_notes)]
+    for part, title, notes in sections:
+        if part not in meta:
+            continue
+        lines += [f"# {title}", "", "## Choix de nettoyage", ""] + [f"- {n}" for n in notes()] + [""]
+        for info in meta[part]:
+            desc = TABLES.get(info["table"], ("", []))[0]
+            prefix = f"{info['dossier']}/" if info.get("dossier") else ""
+            size = ", ".join(f"`{prefix}{info['table']}.{k}` {fr(v / 1024 ** 2, 1)} Mo" for k, v in info["fichiers"].items())
+            lines += [f"## {info['table']}", "", desc, "", f"**{fr(info['lignes'])} lignes** — fichiers : {size}", "",
+                      "| Colonne | Signification | Unité | Source |", "|---|---|---|---|"]
+            for c in info["colonnes"]:
+                d = describe(info["table"], c)
+                if d is None:
+                    log.append(f"colonne non documentée : {info['table']}.{c}")
+                sig, unit, src = d or ("**à documenter**", "", "")
+                lines.append(f"| `{c}` | {sig} | {unit} | {src} |")
+            lines.append("")
     path = SHARE / "DICTIONNAIRE_DONNEES.md"
     path.write_text("\n".join(lines), encoding="utf-8")
     return path
@@ -318,9 +463,187 @@ def write_map(layers: dict[str, gpd.GeoDataFrame]) -> Path:
 
 
 # ---------------------------------------------------------------------------------------------
-def export_all() -> None:
-    SHARE.mkdir(parents=True, exist_ok=True)
-    log: list[str] = []
+def dep_of(codes: pd.Series) -> pd.Series:
+    codes = pd.Series(codes, dtype="string")
+    return codes.str[:3].where(codes.str.startswith("97"), codes.str[:2])
+
+
+def weighted_mean(values: pd.Series, weights: pd.Series, key: pd.Series) -> pd.Series:
+    ok = values.notna()
+    return (values[ok] * weights[ok]).groupby(key[ok]).sum() / weights[ok].groupby(key[ok]).sum()
+
+
+def france_tables(log: list) -> dict[str, gpd.GeoDataFrame | pd.DataFrame]:
+    """Agrégats France entière (département, EPCI, commune) + classement : rien au carreau."""
+    import pyogrio
+
+    from src.ingest.archives import ign_gpkg
+    from src.national.common import national
+    from src.national.ranking import security_by_commune, security_rates
+
+    ade = ign_gpkg("admin_express")
+    rank = pd.read_parquet(national("classement_epci.parquet"))
+    sec = security_by_commune()
+
+    com = pyogrio.read_dataframe(ade, layer="commune", columns=["code_insee", "nom_officiel", "codes_siren_des_epci"])
+    com = com.rename(columns={"nom_officiel": "nom"})
+    com["code_epci"] = com.pop("codes_siren_des_epci").fillna("").str.split(r"[/,; ]+").str[0].replace("", None)
+    com["dep"] = dep_of(com["code_insee"]).to_numpy()
+
+    # stations Citiz par commune (et département)
+    off = pd.read_parquet(national("offer.parquet"), columns=["type", "sous_type", "capacite", "lon", "lat"])
+    cz = off[(off["type"] == "citiz") & (off["sous_type"] == "station")]
+    pts = gpd.GeoDataFrame(cz, geometry=gpd.points_from_xy(cz["lon"], cz["lat"]), crs=4326)
+    j = gpd.sjoin(pts, com[["code_insee", "dep", "geometry"]], how="left", predicate="within")
+    j = j[~j.index.duplicated()]
+    log.append(f"stations Citiz hors commune (en mer, frontière) : {int(j['code_insee'].isna().sum())} / {len(j)}")
+
+    # communes
+    agg_c = pd.read_parquet(national("agg_commune.parquet"))
+    c = com.merge(agg_c, on="code_insee", how="inner")
+    c["stations_citiz"] = c["code_insee"].map(j.groupby("code_insee").size()).fillna(0).astype(int)
+    c["vehicules_citiz"] = c["code_insee"].map(j.groupby("code_insee")["capacite"].sum()).fillna(0)
+    c = c.merge(security_rates(sec, sec.index), left_on="code_insee", right_index=True, how="left")
+    small = c["population"] < RISK_MIN_POP
+    c.loc[small, ["vols_vehicules_1000", "degradations_1000"]] = np.nan
+    ep = rank[["code_epci", "nom", "score_potentiel_citiz", "rang_potentiel"]].rename(
+        columns={"nom": "nom_epci", "score_potentiel_citiz": "score_potentiel_epci", "rang_potentiel": "rang_potentiel_epci"})
+    c = c.merge(ep, on="code_epci", how="left")
+    c["geometry"] = c.geometry.simplify(0.001).set_precision(1e-5)     # ≈ 100 m
+    hidden = c["menages"] < MIN_MEN
+    log.append(f"communes exclues (< {MIN_MEN} ménages) : {int(hidden.sum())} ; taux de vols masqués "
+               f"(< {fr(RISK_MIN_POP)} hab.) : {int(small[~hidden].sum())} communes")
+    cols_c = ["code_insee", "nom", "dep", "code_epci", "nom_epci"] + [k for k in agg_c if k != "code_insee"] + \
+             ["stations_citiz", "vehicules_citiz", "vols_vehicules_1000", "degradations_1000",
+              "score_potentiel_epci", "rang_potentiel_epci", "geometry"]
+    communes_all = c
+    c = gpd.GeoDataFrame(c.loc[~hidden, cols_c], geometry="geometry", crs=4326)
+
+    # départements
+    deps = pyogrio.read_dataframe(ade, layer="departement", columns=["code_insee", "nom_officiel"]).rename(
+        columns={"code_insee": "dep", "nom_officiel": "nom"})
+    agg_d = pd.read_parquet(national("agg_departement.parquet"))
+    d = deps.merge(agg_d, on="dep", how="left")
+    d["stations_citiz"] = d["dep"].map(j.groupby("dep").size()).fillna(0).astype(int)
+    d["vehicules_citiz"] = d["dep"].map(j.groupby("dep")["capacite"].sum()).fillna(0)
+    d = d.merge(security_rates(sec, dep_of(sec.index.to_series()).to_numpy()), left_on="dep", right_index=True, how="left")
+    ca = communes_all
+    d["score_potentiel_moyen"] = d["dep"].map(weighted_mean(ca["score_potentiel_epci"], ca["population"], ca["dep"]))
+    d["part_pop_epci_classes"] = d["dep"].map(ca[ca["score_potentiel_epci"].notna()].groupby("dep")["population"].sum()
+                                              / ca.groupby("dep")["population"].sum())
+    best = ca.dropna(subset=["rang_potentiel_epci"]).sort_values("rang_potentiel_epci").drop_duplicates("dep").set_index("dep")
+    d["meilleur_epci"] = d["dep"].map(best["nom_epci"])
+    d["meilleur_rang"] = d["dep"].map(best["rang_potentiel_epci"])
+    d["geometry"] = d.geometry.simplify(0.002)                         # ≈ 200 m
+    d = gpd.GeoDataFrame(d.sort_values("dep"), geometry="geometry", crs=4326)
+
+    # EPCI (toutes) + classement
+    geo = gpd.read_parquet(national("geo_epci.parquet"))[["code_epci", "geometry"]]
+    e = gpd.GeoDataFrame(rank.merge(geo, on="code_epci", how="left"), geometry="geometry", crs=4326)
+    first = ["rang_potentiel", "code_epci", "nom", "nature"]
+    e = e[first + [k for k in e.columns if k not in first]]
+    cl = pd.DataFrame(e.drop(columns="geometry")).dropna(subset=["score_potentiel_citiz"]).sort_values("rang_potentiel")
+
+    return {"france_departements": round_counts(d), "france_epci": round_counts(e),
+            "france_communes": round_counts(c), "france_classement_epci": round_counts(cl)}
+
+
+FRANCE_MAP = {  # indicateur -> (libellé, format, valeurs fortes en rouge ?)
+    "part_pop_sans_option": ("Population sans aucune option à 5 min", "{:.0%}", True),
+    "n_options_moyen": ("Options pondérées à 5 min par habitant", "{:.1f}", True),
+    "part_pop_citiz_5min": ("Population à 5 min d'une station Citiz", "{:.1%}", True),
+    "part_menages_sans_voiture": ("Ménages sans voiture", "{:.0%}", True),
+    "score_potentiel_moyen": ("Potentiel Citiz moyen (EPCI classés)", "{:.2f}", True),
+    "vols_vehicules_1000": ("Vols liés aux véhicules / 1 000 hab. / an", "{:.1f}", True),
+}
+
+
+def write_france_map(deps: gpd.GeoDataFrame, epci: gpd.GeoDataFrame, citiz: pd.DataFrame, path: Path) -> Path:
+    import branca.colormap as cm
+    import folium
+
+    from app.ui import RAMP
+
+    colors = ["#%02x%02x%02x" % tuple(c) for c in RAMP]
+    m = folium.Map(location=[46.6, 2.4], zoom_start=6, tiles=None)
+    folium.TileLayer("CartoDB positron", control=False).add_to(m)
+    g = deps.copy()
+    g["geometry"] = g.geometry.simplify(0.01).set_precision(1e-3)   # ≈ 1 km : HTML léger
+    tip_cols, aliases = ["nom", "dep", "pop_txt"], ["Département", "Code", "Habitants"]
+    g["pop_txt"] = g["population"].map(lambda v: fr(v) if pd.notna(v) else "n.d.")
+    for col, (label, f, _) in FRANCE_MAP.items():
+        g[f"{col}_txt"] = g[col].map(lambda v, f=f: f.format(v).replace(".", ",") if pd.notna(v) else "n.d.")
+        tip_cols.append(f"{col}_txt")
+        aliases.append(label)
+    g["meilleur_txt"] = (g["meilleur_epci"].fillna("—") + g["meilleur_rang"].map(lambda r: f" (rang {r:.0f})" if pd.notna(r) else ""))
+    tip_cols.append("meilleur_txt")
+    aliases.append("EPCI le mieux classé")
+    for i, (col, (label, _, hot)) in enumerate(FRANCE_MAP.items()):
+        v = g[col].dropna()
+        cmap = cm.LinearColormap(colors if hot else colors[::-1], vmin=float(v.quantile(0.02)), vmax=float(v.quantile(0.98)))
+        fg = folium.FeatureGroup(name=f"{label} (rouge = élevé)", overlay=False, show=i == 0)
+        folium.GeoJson(g[[col] + tip_cols + ["geometry"]].__geo_interface__,
+                       style_function=lambda ft, col=col, cmap=cmap: {
+                           "fillColor": cmap(min(max(ft["properties"][col], cmap.vmin), cmap.vmax))
+                           if ft["properties"][col] is not None else "#dddddd",
+                           "color": "#ffffff", "weight": 0.6, "fillOpacity": 0.75},
+                       tooltip=folium.GeoJsonTooltip(tip_cols, aliases=aliases)).add_to(fg)
+        fg.add_to(m)
+    fg = folium.FeatureGroup(name=f"Stations Citiz ({len(citiz)})", show=False)
+    for r in citiz.itertuples():
+        folium.CircleMarker([r.lat, r.lon], radius=2, color="#e6007e", fill=True, fill_opacity=0.9, weight=0).add_to(fg)
+    fg.add_to(m)
+    top = epci.dropna(subset=["rang_potentiel"]).nsmallest(20, "rang_potentiel")
+    fg = folium.FeatureGroup(name="Top 20 EPCI potentiel Citiz", show=True)
+    for r in top.itertuples():
+        p = r.geometry.representative_point()
+        folium.Marker([p.y, p.x], tooltip=f"#{r.rang_potentiel:.0f} {r.nom} — {fr(r.population)} hab., "
+                                          f"score {r.score_potentiel_citiz:.2f}".replace(".", ","),
+                      icon=folium.DivIcon(html=f'<div style="font:bold 11px sans-serif;color:#fff;background:#222;'
+                                               f'border-radius:9px;padding:1px 5px;">{r.rang_potentiel:.0f}</div>')).add_to(fg)
+    fg.add_to(m)
+    m.get_root().html.add_child(folium.Element(
+        '<div style="position:fixed;bottom:12px;left:12px;z-index:9999;background:#fff;padding:6px 10px;'
+        'font:12px sans-serif;border-radius:4px;box-shadow:0 0 4px #888;max-width:340px">'
+        "<b>France entière, accessibilité à 5 min (V1, vol d'oiseau)</b><br>Un indicateur à la fois (menu en haut à "
+        "droite) ; bleu = faible, rouge = élevé. Guadeloupe, Guyane, Mayotte en gris : pas de population au carreau. "
+        "DROM : faire glisser la carte.</div>"))
+    folium.LayerControl(collapsed=False).add_to(m)
+    m.save(str(path))
+    return path
+
+
+def write_zip(path: Path, files: list[tuple[Path, str]]) -> Path:
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
+        for f, arc in files:
+            if f.exists():
+                z.write(f, arc)
+    return path
+
+
+def export_france(log: list) -> tuple[list[dict], list[Path]]:
+    from src.national.common import national
+
+    folder = SHARE / FRANCE
+    folder.mkdir(parents=True, exist_ok=True)
+    tables = france_tables(log)
+    infos = []
+    for name, t in tables.items():
+        if isinstance(t, gpd.GeoDataFrame):
+            infos.append(export_table(name, t, log, sub=FRANCE, geojson=False))
+        else:                                                           # classement : CSV seul, trié par rang
+            p = folder / f"{name}.csv"
+            round_floats(t).to_csv(p, sep=";", decimal=",", index=False, encoding="utf-8-sig")
+            infos.append({"table": name, "dossier": FRANCE, "lignes": len(t), "colonnes": list(t.columns),
+                          "fichiers": {"csv": p.stat().st_size}})
+    off = pd.read_parquet(national("offer.parquet"), columns=["type", "sous_type", "lon", "lat"])
+    citiz = off[(off["type"] == "citiz") & (off["sous_type"] == "station")]
+    carte = write_france_map(tables["france_departements"], tables["france_epci"], citiz,
+                             folder / "carte_france_departements.html")
+    return infos, [carte]
+
+
+def export_grenoble(log: list) -> tuple[list[dict], list[Path]]:
     layers: dict[str, gpd.GeoDataFrame] = {}
 
     zone = gpd.read_file(processed("zone.gpkg"))
@@ -347,26 +670,43 @@ def export_all() -> None:
         log.append("tables d'accessibilité absentes (phase 3 en cours) : non exportées")
 
     infos = [export_table(name, g, log) for name, g in layers.items()]
-    dico = write_dictionary(infos, log)
-    carte = write_map(layers)
+    return infos, [write_map(layers)]
+
+
+def export_all(parts: tuple[str, ...] = ("grenoble", "france")) -> None:
+    SHARE.mkdir(parents=True, exist_ok=True)
+    log: list[str] = []
+    meta = load_exports_meta()
+    maps: list[Path] = []
+    for part, fn in (("grenoble", export_grenoble), ("france", export_france)):
+        if part in parts:
+            meta[part], m = fn(log)
+            maps += m
+    (SHARE / EXPORTS_META).write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
+    dico = write_dictionary(meta, log)
 
     stamp = dt.date.today().strftime("%Y%m%d")
-    zpath = SHARE / f"hackathon_grenoble_donnees_propres_{stamp}.zip"
-    with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
-        for f in sorted(SHARE.iterdir()):
-            if f.is_file() and f.suffix != ".zip":
-                z.write(f, f.name)
-        for doc in ("methodologie.md", "sources.md"):
-            if (ROOT / "docs" / doc).exists():
-                z.write(ROOT / "docs" / doc, doc)
+    docs = [(ROOT / "docs" / d, d) for d in ("methodologie.md", "sources.md", "ethique.md")]
+    zips = []
+    if "grenoble" in parts:
+        files = [(f, f.name) for f in sorted(SHARE.iterdir())
+                 if f.is_file() and f.suffix != ".zip" and not f.name.startswith(".")]
+        zips.append(write_zip(SHARE / f"hackathon_grenoble_donnees_propres_{stamp}.zip", files + docs[:2]))
+    if "france" in parts:
+        files = [(f, f"{FRANCE}/{f.name}") for f in sorted((SHARE / FRANCE).iterdir()) if f.is_file()]
+        zips.append(write_zip(SHARE / f"hackathon_france_donnees_propres_{stamp}.zip", files + [(dico, dico.name)] + docs))
 
-    print("\nTable                    lignes  fichiers")
-    for i in infos:
-        print(f"{i['table']:<24} {i['lignes']:>6}  " + "  ".join(f"{k} {v / 1024 ** 2:.1f} Mo" for k, v in i["fichiers"].items()))
-    print(f"\n{dico.name} ; {carte.name} : {carte.stat().st_size / 1024 ** 2:.1f} Mo")
-    if carte.stat().st_size > 5 * 1024 ** 2:
-        print("  ATTENTION : carte_apercu.html dépasse 5 Mo : ne pas la commiter (retirer l'exception du .gitignore)")
-    print(f"ZIP : {zpath.name} : {zpath.stat().st_size / 1024 ** 2:.1f} Mo")
+    print("\nTable                      lignes  fichiers")
+    for part in parts:
+        for i in meta[part]:
+            print(f"{i['table']:<26} {i['lignes']:>6}  " + "  ".join(f"{k} {v / 1024 ** 2:.1f} Mo" for k, v in i["fichiers"].items()))
+    print(f"\n{dico.name}")
+    for carte in maps:
+        print(f"{carte.relative_to(SHARE)} : {carte.stat().st_size / 1024 ** 2:.1f} Mo")
+        if carte.stat().st_size > 5 * 1024 ** 2:
+            print(f"  ATTENTION : {carte.name} dépasse 5 Mo : ne pas la commiter (retirer l'exception du .gitignore)")
+    for z in zips:
+        print(f"ZIP : {z.name} : {z.stat().st_size / 1024 ** 2:.1f} Mo")
     for line in log:
         print("  -", line)
 
@@ -433,5 +773,6 @@ if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--estimate-raw-zone", action="store_true", help="estime la taille d'un zip des données brutes de la zone")
+    ap.add_argument("--only", choices=["grenoble", "france"], help="n'exporter qu'une partie (défaut : les deux)")
     a = ap.parse_args()
-    estimate_raw_zone() if a.estimate_raw_zone else export_all()
+    estimate_raw_zone() if a.estimate_raw_zone else export_all((a.only,) if a.only else ("grenoble", "france"))

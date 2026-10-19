@@ -60,19 +60,31 @@ def points_to_epci(df: pd.DataFrame, epci: gpd.GeoDataFrame) -> pd.Series:
     return j[~j.index.duplicated()]["code_epci"].reindex(df.index)
 
 
-def security_by_epci() -> pd.DataFrame:
-    com = pyogrio.read_dataframe(ign_gpkg("admin_express"), layer="commune", read_geometry=False,
-                                 columns=["code_insee", "codes_siren_des_epci"])
-    com["code_epci"] = com["codes_siren_des_epci"].fillna("").str.split(r"[/,; ]+").str[0]
+def security_by_commune() -> pd.DataFrame:
+    """Faits 2023-2025 par commune (index code_insee) : vols liés aux véhicules, dégradations, population cumulée."""
     d = pd.read_parquet(raw("securite", "delinquance_communale_2025.parquet"),
                         columns=["CODGEO_2026", "annee", "indicateur", "nombre", "complement_info_nombre", "insee_pop"])
     d = d[d["annee"].isin([2023, 2024, 2025]) & d["indicateur"].isin(THEFT + [DEGRADATION])]
     d["faits"] = d["nombre"].fillna(d["complement_info_nombre"]).fillna(0)
-    d["code_epci"] = d["CODGEO_2026"].map(com.set_index("code_insee")["code_epci"])
-    pop = d.drop_duplicates(["CODGEO_2026", "annee"]).groupby("code_epci")["insee_pop"].sum()
-    theft = d[d["indicateur"].isin(THEFT)].groupby("code_epci")["faits"].sum()
-    degr = d[d["indicateur"] == DEGRADATION].groupby("code_epci")["faits"].sum()
-    return pd.DataFrame({"vols_vehicules_1000": 1000 * theft / pop, "degradations_1000": 1000 * degr / pop})
+    pop = d.drop_duplicates(["CODGEO_2026", "annee"]).groupby("CODGEO_2026")["insee_pop"].sum()
+    theft = d[d["indicateur"].isin(THEFT)].groupby("CODGEO_2026")["faits"].sum()
+    degr = d[d["indicateur"] == DEGRADATION].groupby("CODGEO_2026")["faits"].sum()
+    return pd.DataFrame({"pop_3ans": pop, "vols": theft, "degradations": degr}).rename_axis("code_insee")
+
+
+def security_rates(sec: pd.DataFrame, key) -> pd.DataFrame:
+    """Taux pour 1 000 habitants (moyenne annuelle 2023-2025) après regroupement des communes selon `key`."""
+    g = sec.groupby(key).sum(min_count=1)
+    return pd.DataFrame({"vols_vehicules_1000": 1000 * g["vols"] / g["pop_3ans"],
+                         "degradations_1000": 1000 * g["degradations"] / g["pop_3ans"]})
+
+
+def security_by_epci() -> pd.DataFrame:
+    com = pyogrio.read_dataframe(ign_gpkg("admin_express"), layer="commune", read_geometry=False,
+                                 columns=["code_insee", "codes_siren_des_epci"])
+    com["code_epci"] = com["codes_siren_des_epci"].fillna("").str.split(r"[/,; ]+").str[0]
+    sec = security_by_commune()
+    return security_rates(sec, sec.index.map(com.set_index("code_insee")["code_epci"]))
 
 
 def build_ranking() -> pd.DataFrame:
