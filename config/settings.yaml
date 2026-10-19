@@ -2,12 +2,14 @@
 # Toute valeur marquée "hypothèse à valider" doit être justifiée dans docs/methodologie.md.
 
 study_area:
-  name: null              # agglomération retenue en phase 1 (point de DÉCISION)
-  insee_communes: []      # codes INSEE des communes du périmètre (ADMIN EXPRESS)
-  epci_siren: null        # alternative : SIREN de l'EPCI (toutes ses communes)
-  osm_region: null        # région Geofabrik, ex. grand-est
-  gtfs_keywords: []       # mots-clés passés à download_all.py --gtfs-filter
-  citiz_networks: []      # sous-dossiers de data/raw/gbfs_citiz concernés
+  name: Grenoble-Alpes-Métropole   # choisi en phase 1 (densité Citiz, GTFS TAG propre, 4 types d'offre)
+  insee_communes: []      # vide = toutes les communes de l'EPCI ci-dessous (ADMIN EXPRESS)
+  epci_siren: "200040715"
+  osm_region: auvergne-rhone-alpes
+  gtfs_keywords: [grenoble, reseau-interurbain-cars-region-isere, cars-region-express, horaires-sncf]
+  citiz_networks: [citiz_auvergne_rhone_alpes]
+  # GBFS à exclure : "Dott France" duplique les flux Dott locaux
+  gbfs_exclude_datasets: [tier-dott-gbfs-france]
 
 crs:
   metric: "EPSG:2154"     # Lambert-93 : tous les calculs de distance / surface
@@ -21,7 +23,8 @@ walk:
 
 offer:
   dedup_m: 40             # fusion des arrêts d'un même mode distants de moins de 40 m
-  typical_weekday: null   # date GTFS de référence (AAAA-MM-JJ) ; null = mardi le plus proche couvert
+  typical_weekday: null   # date GTFS de référence (AAAA-MM-JJ) ; null = mardi le plus chargé des 8 prochaines semaines
+  exclude_name_patterns: ["réservé", "demobox"]   # emplacements GBFS non ouverts au public (insensible à la casse)
 
 # Poids par mode dans l'indicateur d'accessibilité (hypothèse à valider).
 # Un arrêt de bus = 1 ; un mode lourd (fréquence, capacité) pèse plus.
