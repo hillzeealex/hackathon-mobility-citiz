@@ -252,7 +252,8 @@ def check_file_integrity(path: Path, deep: bool) -> tuple[str, str]:
 
 def check_static(raw: Path, rep: Report, attempted: dict, deep: bool) -> None:
     for cat, items in STATIC.items():
-        sec = {"insee": "INSEE", "stops_national": "Arrêts nationaux", "gbfs_catalog": "Catalogue GBFS"}[cat]
+        sec = {"insee": "INSEE", "stops_national": "Arrêts nationaux", "gbfs_catalog": "Catalogue GBFS",
+               "securite": "Sécurité (SSMSI)"}.get(cat, cat)
         for label, _url, rel in items:
             p = raw / rel
             if not p.exists():

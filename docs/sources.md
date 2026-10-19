@@ -200,6 +200,10 @@ Toutes les données sont ouvertes (Licence Ouverte Etalab / ODbL pour OpenStreet
 - INSEE Recensement 2023 - Logement par IRIS (dont motorisation des ménages) - France hors Mayotte — <https://www.insee.fr/fr/statistiques/fichier/9061333/base_ic_logement_2023_xlsx.zip>
 - INSEE Recensement 2023 - Logement par IRIS, DOM (Parquet) — <https://api.insee.fr/melodi/file/DS_RP_LOGEMENT_DOM_PRINC_IRIS_2023/PARQUET>
 
+## Sécurité (SSMSI)
+
+- SSMSI (ministère de l'Intérieur) - Base statistique communale de la délinquance enregistrée 2025, géographie 2026 — <https://static.data.gouv.fr/resources/bases-statistiques-communale-departementale-et-regionale-de-la-delinquance-enregistree-par-la-police-et-la-gendarmerie-nationales/20260709-120017/donnee-comm-data.gouv-parquet-2025-geographie2026-produit-le2026-06-25.parquet>
+
 ## IGN
 
 - IGN ADMIN EXPRESS COG - limites administratives (communes, EPCI, départements) (ADMIN-EXPRESS-COG_4-0__GPKG_WGS84G_FRA_2026-01-01) — <https://data.geopf.fr/telechargement/download/ADMIN-EXPRESS-COG/ADMIN-EXPRESS-COG_4-0__GPKG_WGS84G_FRA_2026-01-01/ADMIN-EXPRESS-COG_4-0__GPKG_WGS84G_FRA_2026-01-01.7z>
@@ -219,7 +223,7 @@ Chaque valeur de `config/costs.yaml` renvoie à l'une de ces sources ou est marq
 - [S4] Transition Vélo, ordres de grandeur assurance et entretien d'une voiture (particulier) — <https://www.transitionvelo.com/?p=32352>
 - [S5] Base Empreinte ADEME (voiture thermique 218 gCO2e/km, électrique 103 gCO2e/km), via Greenly — <https://greenly.earth/blog/secteurs/empreinte-carbone-comparatif-transports> ; à vérifier sur <https://base-empreinte.ademe.fr>
 - [S6] ADEME Impact CO2, comparateur transport — <https://impactco2.fr/outils/transport>
-- [S7] Citiz, *Livre blanc de l'autopartage 2026* — <https://www.citiz.coop/uploads/2026/02/2026-CITIZ-livre_blanc.pdf>
+- [S7] Citiz, *Livre blanc de l'autopartage 2026* (non vérifié : aucun chiffre utilisé) — <https://www.citiz.coop/uploads/2026/02/2026-CITIZ-livre_blanc.pdf>
 
 ## Services et API utilisés
 
