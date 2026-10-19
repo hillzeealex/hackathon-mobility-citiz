@@ -1,3 +1,28 @@
-data/
-.DS_Store
+# Données : jamais commitées (seule l'arborescence est conservée via .gitkeep)
+/data/**
+!/data/**/
+!/data/**/.gitkeep
+
+# Environnement Python
 .venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Téléchargements partiels
+*.part
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Données partagées : seuls le dictionnaire et la carte d'aperçu (< 5 Mo) sont versionnés
+!/data/share/DICTIONNAIRE_DONNEES.md
+!/data/share/carte_apercu.html
+!/data/share/france/carte_france_departements.html
+
+# Divers (jamais versionnés)
+.bevel/
+.env
+.env.*
+.DS_Store

@@ -1,0 +1,66 @@
+# Hypothèses de coût par type d'équipement et paramètres d'impact.
+# Montants en euros HT. Fourchettes basse / moyenne / haute ; l'optimiseur utilise par défaut "moyenne".
+# Chaque valeur porte une source [S#] (liste en bas, reprise dans docs/sources.md) ou la mention
+# "hypothèse à valider" (avec Citiz / la collectivité). Coût comparé au budget :
+#     coût_total = investissement + horizon_ans × exploitation_annuelle
+
+horizon_ans: 3          # durée de la décision d'investissement (hypothèse à valider)
+scenario: moyenne       # basse | moyenne | haute
+
+equipements:
+  citiz_station:
+    libelle: "Station Citiz (1 véhicule + 1 place réservée)"
+    investissement:
+      vehicule:      {basse: 15000, moyenne: 22000, haute: 32000}   # citadine thermique -> électrique ; hypothèse à valider
+      amenagement:   {basse: 500,   moyenne: 1500,  haute: 3000}    # marquage, panneau, arceau ; hypothèse à valider
+    exploitation_annuelle:
+      assurance_entretien: {basse: 1100, moyenne: 1700, haute: 2100}  # assurance 600-900 + entretien 500-1200 [S4] (particulier ; flotte à valider)
+      gestion_nettoyage_telematique: {basse: 1500, moyenne: 2500, haute: 4000}  # hypothèse à valider
+      stationnement: {basse: 0, moyenne: 600, haute: 1800}          # place de voirie mise à disposition (0) -> parking loué ~150 €/mois ; hypothèse à valider
+    note: "Chez Citiz le véhicule est souvent financé par la coopérative et la place fournie par la collectivité : le coût porté par la collectivité peut se limiter à la place et à l'aménagement."
+
+  bus_stop:
+    libelle: "Arrêt de bus accessible ajouté sur une ligne existante"
+    investissement:
+      quai_accessible: {basse: 5500, moyenne: 12500, haute: 25000}  # quai en avancée 5,5 k€ / encoche 12,5-13,7 k€ [S3] ; haute = hypothèse France
+      abribus:         {basse: 0,    moyenne: 2200,  haute: 8000}   # 2,2 k€ [S3] ; haute = hypothèse à valider
+    exploitation_annuelle:
+      entretien: {basse: 200, moyenne: 500, haute: 1000}            # hypothèse à valider
+    note: "Ne couvre PAS la création d'une nouvelle ligne (coût d'exploitation kilométrique, hors périmètre)."
+
+  bike_station:
+    libelle: "Station de vélos en libre-service (≈ 15 vélos)"
+    nb_velos: 15
+    investissement:
+      station: {basse: 20000, moyenne: 35000, haute: 60000}         # bornes, terrassement, raccordement ; hypothèse à valider
+    exploitation_annuelle:
+      par_velo: {basse: 2000, moyenne: 2500, haute: 3000}           # coût complet 2 000-3 000 €/vélo/an (GART) [S2]
+    note: "Le coût GART est un coût complet (amortissement compris) : additionné à l'investissement, la fourchette haute double-compte en partie."
+
+  free_floating_zone:
+    libelle: "Zone de stationnement vélos/trottinettes en free-floating"
+    investissement:
+      marquage: {basse: 1000, moyenne: 2000, haute: 4000}           # hypothèse à valider (véhicules fournis par l'opérateur)
+    exploitation_annuelle:
+      entretien: {basse: 200, moyenne: 500, haute: 1000}            # hypothèse à valider
+
+# Paramètres d'impact (estimations PRUDENTES : on retient la borne basse par défaut)
+impact:
+  scenario: basse
+  autopartage:
+    km_voiture_evites_par_vehicule_an: {basse: 10000, moyenne: 14500, haute: 19000}   # [S1]
+    voitures_remplacees_par_vehicule:  {basse: 5, moyenne: 6.5, haute: 8}             # [S1]
+    places_liberees_par_vehicule:      {basse: 0.9, moyenne: 1.9, haute: 3}           # [S1]
+  facteur_emission_kgco2e_par_km:
+    voiture_thermique: {basse: 0.142, moyenne: 0.218, haute: 0.218}   # [S5] Base Empreinte ADEME (0,218 cycle de vie) ; 0,142 = impactCO2 [S6]
+    voiture_electrique: {basse: 0.103, moyenne: 0.103, haute: 0.103}  # [S5]
+  part_report_modal_tc_velo: 0.0   # pas de CO2 compté pour arrêts/vélos sans donnée locale de report (prudence)
+
+sources:
+  S1: "ADEME / 6t, Enquête nationale sur l'autopartage 2022, communiqué du 22/09/2022 : 1 voiture en autopartage remplace 5 à 8 voitures, supprime 10 000 à 19 000 km/an, libère 0,9 à 3 places — https://www.ort.bourgogne-franche-comte.developpement-durable.gouv.fr/IMG/pdf/ademe_cp_autopartage_22092022.pdf ; rapport : https://www.ort.bourgogne-franche-comte.developpement-durable.gouv.fr/IMG/pdf/enquete-autopartage-2022-rapport.pdf"
+  S2: "GART, coût moyen d'un VLS 2 000-3 000 €/vélo/an, cité par Banque des Territoires — https://www.banquedesterritoires.fr/velos-en-libre-service-un-bilan-coutsavantages-juge-globalement-equilibre"
+  S3: "Commune de Beyne-Heusay (BE), tableau de bord : arrêt PMR 8 750 €, quai en avancée 5 500 €, encoche 12 500 €, demi-encoche 13 700 €, abribus 2 200 € — https://beyne-heusay.be/sites/default/files/documents/news/Tableau-de-bord%20.pdf (prix belges : ordre de grandeur, à confirmer pour la France)"
+  S4: "Transition Vélo, ordres de grandeur assurance 600-900 €/an, entretien 500-1 200 €/an (particulier) — https://www.transitionvelo.com/?p=32352"
+  S5: "Base Empreinte ADEME (voiture thermique 218 gCO2e/km, électrique 103 gCO2e/km, cycle de vie), via Greenly — https://greenly.earth/blog/secteurs/empreinte-carbone-comparatif-transports ; à vérifier sur https://base-empreinte.ademe.fr"
+  S6: "ADEME Impact CO2, comparateur transport (voiture thermique 14,2 kgCO2e / 100 km) — https://impactco2.fr/outils/transport"
+  S7: "Citiz, Livre blanc de l'autopartage 2026 : non vérifié, AUCUN chiffre de ce document n'est utilisé (appli, slides) — https://www.citiz.coop/uploads/2026/02/2026-CITIZ-livre_blanc.pdf"
