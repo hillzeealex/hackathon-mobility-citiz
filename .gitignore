@@ -1,3 +1,17 @@
-data/
+# Données : jamais commitées (seule l'arborescence est conservée via .gitkeep)
+/data/**
+!/data/**/
+!/data/**/.gitkeep
+
+# Environnement Python
+.venv/
 __pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Téléchargements partiels
 *.part
+
+# Streamlit
+.streamlit/secrets.toml

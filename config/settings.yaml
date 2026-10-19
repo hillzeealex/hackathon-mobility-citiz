@@ -1,0 +1,51 @@
+# Paramètres centraux du projet. Chargés par src/common/config.py (load_settings()).
+# Toute valeur marquée "hypothèse à valider" doit être justifiée dans docs/methodologie.md.
+
+study_area:
+  name: null              # agglomération retenue en phase 1 (point de DÉCISION)
+  insee_communes: []      # codes INSEE des communes du périmètre (ADMIN EXPRESS)
+  epci_siren: null        # alternative : SIREN de l'EPCI (toutes ses communes)
+  osm_region: null        # région Geofabrik, ex. grand-est
+  gtfs_keywords: []       # mots-clés passés à download_all.py --gtfs-filter
+  citiz_networks: []      # sous-dossiers de data/raw/gbfs_citiz concernés
+
+crs:
+  metric: "EPSG:2154"     # Lambert-93 : tous les calculs de distance / surface
+  wgs84: "EPSG:4326"      # stockage d'échange et affichage web
+
+walk:
+  minutes: 5
+  speed_kmh: 4.8          # vitesse de marche usuelle -> 5 min ≈ 400 m
+  radius_m: 400           # rayon "5 minutes à pied"
+  radius_large_m: 800     # variable du modèle (≈ 10 min)
+
+offer:
+  dedup_m: 40             # fusion des arrêts d'un même mode distants de moins de 40 m
+  typical_weekday: null   # date GTFS de référence (AAAA-MM-JJ) ; null = mardi le plus proche couvert
+
+# Poids par mode dans l'indicateur d'accessibilité (hypothèse à valider).
+# Un arrêt de bus = 1 ; un mode lourd (fréquence, capacité) pèse plus.
+mode_weights:
+  bus: 1.0
+  tram: 2.0
+  metro: 3.0
+  train: 3.0
+  velo: 1.0
+  trottinette: 0.5
+  citiz: 1.5
+
+# Hypothèses de coût moyennes (€). Fourchettes basse/moyenne/haute sourcées : config/costs.yaml (phase 6).
+costs:
+  file: config/costs.yaml
+  defaults:               # hypothèse à valider
+    citiz_station:  {capex: 30000, opex_year: 8000}
+    bus_stop:       {capex: 15000, opex_year: 1000}
+    bike_station:   {capex: 40000, opex_year: 6000}
+
+privacy:
+  min_households: 11      # aucun carreau < 11 ménages affiché isolément (règle du secret statistique INSEE)
+
+paths:
+  raw: data/raw
+  processed: data/processed
+  docs: docs

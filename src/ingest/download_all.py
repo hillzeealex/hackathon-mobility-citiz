@@ -5,11 +5,11 @@ Hackathon Mobility (Epitech x Citiz) - téléchargement de TOUTES les données o
 Uniquement la bibliothèque standard Python (3.9+) : aucune installation requise.
 
 Usage :
-    python download_all.py                      # tout télécharger (≈ 8-10 Go avec OSM France)
-    python download_all.py --osm region --osm-region grand-est   # OSM d'une seule région (plus léger)
-    python download_all.py --only citiz gbfs insee               # seulement certaines catégories
-    python download_all.py --gtfs-filter strasbourg lyon         # GTFS filtrés par mot-clé
-    python download_all.py --list                                # affiche les catégories
+    python src/ingest/download_all.py                      # tout télécharger (≈ 8-10 Go avec OSM France)
+    python src/ingest/download_all.py --osm region --osm-region grand-est   # OSM d'une seule région (plus léger)
+    python src/ingest/download_all.py --only citiz gbfs insee               # seulement certaines catégories
+    python src/ingest/download_all.py --gtfs-filter strasbourg lyon         # GTFS filtrés par mot-clé
+    python src/ingest/download_all.py --list                                # affiche les catégories
 
 Le script reprend là où il s'est arrêté : un fichier déjà téléchargé n'est pas re-téléchargé.
 Il génère aussi data/raw/manifest.csv et docs/sources.md (livrable demandé par le sujet).
@@ -33,6 +33,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[2]  # racine du dépôt (src/ingest/ -> ../..)
 UA = "Mozilla/5.0 (hackathon-mobility-epitech data downloader)"
 TDG_API = "https://transport.data.gouv.fr/api/datasets"
 
@@ -376,9 +377,11 @@ def write_outputs(out: Path, docs: Path) -> None:
 
 # --------------------------------------------------------------------------------------
 def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):  # Windows : sortie redirigée en cp1252 -> UnicodeEncodeError
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--out", default="data/raw", help="dossier de sortie (défaut : data/raw)")
-    p.add_argument("--docs", default="docs", help="dossier où écrire sources.md")
+    p.add_argument("--out", default=str(ROOT / "data" / "raw"), help="dossier de sortie (défaut : <dépôt>/data/raw)")
+    p.add_argument("--docs", default=str(ROOT / "docs"), help="dossier où écrire sources.md (défaut : <dépôt>/docs)")
     p.add_argument("--only", nargs="*", choices=CATEGORIES, help="ne télécharger que ces catégories")
     p.add_argument("--skip", nargs="*", choices=CATEGORIES, default=[], help="catégories à ignorer")
     p.add_argument("--gtfs-filter", nargs="*", default=[], help="mots-clés pour filtrer les GTFS")

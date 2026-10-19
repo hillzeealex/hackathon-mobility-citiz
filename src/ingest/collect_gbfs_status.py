@@ -7,12 +7,12 @@ toutes les N minutes pendant le hackathon, on peut estimer l'usage réel de chaq
 (nombre de départs / retours = variations du nombre de véhicules disponibles), ce qui
 fournit une cible pour le modèle prédictif.
 
-Pré-requis : avoir lancé `python download_all.py --only citiz` (crée data/raw/gbfs_citiz/index.json).
+Pré-requis : avoir lancé `python src/ingest/download_all.py --only citiz` (crée data/raw/gbfs_citiz/index.json).
 
 Usage :
-    python collect_gbfs_status.py                       # Citiz, toutes les 5 min, sans fin
-    python collect_gbfs_status.py --interval 2 --hours 48
-    python collect_gbfs_status.py --index data/raw/gbfs_all/index.json   # tous les GBFS
+    python src/ingest/collect_gbfs_status.py                       # Citiz, toutes les 5 min, sans fin
+    python src/ingest/collect_gbfs_status.py --interval 2 --hours 48
+    python src/ingest/collect_gbfs_status.py --index data/raw/gbfs_all/index.json   # tous les GBFS
 
 Sortie : data/raw/gbfs_history/station_status_AAAAMMJJ.csv (une ligne par station et par photo)
 Laisse-le tourner dans un terminal à part (ou sur un serveur) dès le début du hackathon.
@@ -23,10 +23,12 @@ import argparse
 import csv
 import datetime as dt
 import json
+import sys
 import time
 import urllib.request
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[2]  # racine du dépôt (src/ingest/ -> ../..)
 UA = "Mozilla/5.0 (hackathon-mobility-epitech gbfs collector)"
 FIELDS = ["snapshot_utc", "dataset", "station_id", "num_vehicles_available",
           "num_docks_available", "is_renting", "is_returning", "last_reported"]
@@ -49,9 +51,11 @@ def status_rows(dataset: str, payload: dict, snap: str):
 
 
 def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):  # Windows : sortie redirigée en cp1252 -> UnicodeEncodeError
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--index", default="data/raw/gbfs_citiz/index.json")
-    p.add_argument("--out", default="data/raw/gbfs_history")
+    p.add_argument("--index", default=str(ROOT / "data" / "raw" / "gbfs_citiz" / "index.json"))
+    p.add_argument("--out", default=str(ROOT / "data" / "raw" / "gbfs_history"))
     p.add_argument("--interval", type=float, default=5, help="minutes entre deux photos")
     p.add_argument("--hours", type=float, default=0, help="durée totale (0 = sans fin)")
     a = p.parse_args()
