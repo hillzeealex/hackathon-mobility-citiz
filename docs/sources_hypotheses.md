@@ -8,7 +8,7 @@ Chaque valeur de `config/costs.yaml` renvoie à l'une de ces sources ou est marq
 - [S4] Transition Vélo, ordres de grandeur assurance et entretien d'une voiture (particulier) — <https://www.transitionvelo.com/?p=32352>
 - [S5] Base Empreinte ADEME (voiture thermique 218 gCO2e/km, électrique 103 gCO2e/km), via Greenly — <https://greenly.earth/blog/secteurs/empreinte-carbone-comparatif-transports> ; à vérifier sur <https://base-empreinte.ademe.fr>
 - [S6] ADEME Impact CO2, comparateur transport — <https://impactco2.fr/outils/transport>
-- [S7] Citiz, *Livre blanc de l'autopartage 2026* — <https://www.citiz.coop/uploads/2026/02/2026-CITIZ-livre_blanc.pdf>
+- [S7] Citiz, *Livre blanc de l'autopartage 2026* (non vérifié : aucun chiffre utilisé) — <https://www.citiz.coop/uploads/2026/02/2026-CITIZ-livre_blanc.pdf>
 
 ## Services et API utilisés
 

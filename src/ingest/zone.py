@@ -1,9 +1,11 @@
 """
-Périmètre d'étude.
+Périmètre d'étude -> data/processed/zone.gpkg (une ligne par commune, Lambert-93)
 
-- load_zone() : lit data/processed/zone.gpkg (construit depuis ADMIN EXPRESS) ; à défaut, se rabat
-  PROVISOIREMENT sur le contour de l'EPCI servi par geo.api.gouv.fr (mis en cache), pour avancer
-  avant la fin du téléchargement IGN. Le repli est signalé par l'attribut `provisoire`.
+- build_zone() : communes de l'EPCI (study_area.epci_siren) ou liste explicite (study_area.insee_communes),
+  depuis ADMIN EXPRESS COG ; colonnes code_insee, nom, population (recensement, millésime ADMIN EXPRESS).
+- load_zone() : lit zone.gpkg ; à défaut, se rabat PROVISOIREMENT sur le contour de l'EPCI servi par
+  geo.api.gouv.fr (attribut `provisoire`).
+- buffer_area() : zone élargie (offre chargée sur zone + offer.buffer_m).
 """
 from __future__ import annotations
 
@@ -11,10 +13,40 @@ import urllib.request
 import warnings
 
 import geopandas as gpd
+import pandas as pd
 
 from src.common.config import load_settings, processed, raw
 
 GEO_API = "https://geo.api.gouv.fr/epcis/{siren}?format=geojson&geometry=contour"
+
+
+def select_communes(communes: pd.DataFrame, epci_siren: str | None, insee: list[str] | None) -> pd.Series:
+    """Masque des communes du périmètre. `codes_siren_des_epci` peut lister plusieurs EPCI séparés par / , ;"""
+    if insee:
+        return communes["code_insee"].isin([str(c) for c in insee])
+    if not epci_siren:
+        raise ValueError("study_area : renseigner epci_siren ou insee_communes")
+    sirens = communes["codes_siren_des_epci"].fillna("").str.split(r"[/,; ]+")
+    return sirens.map(lambda s: str(epci_siren) in s)
+
+
+def build_zone() -> gpd.GeoDataFrame:
+    from src.ingest.archives import ign_gpkg
+
+    s = load_settings()
+    sa = s["study_area"]
+    gpkg = ign_gpkg("admin_express")
+    cols = ["code_insee", "nom_officiel", "population", "codes_siren_des_epci", "date_du_recensement"]
+    communes = gpd.read_file(gpkg, layer="commune", columns=cols)
+    zone = communes[select_communes(communes, sa.get("epci_siren"), sa.get("insee_communes"))]
+    if zone.empty:
+        raise ValueError(f"aucune commune trouvée pour {sa}")
+    zone = zone.rename(columns={"nom_officiel": "nom"}).to_crs(s["crs"]["metric"])
+    zone = zone[["code_insee", "nom", "population", "date_du_recensement", "geometry"]].reset_index(drop=True)
+    zone.to_file(processed("zone.gpkg"), driver="GPKG")
+    print(f"zone.gpkg : {len(zone)} communes, {zone.population.sum():,} habitants "
+          f"(recensement {zone.date_du_recensement.iloc[0]}), {zone.area.sum() / 1e6:.0f} km²")
+    return zone
 
 
 def _epci_contour(siren: str) -> gpd.GeoDataFrame:
@@ -41,3 +73,13 @@ def load_zone() -> gpd.GeoDataFrame:
         zone = _epci_contour(s["study_area"]["epci_siren"])
         zone.attrs["provisoire"] = True
     return zone.to_crs(s["crs"]["metric"])
+
+
+def buffer_area(zone: gpd.GeoDataFrame | None = None):
+    """Zone + offer.buffer_m (géométrie Lambert-93) : emprise de l'offre prise en compte."""
+    zone = load_zone() if zone is None else zone
+    return zone.union_all().buffer(load_settings()["offer"]["buffer_m"])
+
+
+if __name__ == "__main__":
+    build_zone()

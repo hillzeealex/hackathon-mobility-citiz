@@ -22,6 +22,7 @@ walk:
   radius_large_m: 800     # variable du modèle (≈ 10 min)
 
 offer:
+  buffer_m: 800           # l'offre est chargée sur la zone + 800 m : les carreaux en limite voient les arrêts voisins
   dedup_m: 40             # fusion des arrêts d'un même mode distants de moins de 40 m
   typical_weekday: null   # date GTFS de référence (AAAA-MM-JJ) ; null = mardi le plus chargé des 8 prochaines semaines
   exclude_name_patterns: ["réservé", "demobox"]   # emplacements GBFS non ouverts au public (insensible à la casse)
@@ -36,6 +37,20 @@ mode_weights:
   velo: 1.0
   trottinette: 0.5
   citiz: 1.5
+# Free-floating (zones Voi) : chaque zone compte une option PAR MODE (vélo, trottinette), au poids ci-dessous
+# à la place du poids du mode ; sinon les ~700 zones de stationnement écrasent le reste de la carte.
+free_floating_weight: 0.5
+# Pondération par la fréquence (TC) : facteur = clip(passages_jour / reference, min, max)
+frequency:
+  enabled: true
+  reference_passages_jour: 100   # ≈ 1 passage / 10 min sur 16 h
+  min_factor: 0.25
+  max_factor: 2.0
+
+candidates:
+  # Pas de vélo en libre-service à stations fixes à Grenoble (Métrovélo = location en agence) :
+  # la station vélo est exclue par défaut, la zone free-floating est conservée.
+  default_types: [citiz_station, bus_stop, free_floating_zone]
 
 # Coûts et paramètres d'impact (fourchettes sourcées) : config/costs.yaml
 costs:
