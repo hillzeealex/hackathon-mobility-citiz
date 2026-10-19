@@ -358,6 +358,14 @@ def run_osm(out: Path, mode: str, regions: list[str]) -> None:
 # --------------------------------------------------------------------------------------
 # Sorties : manifest + sources.md
 # --------------------------------------------------------------------------------------
+SECRET_PARAM = re.compile(r"([?&](?:api_?key|key|token|access_token)=)[^&>\s]+", re.IGNORECASE)
+
+
+def mask_secrets(text: str) -> str:
+    """Masque les clés d'API présentes dans les URL publiques (sources.md est versionné)."""
+    return SECRET_PARAM.sub(r"\1***", text)
+
+
 def write_outputs(out: Path, docs: Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
     mpath = out / "manifest.csv"
@@ -393,7 +401,7 @@ def write_outputs(out: Path, docs: Path) -> None:
         lines += [f"## {titles.get(cat, cat)}", ""]
         items = sorted(by_src[cat].items())
         for src, url in items[:300]:
-            lines.append(f"- {src} — <{url}>")
+            lines.append(mask_secrets(f"- {src} — <{url}>"))
         if len(items) > 300:
             lines.append(f"- ... et {len(items) - 300} autres (voir `data/raw/manifest.csv`)")
         lines.append("")

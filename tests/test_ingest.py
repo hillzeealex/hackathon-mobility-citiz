@@ -37,3 +37,15 @@ def test_check_data_on_fake_tree(tmp_path):
     assert r.returncode == 1  # HTML à la place du zip -> ❌
     assert "page HTML" in report
     assert "bpe25.parquet | 2 Ko, parquet OK" in report
+
+
+def test_mask_secrets_in_source_urls():
+    import importlib.util
+    from src.common.config import ROOT
+    spec = importlib.util.spec_from_file_location("dl", ROOT / "src" / "ingest" / "download_all.py")
+    dl = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(dl)
+    s = "- X — <https://a.fr/gbfs.json?key=AIzaXYZ&lang=fr> https://b.fr/f?apiKey=abc123 <https://c.fr/x?format=csv>"
+    out = dl.mask_secrets(s)
+    assert "AIzaXYZ" not in out and "abc123" not in out
+    assert "key=***&lang=fr" in out and "apiKey=***" in out and "format=csv" in out

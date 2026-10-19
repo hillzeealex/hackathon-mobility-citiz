@@ -20,3 +20,9 @@ __pycache__/
 !/data/share/DICTIONNAIRE_DONNEES.md
 !/data/share/carte_apercu.html
 !/data/share/france/carte_france_departements.html
+
+# Divers (jamais versionnés)
+.bevel/
+.env
+.env.*
+.DS_Store
