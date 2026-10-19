@@ -43,3 +43,18 @@ def test_every_real_column_is_documented():
               gpd.read_parquet(processed("offer.parquet"))]
     cols = {c for t in tables for c in t.columns if c != "geometry"} | {"latitude", "longitude", "nom_commune", "superficie_km2"}
     assert cols - set(es.COLUMNS) == set()
+
+
+def test_round_counts_only_counts():
+    df = pd.DataFrame({"pop_calee": [12.4, 13.0, 0.4], "men": [7, 8, 2], "part_sans_voiture": [0.123, 0.5, 0.9]})
+    out = es.round_counts(df)
+    assert out.pop_calee.tolist() == [10, 15, 0] and out.men.tolist() == [5, 10, 0]
+    assert out.part_sans_voiture.tolist() == [0.123, 0.5, 0.9]       # ratios intacts
+    assert df.pop_calee.tolist() == [12.4, 13.0, 0.4]                 # pas d'effet de bord
+
+
+@pytest.mark.skipif(not (ROOT / "data" / "share" / "population_iris.csv").exists(), reason="export absent")
+def test_shared_iris_counts_are_multiples_of_5():
+    c = pd.read_csv(ROOT / "data" / "share" / "population_iris.csv", sep=";", decimal=",", encoding="utf-8-sig")
+    for col in ("pop_calee", "ind", "men", "men_pauv"):
+        assert (c[col] % 5 == 0).all(), col

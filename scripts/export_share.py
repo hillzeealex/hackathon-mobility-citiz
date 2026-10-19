@@ -29,6 +29,17 @@ from src.common.config import ROOT, load_settings, processed, raw  # noqa: E402
 SHARE = ROOT / "data" / "share"
 GEOJSON_MAX = 50 * 1024 ** 2
 MIN_MEN = load_settings()["privacy"]["min_households"]
+ROUND_IRIS = 5   # arrondi des effectifs IRIS partagés (anti-recoupement), pas des calculs
+IRIS_COUNT_COLS = ("pop_calee", "ind", "men", "men_pauv", "population", "menages")
+
+
+def round_counts(df: pd.DataFrame, step: int = ROUND_IRIS) -> pd.DataFrame:
+    """Arrondit les effectifs (personnes, ménages) au multiple de `step` le plus proche."""
+    df = df.copy()
+    for c in IRIS_COUNT_COLS:
+        if c in df:
+            df[c] = (df[c] / step).round() * step
+    return df
 
 IGN_ADE = "IGN, ADMIN EXPRESS COG 2026"
 IGN_IRIS = "IGN, CONTOURS IRIS 2026"
@@ -98,7 +109,9 @@ for _t in ("bus", "tram", "train", "telepherique", "velo", "trottinette", "citiz
 TABLES = {  # nom exporté -> (description, ce qui a été fait)
     "zone_communes": ("Les 49 communes de Grenoble-Alpes-Métropole (périmètre d'étude).", []),
     "population_carreaux": ("Population et caractéristiques socio-économiques par carreau de 200 m.", []),
-    "population_iris": ("Agrégat de population_carreaux par IRIS (affichage public recommandé).", []),
+    "population_iris": ("Agrégat par IRIS de TOUS les carreaux (y compris < 11 ménages) : affichage public recommandé. "
+                        "**Effectifs (pop_calee, ind, men, men_pauv) arrondis à 5 près** (secret statistique) ; "
+                        "ratios calculés sur les valeurs exactes.", []),
     "offre": ("Tous les points d'offre de mobilité (arrêts TC, stations Citiz, zones Voi) sur la zone + 800 m.", []),
     "acces_carreaux": ("Indicateurs d'accessibilité à 5 min par carreau (phase 3).", []),
     "acces_iris": ("Indicateurs d'accessibilité agrégés par IRIS (phase 3).", []),
@@ -182,9 +195,10 @@ def cleaning_notes() -> list[str]:
             "**Rattachement des carreaux** : par centroïde (un carreau en bordure n'est compté que dans une commune).",
             f"**Secret statistique** : {fr(r['carreaux_men_lt_11'])} carreaux de moins de {MIN_MEN} ménages sont "
             "utilisés dans les calculs et dans les agrégats IRIS, mais **ne figurent pas** dans population_carreaux "
-            f"(ni les IRIS de moins de {MIN_MEN} ménages dans population_iris). NB : dans un IRIS qui ne masque qu'un "
-            "carreau, celui-ci se déduit par différence ; ses valeurs sont de toute façon publiées par l'INSEE sous forme "
-            "estimée (`i_est_200 = 1`) dans le fichier Filosofi public : aucune donnée confidentielle n'est révélée.",
+            f"(ni les IRIS de moins de {MIN_MEN} ménages dans population_iris). Pour empêcher de retrouver un carreau "
+            f"masqué par différence (total IRIS − carreaux affichés), les **effectifs des tables IRIS sont arrondis à "
+            f"{ROUND_IRIS} près** dans les exports partagés ({', '.join(f'`{c}`' for c in IRIS_COUNT_COLS)}) ; les ratios "
+            "et tous les calculs du projet utilisent les valeurs exactes. Voir `docs/ethique.md`.",
             f"**Motorisation** : jointure IRIS réussie pour {fr(100 * r['taux_jointure_iris'], 1)} % des carreaux des communes "
             f"découpées en IRIS ; {r['repli_commune']} replis sur la valeur communale ; {fr(r['commune_non_irisee'])} "
             "carreaux de communes non découpées en IRIS (valeur communale).",
@@ -318,7 +332,7 @@ def export_all() -> None:
     nom = zone.set_index("code_insee")["nom"]
     layers["population_carreaux"] = cells[cells.men >= MIN_MEN].assign(nom_commune=lambda d: d.code_insee.map(nom))
     iris = iris_aggregate(cells)
-    layers["population_iris"] = iris[iris.men >= MIN_MEN]
+    layers["population_iris"] = round_counts(iris[iris.men >= MIN_MEN])
     log.append(f"carreaux exclus (< {MIN_MEN} ménages) : {int((cells.men < MIN_MEN).sum())} ; "
                f"IRIS exclus : {int((iris.men < MIN_MEN).sum())}")
 
@@ -328,7 +342,7 @@ def export_all() -> None:
         layers["acces_carreaux"] = ac[ac.men >= MIN_MEN]
     if processed("access_iris.parquet").exists():
         ai = gpd.read_parquet(processed("access_iris.parquet"))
-        layers["acces_iris"] = ai[ai.menages >= MIN_MEN] if "menages" in ai else ai
+        layers["acces_iris"] = round_counts(ai[ai.menages >= MIN_MEN] if "menages" in ai else ai)
     else:
         log.append("tables d'accessibilité absentes (phase 3 en cours) : non exportées")
 
