@@ -82,24 +82,11 @@ python scripts/export_share.py
 
 Liste exhaustive avec les URL et la date de chaque fichier : `data/raw/manifest.csv`.
 
-## 3. Option : zip des données brutes limitées à la zone (pour un drive partagé)
+## 3. Pas de zip des données brutes
 
-Pour un coéquipier qui ne peut pas tout retélécharger, on peut préparer un zip des données **brutes**
-réduites à la métropole, sans l'OSM régional complet ni les fichiers nationaux :
+Un zip des données brutes limitées à la métropole avait été envisagé pour un drive partagé : environ
+81 à 113 Mo, dont l'essentiel serait l'OSM (`python scripts/export_share.py --estimate-raw-zone`).
+**L'équipe a décidé de ne pas le créer.** Pour partager les données, on utilise :
 
-| Contenu | Taille estimée |
-|---|---:|
-| GTFS des 6 réseaux utilisés, tels quels | 42 Mo |
-| GBFS Citiz, Voi Grenoble, historique Citiz, catalogue | ≈ 10 Mo |
-| Filosofi, ADMIN EXPRESS, IRIS, BPE, logement : découpés sur la zone | ≈ 6 Mo |
-| OSM : voies de la zone (GeoPackage) | 96 à 191 Mo |
-| **Zip** | **≈ 81 à 113 Mo** |
-
-Estimation : `python scripts/export_share.py --estimate-raw-zone`.
-Ce zip **n'est pas encore créé**. L'OSM représente l'essentiel du volume et de l'incertitude.
-Remarques :
-
-- Le GTFS SNCF couvre toute la France et celui des Cars Région Isère tout le département. Ils sont gardés
-  entiers, car c'est le format attendu par les scripts.
-- Les scripts du dépôt attendent les fichiers nationaux. Avec ce zip, il faudra lancer les scripts de
-  reconstruction en mode « zone » (à adapter si l'option est retenue).
+- le **zip des données nettoyées** (`data/share/`, ≈ 2,3 Mo) pour consulter les données ;
+- **ce guide** pour tout retélécharger à l'identique, si l'on veut relancer le pipeline.

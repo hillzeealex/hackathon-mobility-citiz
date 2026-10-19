@@ -15,7 +15,7 @@ Généré par `scripts/export_share.py` le 2026-10-19. Méthode détaillée : `d
 
 - **Population calée** : Filosofi 2021 ne compte que les ménages fiscaux ordinaires (406 039 individus) ; chaque carreau est recalé sur la population communale du recensement 2023 (450 608) : `pop_calee = ind × ratio_calage`. Ratios par commune : `data/processed/population_calage_communes.csv` (ex. Saint-Martin-d'Hères 1,25 : campus).
 - **Rattachement des carreaux** : par centroïde (un carreau en bordure n'est compté que dans une commune).
-- **Secret statistique** : 2 006 carreaux de moins de 11 ménages sont utilisés dans les calculs et dans les agrégats IRIS, mais **ne figurent pas** dans population_carreaux (ni les IRIS de moins de 11 ménages dans population_iris). NB : dans un IRIS qui ne masque qu'un carreau, celui-ci se déduit par différence ; ses valeurs sont de toute façon publiées par l'INSEE sous forme estimée (`i_est_200 = 1`) dans le fichier Filosofi public : aucune donnée confidentielle n'est révélée.
+- **Secret statistique** : 2 006 carreaux de moins de 11 ménages sont utilisés dans les calculs et dans les agrégats IRIS, mais **ne figurent pas** dans population_carreaux (ni les IRIS de moins de 11 ménages dans population_iris). Pour empêcher de retrouver un carreau masqué par différence (total IRIS − carreaux affichés), les **effectifs des tables IRIS sont arrondis à 5 près** dans les exports partagés (`pop_calee`, `ind`, `men`, `men_pauv`, `population`, `menages`) ; les ratios et tous les calculs du projet utilisent les valeurs exactes. Voir `docs/ethique.md`.
 - **Motorisation** : jointure IRIS réussie pour 99,7 % des carreaux des communes découpées en IRIS ; 8 replis sur la valeur communale ; 1 733 carreaux de communes non découpées en IRIS (valeur communale).
 - **Dédoublonnage de l'offre** : points d'un même mode à moins de 40 m fusionnés (train : 150 m) ; bus 1659→1022, citiz 188→169, telepherique 2→2, train 5→4, tram 168→124, trottinette 697→685, velo 697→685.
 - **Jour type GTFS** : mardi le plus chargé des 8 prochaines semaines couvertes par chaque réseau (2026-10-20, 2026-11-03, 2026-11-10) : évite les vacances scolaires. `frequencies.txt` converti en départs réels.
@@ -82,7 +82,7 @@ Population et caractéristiques socio-économiques par carreau de 200 m.
 
 ## population_iris
 
-Agrégat de population_carreaux par IRIS (affichage public recommandé).
+Agrégat par IRIS de TOUS les carreaux (y compris < 11 ménages) : affichage public recommandé. **Effectifs (pop_calee, ind, men, men_pauv) arrondis à 5 près** (secret statistique) ; ratios calculés sur les valeurs exactes.
 
 **198 lignes** — fichiers : gpkg 0,4 Mo, csv 0,0 Mo, geojson 0,6 Mo
 
