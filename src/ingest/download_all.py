@@ -68,6 +68,11 @@ STATIC = {
          "https://www.insee.fr/fr/statistiques/fichier/8217525/BPE25.parquet",
          "insee/bpe25.parquet"),
     ],
+    "securite": [
+        ("SSMSI (ministère de l'Intérieur) - Base statistique communale de la délinquance enregistrée 2025, géographie 2026",
+         "https://static.data.gouv.fr/resources/bases-statistiques-communale-departementale-et-regionale-de-la-delinquance-enregistree-par-la-police-et-la-gendarmerie-nationales/20260709-120017/donnee-comm-data.gouv-parquet-2025-geographie2026-produit-le2026-06-25.parquet",
+         "securite/delinquance_communale_2025.parquet"),
+    ],
 }
 
 # Collections IGN (flux Atom data.geopf.fr) : le script choisit la dernière édition France entière
@@ -91,7 +96,7 @@ GEOFABRIK_ALIASES = {
     "paca": ["provence-alpes-cote-d-azur"],
 }
 
-CATEGORIES = ["citiz", "gbfs", "gtfs", "stops_national", "gbfs_catalog", "insee", "ign", "osm"]
+CATEGORIES = ["citiz", "gbfs", "gtfs", "stops_national", "gbfs_catalog", "insee", "securite", "ign", "osm"]
 
 # --------------------------------------------------------------------------------------
 # Utilitaires
@@ -380,7 +385,7 @@ def write_outputs(out: Path, docs: Path) -> None:
              "Toutes les données sont ouvertes (Licence Ouverte Etalab / ODbL pour OpenStreetMap).", ""]
     titles = {"citiz": "Citiz (GBFS, partenaire)", "gbfs": "Mobilités partagées (GBFS)",
               "gtfs": "Transports en commun (GTFS)", "stops_national": "Arrêts nationaux",
-              "gbfs_catalog": "Catalogue GBFS", "insee": "INSEE", "ign": "IGN",
+              "gbfs_catalog": "Catalogue GBFS", "insee": "INSEE", "securite": "Sécurité (SSMSI)", "ign": "IGN",
               "osm": "OpenStreetMap"}
     for cat in CATEGORIES:
         if cat not in by_src:
@@ -427,7 +432,7 @@ def main() -> int:
     log(f"Catégories : {', '.join(cats)}\nSortie : {out.resolve()}\n")
 
     try:
-        for cat in ("stops_national", "gbfs_catalog", "insee"):
+        for cat in ("stops_national", "gbfs_catalog", "insee", "securite"):
             if cat in cats:
                 log(f"-> {cat}")
                 with cf.ThreadPoolExecutor(a.workers) as ex:
