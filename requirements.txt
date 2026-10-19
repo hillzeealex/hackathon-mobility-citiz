@@ -26,6 +26,7 @@ pandana>=0.7
 # Application
 streamlit>=1.40
 pydeck>=0.9
+folium>=0.18          # carte HTML autonome des données partagées (scripts/export_share.py)
 plotly>=5.24
 # Tests
 pytest>=8.0

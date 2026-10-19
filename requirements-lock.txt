@@ -3,6 +3,7 @@ annotated-types==0.8.0
 anyio==4.15.1
 attrs==26.1.0
 blosc2==4.14.1
+branca==0.8.2
 brotli==1.2.0
 certifi==2026.10.18
 charset-normalizer==3.5.2
@@ -13,6 +14,7 @@ contourpy==1.4.0
 cpsat-logutils==1.0.0
 cycler==0.12.1
 et_xmlfile==2.0.0
+folium==0.20.0
 fonttools==4.67.0
 geopandas==1.2.0
 h11==0.16.0
@@ -95,3 +97,4 @@ urllib3==2.8.0
 uvicorn==0.54.0
 watchdog==6.0.0
 websockets==17.2
+xyzservices==2026.9.1
