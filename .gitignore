@@ -19,3 +19,4 @@ __pycache__/
 # Données partagées : seuls le dictionnaire et la carte d'aperçu (< 5 Mo) sont versionnés
 !/data/share/DICTIONNAIRE_DONNEES.md
 !/data/share/carte_apercu.html
+!/data/share/france/carte_france_departements.html

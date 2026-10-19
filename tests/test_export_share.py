@@ -58,3 +58,35 @@ def test_shared_iris_counts_are_multiples_of_5():
     c = pd.read_csv(ROOT / "data" / "share" / "population_iris.csv", sep=";", decimal=",", encoding="utf-8-sig")
     for col in ("pop_calee", "ind", "men", "men_pauv"):
         assert (c[col] % 5 == 0).all(), col
+
+
+def test_security_rates_group_communes():
+    from src.national.ranking import security_rates
+    sec = pd.DataFrame({"pop_3ans": [3000, 6000, 300], "vols": [30, None, 3], "degradations": [6, 12, None]},
+                       index=pd.Index(["38185", "38421", "06088"], name="code_insee"))
+    r = security_rates(sec, es.dep_of(sec.index.to_series()).to_numpy())
+    assert r.loc["38", "vols_vehicules_1000"] == pytest.approx(1000 * 30 / 9000)   # commune sans fait : 0, pas NaN
+    assert pd.isna(r.loc["06", "degradations_1000"])                                 # aucune donnée -> NaN
+
+
+def test_dep_of_handles_drom_and_corsica():
+    assert es.dep_of(pd.Series(["97411", "2A004", "06088"])).tolist() == ["974", "2A", "06"]
+
+
+@pytest.mark.skipif(not processed("national", "classement_epci.parquet").exists(), reason="niveau 1 absent")
+def test_every_france_column_is_documented():
+    cols = set(pd.read_parquet(processed("national", "classement_epci.parquet")).columns) | \
+        set(pd.read_parquet(processed("national", "agg_commune.parquet")).columns)
+    extra = {"dep", "nom_epci", "score_potentiel_epci", "rang_potentiel_epci", "score_potentiel_moyen",
+             "part_pop_epci_classes", "meilleur_epci", "meilleur_rang", "latitude", "longitude"}
+    for t in ("france_communes", "france_departements", "france_epci"):
+        assert {c for c in cols | extra if es.describe(t, c) is None} == set(), t
+
+
+@pytest.mark.skipif(not (ROOT / "data" / "share" / "france" / "france_communes.csv").exists(), reason="export absent")
+def test_shared_france_has_no_cells_and_rounded_counts():
+    folder = ROOT / "data" / "share" / "france"
+    assert not any("carreau" in f.name for f in folder.iterdir())
+    c = pd.read_csv(folder / "france_communes.csv", sep=";", decimal=",", encoding="utf-8-sig", dtype={"code_insee": str})
+    assert (c["population"] % 5 == 0).all() and (c["menages"] >= 10).all()
+    assert c.loc[c["population"] < es.RISK_MIN_POP, "vols_vehicules_1000"].isna().all()

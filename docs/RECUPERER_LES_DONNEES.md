@@ -29,8 +29,11 @@ python -m src.ingest.zone          # 49 communes de la métropole
 python -m src.ingest.population    # carreaux de 200 m, population calée, motorisation
 python -m src.ingest.offer         # arrêts, stations Citiz, zones Voi, dédoublonnés
 
-# e) Export partageable (zip, CSV, carte HTML) dans data/share/
-python scripts/export_share.py
+# e) France entière, niveau 1 (≈ 5 min ; GTFS de toute la France requis)
+python -m src.national.build_all
+
+# f) Export partageable (zip, CSV, GPKG, cartes HTML) dans data/share/ (Grenoble) et data/share/france/
+python scripts/export_share.py                  # ou --only grenoble / --only france
 ```
 
 À savoir :
@@ -88,5 +91,7 @@ Un zip des données brutes limitées à la métropole avait été envisagé pour
 81 à 113 Mo, dont l'essentiel serait l'OSM (`python scripts/export_share.py --estimate-raw-zone`).
 **L'équipe a décidé de ne pas le créer.** Pour partager les données, on utilise :
 
-- le **zip des données nettoyées** (`data/share/`, ≈ 2,3 Mo) pour consulter les données ;
+- le **zip des données nettoyées de Grenoble** (`hackathon_grenoble_donnees_propres_AAAAMMJJ.zip`, ≈ 2,3 Mo) ;
+- le **zip France entière** (`hackathon_france_donnees_propres_AAAAMMJJ.zip`, ≈ 20 Mo) : agrégats par département,
+  EPCI et commune, classement des EPCI et carte nationale, sans aucun carreau ;
 - **ce guide** pour tout retélécharger à l'identique, si l'on veut relancer le pipeline.
