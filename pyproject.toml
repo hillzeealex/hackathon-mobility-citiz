@@ -1,0 +1,9 @@
+[project]
+name = "hackathon-mobility-citiz"
+version = "0.1.0"
+description = "Accès à la mobilité partagée à 5 min à pied et recommandation d'implantation de stations Citiz"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

@@ -1,11 +1,40 @@
-# Hackathon Mobility (Epitech × Citiz) : récupération des données
+# Hackathon Mobility (Epitech × Citiz)
 
-Deux scripts Python (bibliothèque standard uniquement, Python 3.9+, **rien à installer**).
+Qui a réellement accès à une option de mobilité à 5 minutes à pied, et où Citiz doit-il ouvrir
+de nouvelles stations sous contrainte de budget ?
+
+## Installation
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate          # Windows  (Linux/Mac : source .venv/bin/activate)
+pip install -r requirements.txt   # versions exactes testées : requirements-lock.txt
+pytest                            # vérifie l'installation
+```
+
+Testé sous Python 3.14.2 (Windows) ; Python 3.12+ requis pour l'analyse.
+
+## Arborescence
+
+```
+config/       settings.yaml (zone d'étude, CRS, rayon de marche, poids, coûts)
+data/raw/     données brutes (jamais commitées)
+data/processed/  sorties GeoParquet du pipeline (jamais commitées)
+src/ingest/   téléchargement, collecte de l'historique, vérification
+src/features/ accessibilité, couverture   src/model/ modèle prédictif   src/optim/ optimisation
+app/          démo Streamlit              docs/  méthodologie, éthique, sources
+slides/       présentation                tests/ pytest              scripts/ build_all
+```
+
+# Récupération des données
+
+Les trois scripts de `src/ingest/` n'utilisent que la bibliothèque standard (Python 3.9+) : ils
+tournent même sans le venv, depuis n'importe quel dossier (les chemins sont relatifs à la racine du dépôt).
 
 ## 1. Tout télécharger
 
 ```bash
-python download_all.py
+python src/ingest/download_all.py
 ```
 
 Ce que ça récupère :
@@ -27,13 +56,13 @@ Ce que ça récupère :
 
 ```bash
 # Tout sauf OSM France, avec OSM d'une seule région
-python download_all.py --osm region --osm-region grand-est
+python src/ingest/download_all.py --osm region --osm-region grand-est
 
 # Seulement Citiz + INSEE + IGN (le minimum pour démarrer)
-python download_all.py --only citiz insee ign
+python src/ingest/download_all.py --only citiz insee ign
 
 # GTFS seulement pour certaines villes
-python download_all.py --only gtfs --gtfs-filter strasbourg grenoble
+python src/ingest/download_all.py --only gtfs --gtfs-filter strasbourg grenoble
 ```
 
 Noms de régions OSM : voir https://download.geofabrik.de/europe/france.html
@@ -58,10 +87,19 @@ docs/sources.md         <- liste des sources, livrable demandé par le sujet
 
 Les fichiers IGN sont en `.7z` : extraire avec 7-Zip (Windows) ou `7z x fichier.7z` (Linux/Mac).
 
-## 2. Collecter l'historique d'usage Citiz (à lancer dès le début du hackathon)
+## 2. Vérifier les données
 
 ```bash
-python collect_gbfs_status.py --interval 5
+python src/ingest/check_data.py          # présence, tailles, JSON, comptages Citiz
+python src/ingest/check_data.py --deep   # + intégrité zip / 7z / parquet / pbf et contenu GTFS
+```
+
+Écrit `data/raw/check_report.md` (✅ OK, ⚠️ à surveiller, ❌ à corriger ; code retour 1 si ❌).
+
+## 3. Collecter l'historique d'usage Citiz (à lancer dès le début du hackathon)
+
+```bash
+python src/ingest/collect_gbfs_status.py --interval 5
 ```
 
 Une photo de l'état de chaque station Citiz toutes les 5 minutes, dans
@@ -71,7 +109,7 @@ Laisse-le tourner dans un terminal à part pendant les 2,5 jours.
 
 ## Notes
 
-- Ajoute `data/` au `.gitignore` : on ne commite pas les données brutes, seulement ce script.
+- `data/` est dans le `.gitignore` : on ne commite jamais les données, seulement le code.
 - Les erreurs éventuelles sont listées dans `manifest.csv` (souvent un flux protégé par clé
   API ou un serveur indisponible) ; relancer le script les retente.
 - Les liens INSEE sont ceux des éditions les plus récentes au 19/10/2026. Les jeux
