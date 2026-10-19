@@ -266,7 +266,7 @@ def check_static(raw: Path, rep: Report, attempted: dict, deep: bool) -> None:
             rows = list(csv.DictReader(f))
         fr = [r for r in rows if (r.get("Country Code") or "").upper() == "FR"]
         citiz = [r for r in fr if "citiz" in json.dumps(r).lower()]
-        rep.add("Catalogue GBFS", OK, "systems.csv",
+        rep.add("Catalogue GBFS", OK, "systems.csv (contenu)",
                 f"{len(rows)} systèmes dans le monde, {len(fr)} en France dont {len(citiz)} Citiz")
 
 
