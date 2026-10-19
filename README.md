@@ -1,117 +1,110 @@
-# Hackathon Mobility (Epitech × Citiz)
+# Hackathon Mobility Citiz (Epitech × Citiz × Microsoft)
 
-Qui a réellement accès à une option de mobilité à 5 minutes à pied, et où Citiz doit-il ouvrir
-de nouvelles stations sous contrainte de budget ?
+**Qui a réellement accès à une option de mobilité à 5 minutes à pied, et où faut-il en ajouter ?**
+
+1. **Carte d'accès** : nombre d'options de mobilité (bus, tram, train, vélo, trottinette, Citiz) à 5 min
+   à pied (400 m) par habitant, du plus froid au plus chaud.
+2. **Offre par type** et population desservie.
+3. **Modèle prédictif + optimiseur sous budget** : liste priorisée de nouvelles stations.
+
+Deux niveaux d'analyse :
+
+- **France entière (niveau 1, fait)** : 2,3 M carreaux de 200 m, 547 GTFS + tous les GBFS, agrégats
+  IRIS / commune / EPCI / département, classement des EPCI à fort potentiel Citiz. Accessibilité « V1 »
+  à vol d'oiseau (borne haute).
+- **Zoom agglomération (niveau 2, en cours)** : Grenoble-Alpes-Métropole (+ 2 agglomérations à choisir) avec
+  la marche réelle sur le réseau OpenStreetMap (V2), le modèle et l'optimiseur.
+
+## Livrables
+
+| Livrable | Où |
+|---|---|
+| Code | `src/`, `app/`, `scripts/`, `tests/` |
+| Slides | `slides/` (en préparation) |
+| Sources | [`docs/sources.md`](docs/sources.md) (généré par le téléchargement) + [`SOURCES.md`](SOURCES.md) |
+| Méthode, éthique | [`docs/methodologie.md`](docs/methodologie.md), [`docs/ethique.md`](docs/ethique.md) |
+
+## Structure du dépôt
+
+```
+config/          settings.yaml (zone d'étude, CRS, rayon de marche, poids des modes), costs.yaml (coûts sourcés)
+src/ingest/      téléchargement, collecte de l'historique Citiz, contrôles, zone, population, offre (Grenoble)
+src/national/    niveau 1 France entière (carreaux, offre, accessibilité, agrégats, classement, fichiers appli)
+src/features/    accessibilité V1 / V2 (réseau piéton OSM)
+src/optim/       coûts et optimiseur (glouton + ILP HiGHS)
+src/common/      configuration, outils géographiques
+app/             application Streamlit (France entière + zoom agglomération)
+scripts/         export des données partagées, données de démo, comparatif des villes
+fabric/          notebook Microsoft Fabric (ingestion)
+docs/            méthodologie, éthique, sources, guide de récupération des données
+slides/          présentation
+tests/           pytest
+data/            NON versionné : raw/ (brut), processed/ (nettoyé), share/ (exports)
+```
 
 ## Installation
 
+Python 3.12 ou plus (testé sous 3.14.2, Windows).
+
 ```bash
+git clone https://github.com/hillzeealex/hackathon-mobility-citiz.git
+cd hackathon-mobility-citiz
 python -m venv .venv
-.venv\Scripts\activate          # Windows  (Linux/Mac : source .venv/bin/activate)
-pip install -r requirements.txt   # versions exactes testées : requirements-lock.txt
-pytest                            # vérifie l'installation
+.venv\Scripts\activate             # Windows   (Linux / Mac : source .venv/bin/activate)
+pip install -r requirements.txt    # versions exactes testées : requirements-lock.txt
+pytest -q                          # vérifie l'installation
 ```
 
-Testé sous Python 3.14.2 (Windows) ; Python 3.12+ requis pour l'analyse.
+## Données
 
-## Arborescence
-
-```
-config/       settings.yaml (zone d'étude, CRS, rayon de marche, poids, coûts)
-data/raw/     données brutes (jamais commitées)
-data/processed/  sorties GeoParquet du pipeline (jamais commitées)
-src/ingest/   téléchargement, collecte de l'historique, vérification
-src/features/ accessibilité, couverture   src/model/ modèle prédictif   src/optim/ optimisation
-app/          démo Streamlit              docs/  méthodologie, éthique, sources
-slides/       présentation                tests/ pytest              scripts/ build_all
-```
-
-# Récupération des données
-
-Les trois scripts de `src/ingest/` n'utilisent que la bibliothèque standard (Python 3.9+) : ils
-tournent même sans le venv, depuis n'importe quel dossier (les chemins sont relatifs à la racine du dépôt).
-
-## 1. Tout télécharger
+Le dossier `data/` n'est **jamais** versionné. Guide complet (commandes, tailles, durées) :
+[`docs/RECUPERER_LES_DONNEES.md`](docs/RECUPERER_LES_DONNEES.md).
 
 ```bash
-python src/ingest/download_all.py
-```
-
-Ce que ça récupère :
-
-| Catégorie | Contenu | Taille approx. |
-|---|---|---|
-| `citiz` | Tous les flux GBFS Citiz (15 réseaux régionaux) : stations, disponibilités, véhicules | quelques Mo |
-| `gbfs` | Tous les autres GBFS de France : vélos, trottinettes, autres autopartages | ~100 Mo |
-| `gtfs` | Tous les GTFS de transports en commun de France (bus, tram, métro, train, DROM inclus) | 2 à 4 Go |
-| `stops_national` | Agrégat national des arrêts (data.gouv.fr, non dédoublonné) | 417 Mo |
-| `gbfs_catalog` | Catalogue mondial GBFS (MobilityData) | < 1 Mo |
-| `insee` | Filosofi carreaux 200 m (population + revenus), projections Omphale, recensement logement par IRIS (motorisation), BPE 2025 (équipements) | ~650 Mo |
-| `ign` | ADMIN EXPRESS (communes, départements) + contours IRIS, dernière édition | ~1 Go |
-| `osm` | Réseau OpenStreetMap France (Geofabrik) | ~4,5 Go |
-
-**Total : environ 8 à 10 Go.** Le script reprend là où il s'est arrêté : si ça coupe, relance la même commande.
-
-### Versions plus légères
-
-```bash
-# Tout sauf OSM France, avec OSM d'une seule région
+# 1. Télécharger (≈ 6,5 Go ; reprend là où il s'est arrêté)
 python src/ingest/download_all.py --osm region --osm-region rhone-alpes
+python src/ingest/check_data.py --deep        # rapport : data/raw/check_report.md
 
-# Seulement Citiz + INSEE + IGN (le minimum pour démarrer)
-python src/ingest/download_all.py --only citiz insee ign
+# 2. Reconstruire Grenoble (≈ 2 min)
+python -m src.ingest.zone
+python -m src.ingest.population
+python -m src.ingest.offer
 
-# GTFS seulement pour certaines villes
-python src/ingest/download_all.py --only gtfs --gtfs-filter strasbourg grenoble
+# 3. Reconstruire la France entière (≈ 5 min, pic mémoire ≈ 1,6 Go)
+python -m src.national.build_all
+
+# 4. Exports partageables (CSV Excel, GPKG QGIS, cartes HTML, zips) -> data/share/
+python scripts/export_share.py
 ```
 
-Noms de régions OSM : voir https://download.geofabrik.de/europe/france.html
-(ex : `ile-de-france`, `rhone-alpes`, `alsace`, `bretagne`...). Geofabrik utilise les régions d'avant 2016 ;
-le script traduit les noms actuels (`grand-est` → alsace + lorraine + champagne-ardenne).
+Pour collecter l'historique d'usage des stations Citiz (à laisser tourner) :
+`python src/ingest/collect_gbfs_status.py --interval 5`.
 
-### Ce que le script produit
+### Données partagées (sans rien installer)
 
-```
-data/raw/
-  gbfs_citiz/<réseau>/  gbfs.json, station_information.json, station_status.json, ...
-  gbfs_citiz/index.json
-  gbfs_all/...
-  gtfs/*.zip
-  stops_national/arrets_transport_france.csv
-  insee/  filosofi (gpkg zip), omphale (zip), logement IRIS, bpe25.parquet
-  ign/admin_express/*.7z   ign/iris/*.7z
-  osm/*.osm.pbf
-  transport_data_gouv/catalogue_datasets.json
-  manifest.csv          <- liste de tout ce qui a été téléchargé (url, taille, statut)
-docs/sources.md         <- liste des sources, livrable demandé par le sujet
-```
+- **Zips de données nettoyées** : Release GitHub `donnees-v1` (Grenoble ≈ 2 Mo, France entière ≈ 20 Mo,
+  agrégats seulement), ou `data/share/` après l'export.
+- **Dictionnaire des données** : [`data/share/DICTIONNAIRE_DONNEES.md`](data/share/DICTIONNAIRE_DONNEES.md).
+- **Cartes HTML** (double-clic) : `data/share/carte_apercu.html` (Grenoble),
+  `data/share/france/carte_france_departements.html` (France).
 
-Les fichiers IGN sont en `.7z` : extraire avec 7-Zip (Windows) ou `7z x fichier.7z` (Linux/Mac).
-
-## 2. Vérifier les données
+## Lancer l'application
 
 ```bash
-python src/ingest/check_data.py          # présence, tailles, JSON, comptages Citiz
-python src/ingest/check_data.py --deep   # + intégrité zip / 7z / parquet / pbf et contenu GTFS
+streamlit run app/app.py
 ```
 
-Écrit `data/raw/check_report.md` (✅ OK, ⚠️ à surveiller, ❌ à corriger ; code retour 1 si ❌).
+Barre latérale : « France entière » (carte par département / EPCI, classement, zoom département) ou
+« Zoom agglomération ». Sans données, l'appli tourne sur des données factices :
+`python scripts/make_demo_data.py`.
 
-## 3. Collecter l'historique d'usage Citiz (à lancer dès le début du hackathon)
+## Notebook Fabric
 
-```bash
-python src/ingest/collect_gbfs_status.py --interval 5
-```
+`fabric/01_ingestion.ipynb` tourne dans Microsoft Fabric : les écritures Spark/Delta et les chemins
+`/lakehouse/...` ne marchent pas en local.
 
-Une photo de l'état de chaque station Citiz toutes les 5 minutes, dans
-`data/raw/gbfs_history/`. Les variations du nombre de véhicules disponibles donnent un
-proxy de l'usage réel par station : c'est une cible pour le modèle prédictif.
-Laisse-le tourner dans un terminal à part pendant les 2,5 jours.
+## Règles du dépôt
 
-## Notes
-
-- `data/` est dans le `.gitignore` : on ne commite jamais les données, seulement le code.
-- Les erreurs éventuelles sont listées dans `manifest.csv` (souvent un flux protégé par clé
-  API ou un serveur indisponible) ; relancer le script les retente.
-- Les liens INSEE sont ceux des éditions les plus récentes au 19/10/2026. Les jeux
-  transport.data.gouv.fr et IGN sont découverts automatiquement, donc toujours à jour.
+- Ne jamais commiter `data/` (sauf le dictionnaire et les cartes HTML de moins de 5 Mo), ni `.venv/`, ni de secret.
+- Un commit par étape logique ; `pytest` doit passer avant chaque push.
+- Travail par branche + Pull Request vers `main`.
