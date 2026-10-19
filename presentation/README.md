@@ -42,7 +42,7 @@ Le sujet couvre la France « DROM inclus », mais autorise à restreindre l'anal
 
 - Le fichier national des arrêts contient des doublons : un même arrêt peut apparaître dans plusieurs jeux. On déduplique par position.
 - Le GBFS est une photo de l'offre à un instant, pas de l'usage réel. La collecte toutes les 5 minutes sert à estimer l'usage.
-- Les coûts d'installation sont des hypothèses sourcées (voir `../hypotheses_couts.csv`), pas des coûts réels Citiz.
+- Les coûts d'installation sont des hypothèses sourcées, pas des coûts réels Citiz.
 - Les voitures par ménage sont données à l'IRIS, une échelle plus grossière que les carreaux de 200 m.
 
 ## Notes de l'équipe
