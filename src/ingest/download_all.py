@@ -372,6 +372,9 @@ def write_outputs(out: Path, docs: Path) -> None:
         if len(items) > 300:
             lines.append(f"- ... et {len(items) - 300} autres (voir `data/raw/manifest.csv`)")
         lines.append("")
+    extra = docs / "sources_hypotheses.md"  # sources rédigées à la main (coûts, API) : conservées à chaque régénération
+    if extra.exists():
+        lines += [extra.read_text(encoding="utf-8").strip(), ""]
     (docs / "sources.md").write_text("\n".join(lines), encoding="utf-8")
 
 
