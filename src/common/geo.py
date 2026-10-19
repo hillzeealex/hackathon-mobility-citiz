@@ -29,11 +29,12 @@ def cluster_labels(xy: np.ndarray, radius: float) -> np.ndarray:
     return connected_components(graph, directed=False)[1]
 
 
-def dedup_points(gdf: gpd.GeoDataFrame, radius: float, by: str = "type",
+def dedup_points(gdf: gpd.GeoDataFrame, radius: float | dict, by: str = "type",
                  sum_cols: tuple[str, ...] = ("capacite", "passages_jour"),
                  ) -> tuple[gpd.GeoDataFrame, pd.DataFrame]:
     """Fusionne les points d'un même groupe (`by`, ex. le mode) distants de moins de `radius` mètres.
 
+    `radius` : un rayon commun, ou {groupe: rayon} avec la clé "default" pour les autres groupes.
     `gdf` doit être dans un CRS métrique. Le point fusionné est le barycentre du groupe ;
     les colonnes `sum_cols` sont sommées, les autres prennent la première valeur ;
     `ids_fusionnes` liste les identifiants d'origine. Renvoie (points fusionnés, stats avant/après).
@@ -44,7 +45,8 @@ def dedup_points(gdf: gpd.GeoDataFrame, radius: float, by: str = "type",
     for key, g in gdf.groupby(by, sort=True):
         g = g.copy()
         xy = np.column_stack([g.geometry.x.to_numpy(), g.geometry.y.to_numpy()])
-        g["_cl"] = cluster_labels(xy, radius)
+        r = radius.get(key, radius.get("default")) if isinstance(radius, dict) else radius
+        g["_cl"] = cluster_labels(xy, r)
         g["_x"], g["_y"] = xy[:, 0], xy[:, 1]
         agg = {c: "first" for c in g.columns if c not in ("geometry", "_cl", "_x", "_y")}
         for c in sum_cols:

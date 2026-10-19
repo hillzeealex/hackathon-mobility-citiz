@@ -28,7 +28,7 @@ import pandas as pd
 
 from src.common.config import load_settings, processed, raw
 from src.common.geo import dedup_points, valid_coords
-from src.ingest.zone import load_zone
+from src.ingest.zone import buffer_area, load_zone
 
 # route_type GTFS (standard + étendu) -> type d'offre
 # 5 (« cable tram ») : utilisé en France par erreur pour des téléphériques (ex. Bastille, Grenoble)
@@ -38,6 +38,9 @@ EXTENDED = [((100, 199), "train"), ((200, 299), "bus"), ((400, 499), "metro"), (
             ((800, 899), "bus"), ((900, 999), "tram"), ((1300, 1399), "telepherique"),
             ((1400, 1499), "telepherique")]
 GTFS_EXCLUDE = ("covoit",)  # lignes de covoiturage : pas une offre de transport collectif
+# Arrêts dont le mode ne se déduit pas du route_type : la SNCF type « train » des lignes TER dont certaines
+# courses sont assurées par autocar ; ces courses desservent des arrêts « OCECar » (gare routière).
+STOP_MODE_OVERRIDES = (("OCECar", "bus"),)
 
 
 def route_mode(rt) -> str | None:
@@ -152,6 +155,9 @@ def gtfs_stop_frequencies(path: Path, area_wgs84, forced_day: str | None = None)
     info.update({"jour_type": day.isoformat(), "services_actifs": len(act), "courses": len(trip_mode)})
     if freq.empty:
         return freq, info
+    for pattern, mode in STOP_MODE_OVERRIDES:
+        freq.loc[freq["stop_id"].str.contains(pattern, regex=False), "type"] = mode
+    freq = freq.groupby(["stop_id", "type"], as_index=False)["passages_jour"].sum()
     out = freq.merge(stops[["stop_id", "stop_name", "stop_lon", "stop_lat"]], on="stop_id")
     out = out.rename(columns={"stop_name": "nom", "stop_lon": "lon", "stop_lat": "lat"})
     info["points_desservis"] = len(out)
@@ -236,7 +242,7 @@ def build_offer(parts: tuple[str, ...] = ("gtfs", "gbfs")) -> gpd.GeoDataFrame:
     s = load_settings()
     zone = load_zone()
     zone_union = zone.union_all()
-    area = zone_union.buffer(s["walk"]["radius_large_m"])
+    area = buffer_area(zone)  # zone + offer.buffer_m : les carreaux en limite voient l'offre voisine
     area_wgs84 = gpd.GeoSeries([area], crs=s["crs"]["metric"]).to_crs(4326).iloc[0]
 
     frames, gtfs_report = [], pd.DataFrame()
@@ -253,7 +259,8 @@ def build_offer(parts: tuple[str, ...] = ("gtfs", "gbfs")) -> gpd.GeoDataFrame:
     gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df["lon"].astype(float), df["lat"].astype(float)),
                            crs=4326).to_crs(s["crs"]["metric"])
     cols = ["id", "type", "sous_type", "nom", "source", "capacite", "passages_jour", "geometry"]
-    out, stats = dedup_points(gdf[cols], radius=s["offer"]["dedup_m"], by="type")
+    out, stats = dedup_points(gdf[cols], radius={"default": s["offer"]["dedup_m"],
+                                                  **(s["offer"].get("dedup_m_by_type") or {})}, by="type")
     out["dans_zone"] = out.within(zone_union)
     out = out[cols[:-1] + ["n_fusionnes", "ids_fusionnes", "dans_zone", "geometry"]]
     out.attrs["zone_provisoire"] = zone.attrs.get("provisoire", False)

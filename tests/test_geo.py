@@ -54,3 +54,9 @@ def test_missing_values_stay_missing():
     g = make([("a", "velo", 0, 0, None), ("b", "velo", 10, 0, None)])
     out, _ = dedup_points(g, radius=40)
     assert len(out) == 1 and pd.isna(out.passages_jour.iloc[0])
+
+
+def test_radius_per_group():
+    g = make([("a", "train", 0, 0, 1), ("b", "train", 120, 0, 1), ("c", "bus", 0, 500, 1), ("d", "bus", 120, 500, 1)])
+    out, _ = dedup_points(g, radius={"default": 40, "train": 150})
+    assert sorted(out.groupby("type").size().to_dict().items()) == [("bus", 2), ("train", 1)]
