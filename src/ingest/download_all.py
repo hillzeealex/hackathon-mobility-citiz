@@ -78,6 +78,18 @@ IGN = {
 }
 
 GEOFABRIK = "https://download.geofabrik.de/europe/france"
+# Geofabrik découpe encore la France selon les 22 régions d'avant 2016 : alias depuis les régions actuelles
+GEOFABRIK_ALIASES = {
+    "grand-est": ["alsace", "lorraine", "champagne-ardenne"],
+    "auvergne-rhone-alpes": ["rhone-alpes", "auvergne"],
+    "nouvelle-aquitaine": ["aquitaine", "limousin", "poitou-charentes"],
+    "occitanie": ["midi-pyrenees", "languedoc-roussillon"],
+    "hauts-de-france": ["nord-pas-de-calais", "picardie"],
+    "normandie": ["basse-normandie", "haute-normandie"],
+    "bourgogne-franche-comte": ["bourgogne", "franche-comte"],
+    "centre-val-de-loire": ["centre"],
+    "paca": ["provence-alpes-cote-d-azur"],
+}
 
 CATEGORIES = ["citiz", "gbfs", "gtfs", "stops_national", "gbfs_catalog", "insee", "ign", "osm"]
 
@@ -325,7 +337,13 @@ def run_osm(out: Path, mode: str, regions: list[str]) -> None:
     if mode == "france":
         jobs = [("france", "https://download.geofabrik.de/europe/france-latest.osm.pbf")]
     else:
-        jobs = [(r, f"{GEOFABRIK}/{r}-latest.osm.pbf") for r in regions]
+        names = []
+        for r in regions:
+            old = GEOFABRIK_ALIASES.get(r, [r])
+            if old != [r]:
+                log(f"   {r} : Geofabrik découpe selon les régions d'avant 2016 -> {', '.join(old)}")
+            names += [n for n in old if n not in names]
+        jobs = [(r, f"{GEOFABRIK}/{r}-latest.osm.pbf") for r in names]
     for name, url in jobs:
         log(f"-> OSM {name} (gros fichier, patience) ...")
         download(url, out / "osm" / f"{name}-latest.osm.pbf",
@@ -343,7 +361,9 @@ def write_outputs(out: Path, docs: Path) -> None:
         with open(mpath, encoding="utf-8") as f:
             old = list(csv.DictReader(f))
     seen = {r["fichier"] for r in MANIFEST}
-    rows = [r for r in old if r["fichier"] not in seen] + MANIFEST
+    rerun = {r["categorie"] for r in MANIFEST}  # erreurs anciennes d'une catégorie relancée : déjà retentées
+    rows = [r for r in old if r["fichier"] not in seen
+            and not (r["categorie"] in rerun and r["statut"].startswith("erreur"))] + MANIFEST
     with open(mpath, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["categorie", "source", "url", "fichier", "taille", "statut", "date"])
         w.writeheader()
@@ -391,7 +411,7 @@ def main() -> int:
     p.add_argument("--osm", choices=["france", "region", "none"], default="france",
                    help="OSM : France entière (~4,5 Go), une/des région(s), ou rien")
     p.add_argument("--osm-region", nargs="*", default=["ile-de-france"],
-                   help="régions Geofabrik (ex : grand-est, auvergne-rhone-alpes, ile-de-france)")
+                   help="régions Geofabrik (ex : rhone-alpes, alsace, ile-de-france ; les régions actuelles sont traduites)")
     p.add_argument("--workers", type=int, default=8, help="téléchargements en parallèle")
     p.add_argument("--list", action="store_true", help="liste les catégories et quitte")
     a = p.parse_args()

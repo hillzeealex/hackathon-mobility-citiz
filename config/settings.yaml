@@ -5,7 +5,7 @@ study_area:
   name: Grenoble-Alpes-Métropole   # choisi en phase 1 (densité Citiz, GTFS TAG propre, 4 types d'offre)
   insee_communes: []      # vide = toutes les communes de l'EPCI ci-dessous (ADMIN EXPRESS)
   epci_siren: "200040715"
-  osm_region: auvergne-rhone-alpes
+  osm_region: rhone-alpes   # Geofabrik : régions d'avant 2016
   gtfs_keywords: [grenoble, reseau-interurbain-cars-region-isere, cars-region-express, horaires-sncf]
   citiz_networks: [citiz_auvergne_rhone_alpes]
   # GBFS à exclure : "Dott France" duplique les flux Dott locaux

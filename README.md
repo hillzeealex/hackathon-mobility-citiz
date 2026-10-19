@@ -56,7 +56,7 @@ Ce que ça récupère :
 
 ```bash
 # Tout sauf OSM France, avec OSM d'une seule région
-python src/ingest/download_all.py --osm region --osm-region grand-est
+python src/ingest/download_all.py --osm region --osm-region rhone-alpes
 
 # Seulement Citiz + INSEE + IGN (le minimum pour démarrer)
 python src/ingest/download_all.py --only citiz insee ign
@@ -66,7 +66,8 @@ python src/ingest/download_all.py --only gtfs --gtfs-filter strasbourg grenoble
 ```
 
 Noms de régions OSM : voir https://download.geofabrik.de/europe/france.html
-(ex : `ile-de-france`, `grand-est`, `auvergne-rhone-alpes`, `occitanie`, `bretagne`...).
+(ex : `ile-de-france`, `rhone-alpes`, `alsace`, `bretagne`...). Geofabrik utilise les régions d'avant 2016 ;
+le script traduit les noms actuels (`grand-est` → alsace + lorraine + champagne-ardenne).
 
 ### Ce que le script produit
 
