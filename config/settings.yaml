@@ -24,6 +24,7 @@ walk:
 offer:
   buffer_m: 800           # l'offre est chargée sur la zone + 800 m : les carreaux en limite voient les arrêts voisins
   dedup_m: 40             # fusion des arrêts d'un même mode distants de moins de 40 m
+  dedup_m_by_type: {train: 150}   # grandes gares : quais TER / TGV distants de plus de 40 m
   typical_weekday: null   # date GTFS de référence (AAAA-MM-JJ) ; null = mardi le plus chargé des 8 prochaines semaines
   exclude_name_patterns: ["réservé", "demobox"]   # emplacements GBFS non ouverts au public (insensible à la casse)
 
