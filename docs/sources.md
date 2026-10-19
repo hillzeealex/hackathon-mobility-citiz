@@ -1,0 +1,526 @@
+# Sources de données
+
+Généré automatiquement par `download_all.py` le 2026-10-19.
+
+Toutes les données sont ouvertes (Licence Ouverte Etalab / ODbL pour OpenStreetMap).
+
+## Citiz (GBFS, partenaire)
+
+- GBFS - Autopartage Citiz Angers Loire Métropole - citiz-angers-gbfs — <https://backend.citiz.fr/public/provider/7/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Auvergne Rhône Alpes (AURA) - gbfs-citiz-autopartage-aura — <https://backend.citiz.fr/public/provider/5/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Bourgogne Franche-Comté BFC - gbfs-citiz-autopartage-bfc — <https://backend.citiz.fr/public/provider/2/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Développement - gbfs-citiz-dev — <https://backend.citiz.fr/public/provider/12/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Gironde - gbfs — <https://backend.citiz.fr/public/provider/4/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Grand Est - gbfs-citiz-autopartage-grand-est — <https://backend.citiz.fr/public/provider/1/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Grand Poitiers - gbfs-citiz-autopartage-grand-poitiers — <https://backend.citiz.fr/public/provider/9/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Haut de France - gbfs-citiz-autopartage-lille-arras — <https://backend.citiz.fr/public/provider/16/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz La Rochelle - gbfs-citiz-la-rochelle — <https://backend.citiz.fr/public/provider/18/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Métropole de Lyon - Offre et disponibilité temps réel du service Citiz en Autopartage Métropole de Lyon — <https://data.grandlyon.com/files/rdata/lpa_mobilite.donnees/geofencing_zones.json>
+- GBFS - Autopartage Citiz Nantes Métropole - gbfs-citiz-nantes — <https://backend.citiz.fr/public/provider/15/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Occitanie - gbfs-citiz-autopartage-occitanie — <https://backend.citiz.fr/public/provider/8/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Pays Basque AUPA - gbfs-citiz-autopartage-aupa — <https://backend.citiz.fr/public/provider/20/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Provence - gbfs-citiz-autopartage-provence — <https://backend.citiz.fr/public/provider/6/gbfs/v3.0/geofencing_zones.json>
+- GBFS - Autopartage Citiz Rennes Métropole - gbfs-citiz-autopartage-rennes-metropole — <https://backend.citiz.fr/public/provider/19/gbfs/v3.0/geofencing_zones.json>
+
+## Mobilités partagées (GBFS)
+
+- GBFS - Autopartage Clem - GBFS autopartage Clem' — <https://gbfs.clem.mobi/system_information.json>
+- GBFS - Autopartage Getaround France - Flux GBFS France — <https://www.data.gouv.fr/api/1/datasets/r/b9a4aeb4-7689-47ea-83a8-992378985381>
+- GBFS - Autopartage Leo&Go Métropole de Lyon - Véhicules en autopartage LeoandGo dans la Métropole de Lyon - disponibilités temps réel — <https://download.data.grandlyon.com/files/rdata/lag_leoandgo.disponibilite/free_bike_status.json>
+- GBFS - Autopartage Optymo Belfort - Optymo - ALS - Liste et état des stations — <https://data.optymo.fr/als/gbfs.json>
+- GBFS - Autopartage Rémi Région Centre-Val de loire - REMI-GBFS Stations d'autopartage — <https://gbfs.clem.mobi/remi/system_information.json>
+- GBFS - Scooters YEGO Bordeaux - YEGO GBFS Bordeaux  — <https://services.rideyego.com/gbfs/2-2/bordeaux/fr/system_information>
+- GBFS - Scooters YEGO Nice - YEGO GBFS Nice  — <https://services.rideyego.com/gbfs/2-2/nice/fr/system_information>
+- GBFS - Scooters YEGO Paris - YEGO GBFS Paris  — <https://services.rideyego.com/gbfs/2-2/paris/fr/system_information>
+- GBFS - Scooters YEGO Toulouse - YEGO GBFS Toulouse — <https://services.rideyego.com/gbfs/2-2/toulouse/fr/system_information>
+- GBFS - Trottinettes Bird Ajaccio - Bird à Ajaccio - Flux GBFS — <https://mds.bird.co/gbfs/v2/public/provider/bird/ajaccio/free_bike_status.json>
+- GBFS - Trottinettes Bird Bastia - Bird à Bastia - Flux GBFS — <https://mds.bird.co/gbfs/v2/public/provider/bird/bastia/free_bike_status.json>
+- GBFS - Trottinettes Bird Blois - Flux GBFS du service de trottinettes électriques Bird à Blois — <https://mds.bird.co/gbfs/v2/public/provider/bird/blois-france/free_bike_status.json>
+- GBFS - Trottinettes Bird Châlons-en-Champagne - Bird à Châlons-en-Champagne - Flux GBFS — <https://mds.bird.co/gbfs/v2/public/provider/bird/chalonsenchampagne/free_bike_status.json>
+- GBFS - Trottinettes Bird Gap - Bird à Gap - Flux GBFS — <https://mds.bird.co/gbfs/v2/public/provider/bird/gap/free_bike_status.json>
+- GBFS - Trottinettes Bird Laval - Bird à Laval - Flux GBFS — <https://mds.bird.co/gbfs/v2/public/provider/bird/laval/free_bike_status.json>
+- GBFS - Trottinettes Bird Vichy - Bird à Vichy - Flux GBFS — <https://mds.bird.co/gbfs/v2/public/provider/bird/vichy/free_bike_status.json>
+- GBFS - Trottinettes Pony Beauvais - Géolocalisation en temps réel des vélos, vélos à assistance électrique et trottinettes partagés de l’entreprise française pony à Beauvais — <https://proxy.transport.data.gouv.fr/resource/pony-beauvais-gbfs/gbfs.json>
+- GBFS - Trottinettes Pony La Roche-sur-Yon - GBFS Trottinettes Impulsyon — <https://gbfs.getapony.com/v1/La_Roche_Sur_Yon/fr/gbfs.json?key=***>
+- GBFS - VLS AQTA (Auray Quiberon Terre Atlantique) - VLS AQTA (Auray Quiberon Terre Atlantique) — <https://gbfs.partners.fifteen.eu/gbfs/2.2/auray-quiberon/en/gbfs.json>
+- GBFS - VLS Altervélo Saint-Pierre La Réunion (CIVIS) - Vélos à assistance électrique en libre service Saint-Pierre La Réunion CIVIS (Altervélo) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Auch-Vélo’c Grand Auch - GBFS Auch VeloC — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS BYCOR Ouest Rhodanien - VAELS OUEST RHODANIEN BYCOR — <https://www.mobility-parc.net/gbfs/v3/TARARE/system_information.json>
+- GBFS - VLS Brennus à Vélo Grand Sénonais - Données service Brennus à vélo - vélo en libre service — <https://gbfs.partners.fifteen.eu/gbfs/2.2/sens/en/gbfs.json>
+- GBFS - VLS C Vélo Clermont-Ferrand - Etat des stations de Vélos en Libre-Service C.vélo (GBFS) — <https://clermontferrand.publicbikesystem.net/customer/gbfs/v2/gbfs_versions>
+- GBFS - VLS CC des 7 Vallées - Vélos à assistance électrique en libre service dans la communauté de communes des 7 vallées — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS CYCLOlibre Carcassonne - Cyclolibre — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Calivélo communauté d'agglomération du Libournais (La Cali) - API GBFS Ecovelo du réseau vélo de Libourne — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Calivélo communauté d'agglomération du Libournais (La Cali) - API GBFS du réseau vélo de Libourne — <https://api.okina.fr/gateway/nam/gbfs/gbfs/v2/calivelo_ecovelo/vehicle_types>
+- GBFS - VLS Cap Cotentin Vélo - VAELS Cap Cotentin au standard GBFS — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Choletbus 2 Roues Cholet - Choletbus 2 Roues VAELS — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Cité Cycle Saint-Flour - Vélos à assistance électrique en libre service Saint-Flour (Cité Cycle) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Cycl'O Béarn CC du Haut Béarn - VLS OLORON — <https://www.mobility-parc.net/gbfs/v3/OLORON/system_information.json>
+- GBFS - VLS Go'clicot vélo CC du Pays du Coquelicot - VLS PAYS DU COQUELICOT — <https://www.mobility-parc.net/gbfs/v3/COQUELICOT/system_information.json>
+- GBFS - VLS GraouLib' Eurométropole de Metz - gbfs.json — <https://gbfs.partners.fifteen.eu/gbfs/2.2/metz/en/gbfs.json>
+- GBFS - VLS Hoplà CC Plaine d’Estrées - ESTREES SAINT DENIS — <https://www.mobility-parc.net/gbfs/v3/ESTREES/system_information.json>
+- GBFS - VLS IDEcycle Pau - https://gbfs.partners.fifteen.eu/gbfs/pau/gbfs — <https://gbfs.partners.fifteen.eu/gbfs/2.2/pau/en/gbfs.json>
+- GBFS - VLS Impulsyon La Roche Sur Yon - VLS Impulsyon — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Karu'vélo Pointe-à-Pitre La Guadeloupe - Vélos à assistance électrique en libre service Pointe-à-Pitre Guadeloupe (Karu'vélo) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Le Marcel Troyes Champagne Métropole - Données du service de vélos en libre-service "Le Marcel" - Troyes Champagne Métropole — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Le Vélo Baulois La Baule-Escoublac - https://api.gbfs.ecovelo.mobi/labaule/gbfs.json — <https://api.gbfs.v2.2.ecovelo.mobi/fr/vehicle_types.json>
+- GBFS - VLS Le Vélo TBM Bordeaux Métropole - GBFS.json — <https://bdx.mecatran.com/utw/ws/gbfs/bordeaux/v3/system_information.json?apiKey=***>
+- GBFS - VLS LeVélo Marseille - GBFS — <https://gbfs.omega.fifteen.eu/gbfs/2.2/marseille/en/gbfs.json>
+- GBFS - VLS Les petites reines Sables d'Olonne Agglomération - Vélos à assistance électrique en libre service Sables d'Olonne (Les petites reines) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Libélo Valence Romans - GBFS VRM — <https://valence.publicbikesystem.net/customer/gbfs/v2/gbfs_versions>
+- GBFS - VLS Lovélo Rouen - Données statiques et temps réel du service de VLS Lovélo Métropole Rouen Normandie — <https://gbfs.urbansharing.com/lovelolibreservice.fr/system_information.json>
+- GBFS - VLS MontenVélo CC Pays du Mont-Blanc (CCPMB) - Les données du fichier sont les suivantes : géolocalisation en temps réel des vélos à assistance électrique partagés du service MontenVélo sur la Communauté de communes Pays du Mont-Blanc (CCPMB).  — <https://gbfs.partners.fifteen.eu/gbfs/2.2/mont_blanc/en/gbfs.json>
+- GBFS - VLS Naolib Nantes Métropole - https://api.cyclocity.fr/contracts/nantes/gbfs/gbfs.json — <https://api.cyclocity.fr/contracts/nantes/gbfs/v2/gbfs_versions.json>
+- GBFS - VLS Naolib Nantes Métropole - https://api.cyclocity.fr/contracts/nantes/gbfs/v3/gbfs.json — <https://api.cyclocity.fr/contracts/nantes/gbfs/v3/gbfs_versions.json>
+- GBFS - VLS NemoVélo Nîmes Métropole - Vélos à assistance électrique en libre service Nîmes métropole (Nemovelo) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Ogalo Saumur - Vélos à assistance électrique en libre service Saumur (Ogalo Cyclette) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Optymo Belfort - Optymo - VLS - Liste et état des stations — <https://data.optymo.fr/vls/system_information.json>
+- GBFS - VLS Périvélo Grand Périgueux - API GBFS Ecovelo du réseau vélo de Périgueux — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Périvélo Grand Périgueux - API GBFS du réseau vélo de Périgueux — <https://api.okina.fr/gateway/nam/gbfs/gbfs/v2/perivelo_ecovelo/vehicle_types>
+- GBFS - VLS R'Houle ports de Piriac-sur-Mer et de La Turballe - Vélos à assistance électrique en libre service des ports de Piriac-sur-Mer et de La Turballe (R'Houle) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Rubis'Vélo Grand Bourg Agglomération - Rubis'Vélo - Vélos à assistance électrique en libre-service de Grand Bourg Agglomération — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS STAR Rennes - Fichier gbfs.json — <https://eu.ftp.opendatasoft.com/star/gbfs/gbfs.json>
+- GBFS - VLS Semo CA Seine-Eure - Vélo à assistance électrique en libre service — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Tanlib Niort - Vélos en Libre Service Tanlib — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Tarbes Lourdes Pyrénées (TLP) - TLP Mobilités — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Tempo Vélo Agen - GBFS Tempo Vélo — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Ti Vélo Pays de Landerneau-Daoulas - GBFS v2.2 - États des vélos en libre-service — <https://gbfs.partners.fifteen.eu/gbfs/2.2/landerneau/en/gbfs.json>
+- GBFS - VLS Transvilles Valenciennes - Vélos en libre-service du réseau Transvilles au format GBFS — <https://stables.donkey.bike/api/public/gbfs/2/donkey_valenciennes/en/system_information.json>
+- GBFS - VLS V'lille Lille - GBFS - V'lille — <https://media.ilevia.fr/opendata/station_status.json>
+- GBFS - VLS VELPAR CC Pays de l'Arbresle - VLS DE L'ARBRESLE — <https://www.mobility-parc.net/gbfs/v3/ARBRESLE/system_information.json>
+- GBFS - VLS Vel'in Grand Calais (SITAC) - Vel'in — <https://stce.transdev-hdf.fr/gbfs/system_information.php>
+- GBFS - VLS Velonecy Grand Annecy - Flux GBFS Vélonecy — <https://gbfs.partners.fifteen.eu/gbfs/2.2/annecy/en/gbfs.json>
+- GBFS - VLS Velopop’ Avignon - fichier gbfs veleo electrique en libre service — <https://gbfs.partners.fifteen.eu/gbfs/2.2/avignon/en/gbfs.json>
+- GBFS - VLS Vernou-en-Sologne (Vernou Vélo) - Vélos à assistance électrique en libre service Venou-en-Sologne (Vernou Vélo) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Vertuose Grand Longwy - GBFS Vertuose — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS ViVélo Vichy Communauté - Vélos en libre service ViVélo — <https://gbfs.partners.fifteen.eu/gbfs/2.2/vichy/en/gbfs.json>
+- GBFS - VLS Viavélo CA Villefranche Beaujolais Saône - GBFS Viavélo — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Vivolt agglomération d'Epinal - Flux GBFS Vilvolt — <https://gbfs.partners.fifteen.eu/gbfs/2.2/epinal/en/gbfs.json>
+- GBFS - VLS Vél'In CC Pays d'Opale - Pays d'Opale — <https://www.mobility-parc.net/gbfs/v3/Opale/system_information.json>
+- GBFS - VLS Vél'Ossau CC Vallée d'Ossau - VLS VALLEE D'OSSAU — <https://www.mobility-parc.net/gbfs/v3/OSSAU/system_information.json>
+- GBFS - VLS VélOstan’lib Nancy - API Cyclocity / JCDecaux Developer — <https://api.cyclocity.fr/contracts/nancy/gbfs/v2/gbfs_versions.json>
+- GBFS - VLS VélYcéo Saint-Nazaire - https://api.gbfs.ecovelo.mobi/velyceo/gbfs.json — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Vélam Amiens - Caractéristiques des vélos — <https://www.data.gouv.fr/api/1/datasets/r/131b5c6f-0325-4020-99c6-7d382e4963a3>
+- GBFS - VLS Vélam Amiens - Disponibilité en temps réel — <https://www.data.gouv.fr/api/1/datasets/r/36ed9ad8-e77f-45c1-b426-1a2b6ec3a2c6>
+- GBFS - VLS Vélam Amiens - Index racine de l'API — <https://api.cyclocity.fr/contracts/amiens/gbfs/v2/gbfs_versions.json>
+- GBFS - VLS Vélam Amiens - Information sur le service Vélam — <https://www.data.gouv.fr/api/1/datasets/r/7179a29a-2ec0-4d66-8474-74354efb0ecd>
+- GBFS - VLS Vélam Amiens - Inventaire des stations — <https://www.data.gouv.fr/api/1/datasets/r/e0a2c6fa-19e7-4197-8484-e9b3ca0eef05>
+- GBFS - VLS Vélhop Strasbourg Eurométropole - https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_ae/gbfs.json — <https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_ae/fr/system_information.json>
+- GBFS - VLS VéliVert Saint-Etienne - Fichier de découverte — <https://gbfs.sigma.fifteen.eu/gbfs/2.2/saint-etienne/en/gbfs.json>
+- GBFS - VLS Vélib Paris et communes limitrophes - Flux GBFS — <https://velib-metropole-opendata.smovengo.cloud/opendata/Velib_Metropole/gbfs.json>
+- GBFS - VLS Vélibleu Grand Chatellerault - GRAND CHATELLERAULT — <https://www.mobility-parc.net/gbfs/v3/CHATELLERAULT/system_information.json>
+- GBFS - VLS Vélibéo CA Bassin de Brive - API GBFS Ecovelo du réseau vélo de Brive — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Vélibéo CA Bassin de Brive - API GBFS du réseau vélo de Brive — <https://api.okina.fr/gateway/nam/gbfs/gbfs/v2/velibeo_ecovelo/vehicle_types>
+- GBFS - VLS Vélo Fluo Grand Est - GBFS Vélo Fluo — <https://gbfs.partners.fifteen.eu/gbfs/2.2/velo-fluo/en/gbfs.json>
+- GBFS - VLS Vélo Modalis CA Royan Atlantique - API GBFS Fifteen du réseau vélo de Royan — <https://gbfs.partners.fifteen.eu/gbfs/2.2/modalis-royan/en/gbfs.json>
+- GBFS - VLS Vélo Modalis Grand Angoulême - API GBFS Fifteen du réseau vélo d'Angoulême — <https://gbfs.partners.fifteen.eu/gbfs/2.2/angouleme/en/gbfs.json>
+- GBFS - VLS Vélo Modalis Grand Cognac Agglomération - API GBFS Fifteen du réseau vélo de Cognac — <https://gbfs.partners.fifteen.eu/gbfs/2.2/velo-modalis/en/gbfs.json>
+- GBFS - VLS Vélo Modalis Saintes Grandes Rives Agglo - API GBFS Fifteen du réseau vélo de Saintes — <https://gbfs.partners.fifteen.eu/gbfs/2.2/saintes/en/gbfs.json>
+- GBFS - VLS Vélo Vallée de Vézère CC Vallée de l'Homme (CCVH) - VLS VALLEE VEZERE — <https://www.mobility-parc.net/gbfs/v3/LASCAUX/system_information.json>
+- GBFS - VLS Vélo d'Aqui Argelès-sur-mer - Vélos à assistance électrique en libre service Argelès-sur-mer (Vélo d'Aqui) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Vélo'Cité Laon - Vélos à assistance électrique en libre service Laon  (Vélo'Cité) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS Vélo'v Lyon - gbfs.json — <https://download.data.grandlyon.com/files/rdata/jcd_jcdecaux.jcdvelov/gbfs_versions.json>
+- GBFS - VLS VéloCité Besançon - General Bikeshare Feed Specification (GBFS) v2.3 — <https://api.cyclocity.fr/contracts/besancon/gbfs/v2/gbfs_versions.json>
+- GBFS - VLS VéloCité Mulhouse - m2a_stationsvelocite_gbfs.json — <https://gbfs.nextbike.net/maps/gbfs/v2/nextbike_af/fr/system_information.json>
+- GBFS - VLS VéloMoove Bassin de Pompey - Fichier de découverte — <https://gbfs.partners.fifteen.eu/gbfs/2.2/pompey/en/gbfs.json>
+- GBFS - VLS VéloMoove Bassin de Pompey - Information système — <https://www.data.gouv.fr/api/1/datasets/r/9cff5e9a-8f40-4c93-a36a-a3ee478703d7>
+- GBFS - VLS VéloMoove Bassin de Pompey - Informations tarifaires — <https://www.data.gouv.fr/api/1/datasets/r/5bc7bc88-285c-4cf2-91cf-62999ed993a5>
+- GBFS - VLS VéloMoove Bassin de Pompey - Limites géographiques — <https://www.data.gouv.fr/api/1/datasets/r/af389d13-d0cc-4ee6-ae67-4c8c6e0e74eb>
+- GBFS - VLS VéloMoove Bassin de Pompey - Types de véhicules — <https://www.data.gouv.fr/api/1/datasets/r/9eddda26-e867-4b11-ac69-568a05639f76>
+- GBFS - VLS VéloZef Brest - Url du flux GBFS — <https://gbfs.partners.fifteen.eu/gbfs/2.2/brest/en/gbfs.json>
+- GBFS - VLS Vélolib CU Caen la Mer (Twisto) - https://gbfs.partners.fifteen.eu/gbfs/caen/gbfs.json — <https://gbfs.partners.fifteen.eu/gbfs/2.2/caen/en/gbfs.json>
+- GBFS - VLS Vélomagg Montpellier Méditerranée Métropole - Disponibilité des vélos en libre-service  de Montpellier en temps réel  — <https://gbfs.theta.fifteen.eu/gbfs/2.2/montpellier/en/gbfs.json>
+- GBFS - VLS VélopartaG CC du Gévaudan - VLS DU GEVAUDAN — <https://www.mobility-parc.net/gbfs/v3/GEVAUDAN/system_information.json>
+- GBFS - VLS VélôToulouse Toulouse Métropole - https://api.cyclocity.fr/contracts/toulouse/gbfs/gbfs.json — <https://api.cyclocity.fr/contracts/toulouse/gbfs/v2/gbfs_versions.json>
+- GBFS - VLS Yélo CA La Rochelle - gbfs.json — <https://opendata.agglo-larochelle.fr/d4c/api/datasets/1.0/yelo___disponibilite_des_velos_en_libre_service/alternative_exports/7f0df698-4c17-4d9f-9d7e-49c13a3a6015>
+- GBFS - VLS Zébullo Grand Reims - Fichier d’index GBFS (annuaire des flux) — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - VLS vélos partagés Vassivière CC Porte de Vassivière - VLS PORTE DE VASSIVIERE — <https://www.mobility-parc.net/gbfs/v3/VASSIVIERE/system_information.json>
+- GBFS - Vélos Lime Communauté d’Agglomération Sophia Antipolis (CASA) - Lime CASA — <https://data.lime.bike/api/partners/v2/gbfs/casa/system_information>
+- GBFS - Vélos Lime Les Lilas - GBFS Les Lilas — <https://data.lime.bike/api/partners/v2/gbfs/leslilas/system_information>
+- GBFS - Vélos Lime Nogent-sur-Marne - Lime Nogent-sur-Marne — <https://data.lime.bike/api/partners/v2/gbfs/nogent/system_information>
+- GBFS - Vélos Lime Paris - Lime Paris — <https://data.lime.bike/api/partners/v2/gbfs/parisproper/system_information>
+- GBFS - Vélos Lime Paris Saclay - Lime Paris Saclay — <https://data.lime.bike/api/partners/v2/gbfs/paris_saclay/system_information>
+- GBFS - Vélos Pony Marseille - PONY GBFS MARSEILLE — <https://gbfs.getapony.com/v1/Marseille/fr/gbfs.json>
+- GBFS - Vélos Voi Paris - GBFS VOI Paris — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/352/system_information.json>
+- GBFS - Vélos Voi V'lones (Irigny, Saint-Genis-Laval, Charly , Vernaison) - V'Lônes GBFS — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/406/system_information.json>
+- GBFS - Vélos et trottinettes Dott Bordeaux - Tier-Dott Bordeaux GBFS — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott France - Tier-Dott Public GBFS Feed - Bordeaux — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott France - Tier-Dott Public GBFS Feed - Lyon — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott France - Tier-Dott Public GBFS Feed - Ol-vallee — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott France - Tier-Dott Public GBFS Feed - Paris — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott France - Tier-Dott Public GBFS Feed for France — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott Lyon - Tier-Dott Lyon GBFS — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott OL Vallée - Tier-Dott OL Vallée GBFS — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott Paris - Tier-Dott Paris GBFS — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Dott Syndicat Intercommunal d'Etudes des Mobilités Urbaines Marne-la-Vallée (SIEMU) - Tier-Dott SIEMU GBFS — <https://gbfs.api.ridedott.com/public/v2/gbfs_versions.json>
+- GBFS - Vélos et trottinettes Lime Le Havre - GBFS Le Havre — <https://data.lime.bike/api/partners/v2/gbfs/ELB6RY5ANOZLB/system_information>
+- GBFS - Vélos et trottinettes Lime Lille - GBFS Lille — <https://data.lime.bike/api/partners/v2/gbfs/lille/system_information>
+- GBFS - Vélos et trottinettes Lime Marseille - GBFS Marseille — <https://data.lime.bike/api/partners/v2/gbfs/marseille/system_information>
+- GBFS - Vélos et trottinettes Lime Nice - GBFS Nice — <https://data.lime.bike/api/partners/v2/gbfs/nice/system_information>
+- GBFS - Vélos et trottinettes Naolib micromob Nantes (avec stations) - https://api.gbfs.ecovelo.mobi/chantrerie/gbfs.json — <https://api.gbfs.v3.0.ecovelo.mobi/vehicle_types.json>
+- GBFS - Vélos et trottinettes Pony Angers - GBFS — <https://proxy.transport.data.gouv.fr/resource/pony-angers-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Bordeaux - GBFS — <https://proxy.transport.data.gouv.fr/resource/pony-bordeaux-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Bourges - Vélos et trottinettes Pony Bourges — <https://proxy.transport.data.gouv.fr/resource/pony-bourges-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Evry - Vélos et trottinettes Pony Evry — <https://proxy.transport.data.gouv.fr/resource/pony-evry-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Hérouville - Vélos et trottinettes Pony Herouville — <https://proxy.transport.data.gouv.fr/resource/pony-herouville-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Limoges - Vélos et trottinettes Pony Limoges — <https://proxy.transport.data.gouv.fr/resource/pony-limoges-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Lorient - Vélos et trottinettes Pony Lorient — <https://proxy.transport.data.gouv.fr/resource/pony-lorient-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Nice - Vélos et trottinettes Pony Nice — <https://proxy.transport.data.gouv.fr/resource/pony-nice-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Pays Basque - Vélos Pony Pays Basque — <https://proxy.transport.data.gouv.fr/resource/pony-pays-basque-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Perpignan - Vélos et trottinettes Pony Perpignan — <https://proxy.transport.data.gouv.fr/resource/pony-perpignan-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Pony Poitiers - Vélos et trottinettes Pony Poitiers — <https://proxy.transport.data.gouv.fr/resource/pony-poitiers-gbfs/gbfs.json>
+- GBFS - Vélos et trottinettes Voi Grand Paris Seine et Oise - Grand Paris Seine et Oise GBFS — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/422/system_information.json>
+- GBFS - Vélos et trottinettes Voi Grenoble - GBFS VOI Grenoble — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/358/system_information.json>
+- GBFS - Vélos et trottinettes Voi Havre et Octeville-sur-Mer - GBFS Voi Le Havre and Octeville-sur-Mer — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/336/system_information.json>
+- GBFS - Vélos et trottinettes Voi Marseille - GBFS Voi Marseille — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/66/system_information.json>
+- GBFS - Vélos et trottinettes Voi Saint-Quentin-en-Yvelines - GBFS Saint-Quentin-en-Yvelines — <https://api.voiapp.io/gbfs/fr/6bb6b5dc-1cda-4da7-9216-d3023a0bc54a/v2/355/system_information.json>
+
+## Transports en commun (GTFS)
+
+- GTFS - Agrégat des réseaux urbains et interurbains d'Auvergne-Rhône-Alpes - Agrégat Oùra — <https://www.data.gouv.fr/api/1/datasets/r/231acea2-40cf-4c06-b2eb-646274e0b853>
+- GTFS - Agrégat des réseaux urbains et interurbains de Bretagne - KORRIGO — <https://www.data.gouv.fr/api/1/datasets/r/8c7b32d0-6481-4bb8-b903-c50a04c72fec>
+- GTFS - Agrégat des réseaux urbains et interurbains de Normandie - Base de données multimodale théorique des réseaux de transport public normands au format GTFS — <https://transport.data.gouv.fr/resources/81942/download>
+- GTFS - Agrégat des réseaux urbains et interurbains de Nouvelle Aquitaine - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/e09ee736-ae5e-48c8-ac13-3839e3f2f74a>
+- GTFS - Agrégat des réseaux urbains et interurbains des Pays de la Loire - GTFS Destineo Pays de la Loire — <https://www.data.gouv.fr/api/1/datasets/r/c0bd9ff1-97f9-43f8-aca4-8e80d7728324>
+- GTFS - Agrégat des réseaux urbains et interurbains du Centre-Val-de-Loire - GTFS réseau JVMALIN — <https://www.data.gouv.fr/api/1/datasets/r/a193c142-366b-4a7b-8afb-c0bdf23ca7ea>
+- GTFS - Agrégat des réseaux urbains et interurbains du Grand Est - Horaires théoriques des réseaux urbains et interurbains en Région Grand Est — <https://transport.data.gouv.fr/resources/83634/download>
+- GTFS - Bacs Ecouflant/Cantenay-Epinard et Pruillé - bacs_alm_gtfs.zip — <https://transport.data.gouv.fr/resources/84018/download>
+- GTFS - Bacs de Loire en Loire-Atlantique (44) - gtfs_bac_loire2026.zip — <https://www.data.gouv.fr/api/1/datasets/r/b2678aad-0d78-45f8-aa59-f78723ede272>
+- GTFS - Funiculaire des Arcs - Funiculaire Bourg-Saint-Maurice/ Les Arcs période estivale  — <https://transport.data.gouv.fr/resources/83848/download>
+- GTFS - Lignes de covoiturage M covoit' Lignes+ - Horaires théoriques M'Covoit Ligne Plus — <https://www.data.gouv.fr/api/1/datasets/r/91dbf9cb-4ab2-42a3-9f40-0791a53d58d2>
+- GTFS - Navette Aéroport de Bordeaux - Horaires théoriques du réseau Bordeaux - Navettes aéroport - 30 Direct (GTFS) — <https://www.data.gouv.fr/api/1/datasets/r/4cb2f0a9-d3d8-402b-b0bb-afafb741e5f1>
+- GTFS - Navette Pontorson – Le Mont-Saint-Michel - Jeu de données théorique du réseau Navette Pontorson - Le Mont-Saint-Michel  — <https://www.data.gouv.fr/api/1/datasets/r/7e0312ef-a6e0-41ab-a75a-2b782a4b1d6b>
+- GTFS - Navette de Montbrison et de Saint Just Saint Rambert - navettes-urbaines-lfa.zip — <https://www.data.gouv.fr/api/1/datasets/r/4536fa0a-b880-47ba-9f94-42a6303e584b>
+- GTFS - Navette de la CC Sel et Vermois - Horaires théoriques de la navette de Sel et Vermois (GTFS) — <https://transport.data.gouv.fr/resources/82907/download>
+- GTFS - Navette estivale Andemu - ANDEMU GTFS 2025 — <https://www.data.gouv.fr/api/1/datasets/r/7213015d-a5b6-429d-84e8-c8c01e4cb84e>
+- GTFS - Navette estivale CVL Mobilité - LaNavette_l'étéàChinon_2026.zip — <https://www.data.gouv.fr/api/1/datasets/r/af410692-57e7-44a3-b888-4efccdf77014>
+- GTFS - Navette estivale Corté - vallée de la Restonica - via-corsica-restonica-c13.zip — <https://www.data.gouv.fr/api/1/datasets/r/ba2f71b6-23ca-4b51-b319-bd9576933d94>
+- GTFS - Navette estivale Grimaud - données statiques — <https://www.data.gouv.fr/api/1/datasets/r/7a182d63-ebe2-4490-8bc8-188ae7312c23>
+- GTFS - Navette estivale Ramatuelle - données statiques — <https://www.data.gouv.fr/api/1/datasets/r/629ffcc9-152e-4526-9720-3ccf944c97e2>
+- GTFS - Navette estivale SNGO! Giverny Vernon - Gare SNCF - pt-th-offer-sngonavettegiverny-gtfs-20240413-382-opendata.zip — <https://transport.data.gouv.fr/resources/81177/download>
+- GTFS - Navette estivale îles des Glénan - GTFS Glénan 2025 — <https://www.data.gouv.fr/api/1/datasets/r/c6be5123-466e-4989-8843-549bee825750>
+- GTFS - Navette saisonnière Col'ette - colette_gtfs.zip — <https://transport.data.gouv.fr/resources/84203/download>
+- GTFS - Navette saisonnière Méribus - MERIBUS ESTIVAL 2026 — <https://transport.data.gouv.fr/resources/82682/download>
+- GTFS - Navettes Aéroport de Lille - Lille_v5.zip — <https://www.data.gouv.fr/api/1/datasets/r/f389ca22-d36e-46f3-9e00-5be700c7139b>
+- GTFS - Navettes Bagnères-de-Bigorre - La Mongie - Horaires théoriques de la station de Bagnères / La Mongie (GTFS) — <https://www.data.gouv.fr/api/1/datasets/r/2a189c2d-7ccd-4b2e-bca0-40df0734fe0a>
+- GTFS - Navettes Skibus Vallée des Belleville - GTFS_BELLEVILLE.zip — <https://transport.data.gouv.fr/resources/83787/download>
+- GTFS - Navettes du Giffre - GTFS-Les-Navettes-du-Giffre-2024-v1.zip — <https://www.data.gouv.fr/api/1/datasets/r/58b67800-a341-44f8-9a31-864d578b9757>
+- GTFS - Navettes estivales Chorges - Chanteloube - Navette Vaï Chorges baie de Chanteloubé été 2026.zip — <https://transport.data.gouv.fr/resources/84030/download>
+- GTFS - Navettes estivales La Rosière - gtfs_navettes_la_rosiere_ete2026.zip — <https://transport.data.gouv.fr/resources/84133/download>
+- GTFS - Navettes estivales Pornic Agglomération - Navettes_été_2026_V6.zip — <https://www.data.gouv.fr/api/1/datasets/r/5342ec1d-387e-458f-9baf-31a6aab1c26b>
+- GTFS - Navettes estivales réseau DIGO - GTFS Cote Landes Nature.zip — <https://www.data.gouv.fr/api/1/datasets/r/cf6776cd-2f5c-4190-8bec-3578d7f87372>
+- GTFS - Navettes hivernales Skibus Courchevel - Courchevel éte — <https://www.data.gouv.fr/api/1/datasets/r/cefefa57-65ca-4f9e-94be-c1fd3dc5551a>
+- GTFS - Navettes hivernales de l'Alpe d'Huez - Horaires théoriques du réseau Resalp - Alpe d'Huez — <https://www.data.gouv.fr/api/1/datasets/r/c3fa69f0-f8b1-4324-be67-be72baf80ceb>
+- GTFS - Navettes hivernales des 2 Alpes - GTFS de la navette annuelle de la station des 2 Alpes, circulant du 4 mai 2026 au 4 juillet 2026 — <https://transport.data.gouv.fr/resources/83989/download>
+- GTFS - Navettes hivernales des 2 Alpes - GTFS.zip — <https://transport.data.gouv.fr/resources/83813/download>
+- GTFS - Navettes hivernales réseau Vaï - Navettes stations Vaï hiver 2025-2026.zip — <https://www.data.gouv.fr/api/1/datasets/r/f8a8d797-035b-4adf-a447-a8624639232e>
+- GTFS - Navettes maritimes - UBA - uniondes-arcachon-fr (3).zip — <https://transport.data.gouv.fr/resources/84043/download>
+- GTFS - Navettes saisonnières Bourg-Saint-Maurice - Navettes Bourg-Saint-Maurice — <https://transport.data.gouv.fr/resources/83626/download>
+- GTFS - Navettes saisonnières Gratibus - GTFS GRATIBUS — <https://www.data.gouv.fr/api/1/datasets/r/05625beb-8d5c-4996-a826-253dc6599a19>
+- GTFS - Navettes saisonnières Tignes - Horaires théoriques de la station de Tignes (GTFS) — <https://www.data.gouv.fr/api/1/datasets/r/9f5669e6-202f-4166-99e4-0e15586e1473>
+- GTFS - Navettes saisonnières Transaltitude - Isère - Transaltitude — <https://www.data.gouv.fr/api/1/datasets/r/932fb155-53d5-4717-87e0-b42fe3aa538b>
+- GTFS - Navettes saisonnières Val d'Isère - Horaires théoriques du réseau Val d'Isère (GTFS) — <https://www.data.gouv.fr/api/1/datasets/r/d6c3eae8-fab6-4ff2-adc2-32bb2d213dd7>
+- GTFS - Navettes saisonnières Valmobus - Horaires théoriques de la station de ski Valmorel (GTFS) — <https://www.data.gouv.fr/api/1/datasets/r/300108a3-f8c1-4bc8-873e-f1243d49716b>
+- GTFS - Navettes saisonnières de la CC du Guillestrois et du Queyras - gtfs.zip — <https://www.data.gouv.fr/api/1/datasets/r/bf92984d-4441-4cad-9879-b7209acba875>
+- GTFS - Programme des vols Finist'Air - Finist'Air - Région Bretagne — <https://www.data.gouv.fr/api/1/datasets/r/073a6dbc-2bef-4088-afe4-68a29dd4e796>
+- GTFS - Remontées mécaniques - Courchevel - gtfs_Remontees_au_depart_Courchevel_ete2026.zip — <https://transport.data.gouv.fr/resources/84204/download>
+- GTFS - Réseau SNCF TGV, Intercités et TER - https://eu.ftp.opendatasoft.com/sncf/plandata/Export_OpenData_SNCF_GTFS_NewTripId.zip — <https://www.data.gouv.fr/api/1/datasets/r/9ae758ec-cd7a-40cd-a890-bb3963224942>
+- GTFS - Réseau européen AVE Renfe - Horaires AVE Espagne -France — <https://www.data.gouv.fr/api/1/datasets/r/eae0fa46-087a-4018-ada9-d8add124e635>
+- GTFS - Réseau européen BlaBlaCar Bus - GTFS BlaBlaCar Bus — <https://www.data.gouv.fr/api/1/datasets/r/fd54f81f-4389-4e73-be75-491133d011c3>
+- GTFS - Réseau européen Eurostar - Eurostar GTFS a partir du 16/09/2025 — <https://www.data.gouv.fr/api/1/datasets/r/bfd97acd-63f3-4ea4-bfe8-70e4c7fd8d13>
+- GTFS - Réseau européen FlixBus et FlixTrain - Horaires Flixbus Europe — <https://www.data.gouv.fr/api/1/datasets/r/30d94e83-48a4-4c44-8a96-c082377f5221>
+- GTFS - Réseau interurbain - Ain (01) - GTFS AIN — <https://www.data.gouv.fr/api/1/datasets/r/723f0cc2-476a-464c-a40e-bf8686f7bd8d>
+- GTFS - Réseau interurbain - Allier (03) - GTFS — <https://www.data.gouv.fr/api/1/datasets/r/edf15063-dbbb-4543-a39d-60a39a418ee3>
+- GTFS - Réseau interurbain - Ardèche (07) - GTFS_ardeche.zip — <https://www.data.gouv.fr/api/1/datasets/r/4e69fff6-6ae5-4ac0-9fa4-9c24ac92f291>
+- GTFS - Réseau interurbain - Cantal (15) - GTFS Car Région Cantal — <https://www.data.gouv.fr/api/1/datasets/r/2053f06d-439c-43fe-87fb-528179a8502e>
+- GTFS - Réseau interurbain - Charente (16) - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/7eb95c82-711e-455c-86b1-ecf138697ebe>
+- GTFS - Réseau interurbain - Charente-Maritime (17) - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/161ac8dd-bdd4-40dd-bce7-d9edef4af632>
+- GTFS - Réseau interurbain - Corrèze (19) - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/2b76718b-2ab0-4f95-8528-cce4bb6af4fe>
+- GTFS - Réseau interurbain - Corse - GTFS - Transport - Via Strada — <https://www.data.gouv.fr/api/1/datasets/r/fe20cb23-34b8-4965-acf7-1b28bf966891>
+- GTFS - Réseau interurbain - Creuse (23) - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/b3f2f823-fe55-4265-9efe-605d8156dea2>
+- GTFS - Réseau interurbain - Deux-Sèvres (79) - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/73b1b1ee-2b81-445f-8930-b95a2b28a81b>
+- GTFS - Réseau interurbain - Dordogne (24) - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/f7590323-d782-40ed-a6b2-67e37930f6cd>
+- GTFS - Réseau interurbain - Gironde (33) - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/ba4be162-cc7f-4c7c-9d96-376a225e9045>
+- GTFS - Réseau interurbain - Haute-Loire (43) - GTFS — <https://www.data.gouv.fr/api/1/datasets/r/6dc48e22-edc4-478d-896d-7fdd02bbcda9>
+- GTFS - Réseau interurbain - Haute-Savoie (74) - GTFS_haute_savoie.zip — <https://www.data.gouv.fr/api/1/datasets/r/71926816-92f8-4620-8b8f-e1804f645e26>
+- GTFS - Réseau interurbain - Haute-Vienne (87) - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/8d1cc7f8-2b29-4844-b98c-4a5b35075d57>
+- GTFS - Réseau interurbain - Isère (38) - cars Région Isère (38) - Offre théorique au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/40ee9d6c-3bb9-409e-b670-986212de63f2>
+- GTFS - Réseau interurbain - Landes (40) - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/476fec18-c51f-41e6-9d15-0030174389c3>
+- GTFS - Réseau interurbain - Loire (42) - GTFS LOIRE — <https://www.data.gouv.fr/api/1/datasets/r/d22ab458-e6b4-4334-96dc-18590a3d9e5d>
+- GTFS - Réseau interurbain - Lot-et-Garonne (47) - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/bbf7ffef-9706-42e8-a3c8-7113168621d7>
+- GTFS - Réseau interurbain - Puy-de-Dôme (63) - GTFS PUY DE DOME — <https://www.data.gouv.fr/api/1/datasets/r/fff9c08f-6172-4c94-b46e-c0144ae0bd10>
+- GTFS - Réseau interurbain - Pyrénées-Atlantiques (64) - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/44806d1e-0798-40e6-8e7e-21d0ddfe81d2>
+- GTFS - Réseau interurbain - Savoie (73) - GTFS Car région Savoie — <https://www.data.gouv.fr/api/1/datasets/r/4b74f1b9-fcc0-4e59-bf48-7ed4102e5222>
+- GTFS - Réseau interurbain - Savoie (73) - GTFS des cars Région Savoie Lignes touristiques — <https://www.data.gouv.fr/api/1/datasets/r/3f74ea07-5385-467c-be4c-74bca2404333>
+- GTFS - Réseau interurbain - Somme (80) - Fichier GTFS commercial de la Somme — <https://www.data.gouv.fr/api/1/datasets/r/429d30fb-ba6e-4e90-ad82-6d589a98cbfd>
+- GTFS - Réseau interurbain - Vienne (86) - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/a70fab11-9ac9-481e-91c8-925e805741ba>
+- GTFS - Réseau interurbain Aléop - Pays de la Loire - GTFS Aléop — <https://www.data.gouv.fr/api/1/datasets/r/916752e4-5daa-48bd-8bc1-4dd8d64f1d4a>
+- GTFS - Réseau interurbain BreizhGo Bateaux - Breizhgo Bateaux Arz — <https://www.data.gouv.fr/api/1/datasets/r/8a2c923c-d308-4391-801e-2369cdde7749>
+- GTFS - Réseau interurbain BreizhGo Bateaux - Breizhgo Bateaux Bréhat — <https://www.data.gouv.fr/api/1/datasets/r/9ef537b6-fbeb-468f-9d6d-47c1d0d98504>
+- GTFS - Réseau interurbain BreizhGo Bateaux - Breizhgo Bateaux Finistère — <https://www.data.gouv.fr/api/1/datasets/r/705809de-4712-4c52-add3-03c4d9b6d621>
+- GTFS - Réseau interurbain BreizhGo Bateaux - Breizhgo Bateaux Morbihan — <https://www.data.gouv.fr/api/1/datasets/r/c09012e4-cb57-41da-94c5-013a19c99e14>
+- GTFS - Réseau interurbain BreizhGo Car - Breizhgo 35 — <https://www.data.gouv.fr/api/1/datasets/r/69948a62-0bac-4081-8ae0-d71c4d5b751d>
+- GTFS - Réseau interurbain BreizhGo Car - Breizhgo Car 22 — <https://www.data.gouv.fr/api/1/datasets/r/d09facf8-2bc9-4d8c-ad43-d5cb05f39406>
+- GTFS - Réseau interurbain BreizhGo Car - Breizhgo Car 29 — <https://www.data.gouv.fr/api/1/datasets/r/c407501a-ee0d-425d-b954-42927c0eaffa>
+- GTFS - Réseau interurbain BreizhGo Car - Breizhgo Car 56 — <https://www.data.gouv.fr/api/1/datasets/r/1b9a895a-1843-4620-bcd4-3bbd08c396c0>
+- GTFS - Réseau interurbain BreizhGo Car 35 (expérimentation) - Breizhgo 35 — <https://www.data.gouv.fr/api/1/datasets/r/7a438a9a-517b-492c-89b0-2e4d3b72ac00>
+- GTFS - Réseau interurbain BreizhGo TER - Breizhgo TER — <https://www.data.gouv.fr/api/1/datasets/r/b7a835d4-7a93-4d8b-87bd-c657800fc29f>
+- GTFS - Réseau interurbain Car Jaune - Horaires théoriques du réseau Car Jaunes — <https://transport.data.gouv.fr/resources/80934/download>
+- GTFS - Réseau interurbain Cars Région Express - GTFS Cars Région Express — <https://www.data.gouv.fr/api/1/datasets/r/c379471b-c554-4838-9c00-39d7ced7b53a>
+- GTFS - Réseau interurbain Express ZOU ! - ZOU_Réseau Express GTFS.Zip — <https://www.data.gouv.fr/api/1/datasets/r/1164d75b-4a9f-4c5a-b765-31d861b34fda>
+- GTFS - Réseau interurbain Fluo Grand-Est - Ardennes (08) - Horaires théoriques du réseau Fluo Grand Est dans les Ardennes (GTFS) — <https://transport.data.gouv.fr/resources/80413/download>
+- GTFS - Réseau interurbain Fluo Grand-Est - Aube (10) - Horaires théoriques du réseau Fluo Grand Est dans l'Aube (GTFS) — <https://transport.data.gouv.fr/resources/80415/download>
+- GTFS - Réseau interurbain Fluo Grand-Est - Bas-Rhin (67) - Horaires théoriques du réseau Fluo Grand Est dans le Bas-Rhin (GTFS) — <https://transport.data.gouv.fr/resources/80417/download>
+- GTFS - Réseau interurbain Fluo Grand-Est - Haut-Rhin (68) - Horaires théoriques du réseau Fluo Grand Est dans le Haut-Rin (GTFS) — <https://transport.data.gouv.fr/resources/80419/download>
+- GTFS - Réseau interurbain Fluo Grand-Est - Haute-Marne (52) - Horaires théoriques du réseau Fluo Grand Est en Haute-Marne (GTFS) — <https://transport.data.gouv.fr/resources/81989/download>
+- GTFS - Réseau interurbain Fluo Grand-Est - Horaires théoriques du réseau interurbain Fluo Grand Est — <https://transport.data.gouv.fr/resources/83635/download>
+- GTFS - Réseau interurbain Fluo Grand-Est - Marne (51) - Horaires théoriques du réseau Fluo Grand Est dans la Marne (GTFS) — <https://transport.data.gouv.fr/resources/80421/download>
+- GTFS - Réseau interurbain Fluo Grand-Est - Meurthe-et-Moselle (54) - Horaires théoriques du réseau Fluo Grand Est en Meurthe-et-Moselle (GTFS) — <https://transport.data.gouv.fr/resources/80423/download>
+- GTFS - Réseau interurbain Fluo Grand-Est - Meuse (55) - Horaires théoriques du réseau Fluo Grand Est dans la Meuse (GTFS) — <https://transport.data.gouv.fr/resources/80425/download>
+- GTFS - Réseau interurbain Fluo Grand-Est - Moselle (57) - Horaires théoriques du réseau Fluo Grand Est en Moselle (GTFS) — <https://transport.data.gouv.fr/resources/80427/download>
+- GTFS - Réseau interurbain Fluo Grand-Est - Vosges (88) - Horaires théoriques du réseau Fluo Grand Est dans les Vosges (GTFS) — <https://transport.data.gouv.fr/resources/80429/download>
+- GTFS - Réseau interurbain Mobigo - Données au format GTFS des lignes régulières de la Région — <https://www.data.gouv.fr/api/1/datasets/r/28d3c8bf-97f7-40ed-be9f-00e737f74757>
+- GTFS - Réseau interurbain Mobigo - Données du Réseau Mobigo dans l'Yonne - 89 — <https://www.data.gouv.fr/api/1/datasets/r/5c995d2c-8e79-4e40-b4a6-c0583c647201>
+- GTFS - Réseau interurbain Mobigo - Données du Réseau Mobigo dans le Doubs - 25 — <https://www.data.gouv.fr/api/1/datasets/r/a5f952a8-e0d1-439d-9881-b98fb6c202bb>
+- GTFS - Réseau interurbain Mobigo - Données du réseau Mobigo dans la Nièvre - 58 — <https://www.data.gouv.fr/api/1/datasets/r/6f4787d8-30d8-4a75-845a-1e1dfb71c15a>
+- GTFS - Réseau interurbain Mobigo - Données du réseau Mobigo dans le Jura - 39 — <https://www.data.gouv.fr/api/1/datasets/r/4001fba7-6078-4345-8859-f424b787c3a7>
+- GTFS - Réseau interurbain Mobigo - Données du réseau Mobigo en Côte d'Or - 21 — <https://www.data.gouv.fr/api/1/datasets/r/151b2c7b-e8a9-4873-909e-d376eaeeb1e0>
+- GTFS - Réseau interurbain Mobigo - Données du réseau Mobigo en Haute-Saône - 70 — <https://www.data.gouv.fr/api/1/datasets/r/27cc46db-561f-42c4-8ab2-8436e64c9921>
+- GTFS - Réseau interurbain Mobigo - Données du réseau Mobigo en Saône et Loire - 71 — <https://www.data.gouv.fr/api/1/datasets/r/2ccfe3e5-8e1d-47a6-9d68-a2e3d16f63b1>
+- GTFS - Réseau interurbain Nomad Car - PT_TH_OFFER_NOMAD_gtfs_20251215_920_OPENDATA.zip — <https://transport.data.gouv.fr/resources/82317/download>
+- GTFS - Réseau interurbain Rémi - REMI GTFS — <https://www.data.gouv.fr/api/1/datasets/r/6c52238c-1c1e-4c5a-922b-8b66c0415a9e>
+- GTFS - Réseau interurbain TIC - Arrêts, horaires et parcours théoriques (GTFS) - réseau TIC (interurbain) — <https://www.data.gouv.fr/api/1/datasets/r/d9ea4b4a-0717-4a7d-bd14-054afa192457>
+- GTFS - Réseau interurbain TXIK TXAK - Horaires théoriques au format GTFS des lignes du réseau Txik Txak — <https://www.data.gouv.fr/api/1/datasets/r/a6c39f5b-9e05-4dc6-be13-f2620ff73216>
+- GTFS - Réseau interurbain bus Proximité ZOU ! - ZOU_Réseau Proximité GTFS.Zip — <https://www.data.gouv.fr/api/1/datasets/r/9c8116cb-2f1a-4045-b149-c5bf6cae6bef>
+- GTFS - Réseau interurbain des Chemins de fer Corse - Chemin de fer de la Corse — <https://www.data.gouv.fr/api/1/datasets/r/69c3db8a-a5fd-471f-b59f-46b9faded381>
+- GTFS - Réseau interurbain et TAD zonal Corolis - Arrêts, horaires et parcours théoriques (GTFS) - réseau Corolis (interurbain) — <https://www.data.gouv.fr/api/1/datasets/r/191ae476-2ce8-48d7-bed2-b9cb93f63364>
+- GTFS - Réseau interurbain et TAD zonal Corolis - Description du TAD zonal (GTFS-Flex) - réseau Corolis — <https://www.data.gouv.fr/api/1/datasets/r/61277099-cde9-457c-919d-a1b7b20fe992>
+- GTFS - Réseau interurbain et scolaire - Drôme (26) - GTFS_drome.zip — <https://www.data.gouv.fr/api/1/datasets/r/fda59af2-0eb3-4a8a-8e59-593f768f836a>
+- GTFS - Réseau interurbain liO Occitanie - GTFS liO — <https://www.data.gouv.fr/api/1/datasets/r/d747fe79-2915-4cdd-8cc5-51a810baaca5>
+- GTFS - Réseau maritime - Gironde (33) - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/c3f86058-0be8-41f2-aa98-82d3a5625f22>
+- GTFS - Réseau maritime Bacs de Seine - Jeu de données théorique du réseau Bacs de Seine (Seine-Maritime) — <https://transport.data.gouv.fr/resources/82308/download>
+- GTFS - Réseau maritime Brittany Ferries - gtfs-brittanyferries.zip — <https://transport.data.gouv.fr/resources/83427/download>
+- GTFS - Réseau maritime Corsica Ferries - gfts-CF.zip — <https://www.data.gouv.fr/api/1/datasets/r/b95d6838-1143-4653-840f-eebc33c16fa7>
+- GTFS - Réseau maritime Corsica Linea - 2025-2026.zip — <https://www.data.gouv.fr/api/1/datasets/r/13977931-86ae-4b7a-9598-d222333a5fbd>
+- GTFS - Réseau maritime Transmanche Ferries - PT_TH_OFFER_TRANSMANCHE_gtfs_20260401_727_OPENDATA.zip — <https://transport.data.gouv.fr/resources/83981/download>
+- GTFS - Réseau maritime Yeu-Continent - https://app.mecatran.com/utw/ws/gtfsfeed/static/pdlYeuContinent?apiKey=*** — <https://www.data.gouv.fr/api/1/datasets/r/b57c66f2-ecaf-4934-a530-753bcb8aad04>
+- GTFS - Réseau maritime de Corse du Sud - Via-Mare.zip — <https://www.data.gouv.fr/api/1/datasets/r/edabe706-150e-4320-a0cc-b68eed217495>
+- GTFS - Réseau maritime de Martinique - gtfs-maritime-bluelines.zip — <https://www.data.gouv.fr/api/1/datasets/r/39fc07d6-65b5-49f0-a5f2-d56757a8dd42>
+- GTFS - Réseau national Trenitalia France - GTFS Trenitalia France — <https://www.data.gouv.fr/api/1/datasets/r/bdecea2c-ebc9-4f22-812d-927e4a2e4bad>
+- GTFS - Réseau saisonnier Le Rayol Canadel sur Mer - données statiques — <https://www.data.gouv.fr/api/1/datasets/r/d4d91019-c15a-4733-bd2d-0ebf17d69993>
+- GTFS - Réseau saisonnier ligne Cogolin - données statiques — <https://www.data.gouv.fr/api/1/datasets/r/8d670add-a215-486a-bf96-2b44b3b6aebe>
+- GTFS - Réseau scolaire CoqueliGO - CoqueliGO_CoqueliGO-Scolaire-V9-14_gtfs_2025-11-06_13-49-31.zip — <https://www.data.gouv.fr/api/1/datasets/r/df09ccf2-6cf5-4d7a-b03a-b3ebb89f7e49>
+- GTFS - Réseau scolaire REDON Agglomération - GTFS — <https://www.data.gouv.fr/api/1/datasets/r/342f132a-055a-45dd-a50a-6bef89c58444>
+- GTFS - Réseau scolaire SLAM - 2026_08_27_GTFS_SLAM_Scolaire.zip — <https://transport.data.gouv.fr/resources/84189/download>
+- GTFS - Réseau scolaire Scolaris - https://opendata.idelis.fr/?file=GTFS_Scolaris/Data.GTFS.zip — <https://www.data.gouv.fr/api/1/datasets/r/cf2d4693-a21d-41af-9c92-a5f8847e38cb>
+- GTFS - Réseau scolaire Start - GTFS START Thonon Agglomération — <https://www.data.gouv.fr/api/1/datasets/r/7cbb883b-d0cb-4bc7-b2e0-7537afdbc86e>
+- GTFS - Réseau scolaire TEDbus - TEDbus-horaires_scolaires.zip — <https://transport.data.gouv.fr/resources/84251/download>
+- GTFS - Réseau scolaire Tiva - Intercom_de_la_Vire_au_Noireau_Tiva_scolaire_secondaires_a_2025_2026_GTFS — <https://www.data.gouv.fr/api/1/datasets/r/4d6b5107-fec7-41bb-9115-bbaafb7e71f1>
+- GTFS - Réseau scolaire de Flers - GTFS  SCOLAIRE DU 01/09/2026 AU 02/07/2027 — <https://www.data.gouv.fr/api/1/datasets/r/e833d9ed-201b-4154-aa16-45bc00939571>
+- GTFS - Réseau scolaire de Martinique - gtfs-scolaire-mt.zip — <https://www.data.gouv.fr/api/1/datasets/r/c14a1893-58a1-4e7b-830e-bd1f9daa863d>
+- GTFS - Réseau scolaire interurbain ZOU ! - ZOU_Réseau Scolaire GTFS.Zip — <https://www.data.gouv.fr/api/1/datasets/r/6471d334-17df-4308-bae0-5736c24a2e6a>
+- GTFS - Réseau urbain - Navette Ariane - Offre transport NA Mobilités GTFS — <https://transport.data.gouv.fr/resources/83982/download>
+- GTFS - Réseau urbain - Parc d'Activités du Val Drouette - LIGNE_REGU_PEM_CCPEIF-100926.zip — <https://transport.data.gouv.fr/resources/84205/download>
+- GTFS - Réseau urbain 3CMA - 3CMA BUS Horaires GTFS — <https://www.data.gouv.fr/api/1/datasets/r/ff226a89-a0f7-4e6d-af0c-3b34b54306ae>
+- GTFS - Réseau urbain A Balanina - a-balanina-horaires.zip — <https://www.data.gouv.fr/api/1/datasets/r/f88c086a-4fe1-4af1-a027-f809d4422b65>
+- GTFS - Réseau urbain A Berlina - A-Berlina — <https://www.data.gouv.fr/api/1/datasets/r/a84de823-7cb2-4d87-917e-e2dda306d280>
+- GTFS - Réseau urbain A Citadina - Horaires du réseau de transport A Citadina au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/74f0577f-f709-49db-9750-53c9341f6e50>
+- GTFS - Réseau urbain ARAVIS Bus - Export GTFS - ARAVIS Eté 2026.zip — <https://www.data.gouv.fr/api/1/datasets/r/ef75d2f7-770c-4644-ad07-fdea7eef99ca>
+- GTFS - Réseau urbain ARAVIS Bus - Export GTFS - ARAVIS HIVER 2026 - HIVER20252026.zip — <https://www.data.gouv.fr/api/1/datasets/r/14769e22-a9cd-42b8-85a7-2e0f556e8091>
+- GTFS - Réseau urbain ARVI - GTFS_ARV'i-2CCAM rentrée — <https://transport.data.gouv.fr/resources/83578/download>
+- GTFS - Réseau urbain ARVI - GTFS_ARV'i_09-09_16-10 V3.zip — <https://transport.data.gouv.fr/resources/84192/download>
+- GTFS - Réseau urbain AXO - Arrêts, horaires et parcours théoriques (GTFS) - réseau AXO — <https://www.data.gouv.fr/api/1/datasets/r/0676f78f-66f9-4d37-a67e-0944ac5164e3>
+- GTFS - Réseau urbain AXO - Description du TAD zonal (GTFS-Flex) - réseau AXO — <https://www.data.gouv.fr/api/1/datasets/r/23f2f5ed-c21c-4e87-840b-22512fe7c5d7>
+- GTFS - Réseau urbain AggloBus - GTFS Bourges Agglobus — <https://www.data.gouv.fr/api/1/datasets/r/ef2f826c-c1c6-4eb4-9da3-4c2f37b3afaf>
+- GTFS - Réseau urbain Agglobus - GTFS L7 ET L8 — <https://www.data.gouv.fr/api/1/datasets/r/12c4aed4-a268-4cb3-8fb5-7625a747cf56>
+- GTFS - Réseau urbain Agglobus - GTFS YANABUS 2026 — <https://www.data.gouv.fr/api/1/datasets/r/d358344a-ed1e-4d74-b092-9cbc517b10a8>
+- GTFS - Réseau urbain Alesy - GTFS du réseau Ales'y — <https://www.data.gouv.fr/api/1/datasets/r/b9a0f32e-4386-454c-8759-b82653fa861e>
+- GTFS - Réseau urbain Alliance - GTFS statique - Alliance bus — <https://transport.data.gouv.fr/resources/84228/download>
+- GTFS - Réseau urbain Alternéo - gtfs-cineo-20260825-20270825.zip — <https://transport.data.gouv.fr/resources/80676/download>
+- GTFS - Réseau urbain Alégo - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/88be32ef-3b1a-493f-b73f-660a1f1b24f7>
+- GTFS - Réseau urbain Aléo - GTFS Théorique Aleo — <https://transport.data.gouv.fr/resources/83839/download>
+- GTFS - Réseau urbain Amelys - gtfs-04-02-2026-05-07-2026.zip — <https://www.data.gouv.fr/api/1/datasets/r/39240e80-d3f4-4702-ba93-520fae414649>
+- GTFS - Réseau urbain Ametis - GTFS - Horaires théoriques + TAD + Scolaire + Shapes — <https://www.data.gouv.fr/api/1/datasets/r/571e3014-066d-4bd6-9f73-fb8065c928c6>
+- GTFS - Réseau urbain Ametis - GTFS - pour être utilisé avec le GTFS-RT — <https://www.data.gouv.fr/api/1/datasets/r/5bc8b7dc-0d4e-48e7-b2ec-eccfe3702c19>
+- GTFS - Réseau urbain Ar bus - Ar bus - Landerneau-Daoulas — <https://www.data.gouv.fr/api/1/datasets/r/80fc7c72-e21e-4458-a692-9da58db27566>
+- GTFS - Réseau urbain Arc-en-ciel - Périmètre Caudrésis-Catésis - Fichier GFTS - Réseau Hauts-de-France - Secteur Caudrésis-Catésis — <https://transport.data.gouv.fr/resources/83396/download>
+- GTFS - Réseau urbain Arche Agglo - GTFS du réseau ARCHE AGGLO LE BUS — <https://transport.data.gouv.fr/resources/84226/download>
+- GTFS - Réseau urbain Argentan Bus - pt-th-offer-argentanbus-gtfs-20241219-303-opendata.zip — <https://transport.data.gouv.fr/resources/82315/download>
+- GTFS - Réseau urbain Artis - GTFS — <https://www.data.gouv.fr/api/1/datasets/r/4ded8fb3-a38d-45c5-b4a7-a2f6ac17ba4f>
+- GTFS - Réseau urbain Astrobus - PT_TH_OFFER_ASTROBUS_gtfs_20251230_980_OPENDATA.zip — <https://transport.data.gouv.fr/resources/82140/download>
+- GTFS - Réseau urbain Astuce - GTFS - Données enrichies du réseau Astuce — <https://www.data.gouv.fr/api/1/datasets/r/307f2911-39a3-42a6-85ee-2b742955836a>
+- GTFS - Réseau urbain Astuce - Liste des arrêts, horaires et parcours du réseau Astuce — <https://www.data.gouv.fr/api/1/datasets/r/c0ebcf01-954a-4d24-b2d8-a00333ffe937>
+- GTFS - Réseau urbain Azalys - Azalys Blois GTFS — <https://www.data.gouv.fr/api/1/datasets/r/e6e0228d-9916-4216-bb5f-7d3edf57866c>
+- GTFS - Réseau urbain BAAG - EXPORT GTFS 250926.zip — <https://www.data.gouv.fr/api/1/datasets/r/ba040e45-b186-4d16-9657-ceb865ff0315>
+- GTFS - Réseau urbain BUSS - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/33f62e9d-5495-413e-ae74-070e52ab51f7>
+- GTFS - Réseau urbain Bastibus - GTFS.zip — <https://transport.data.gouv.fr/resources/84234/download>
+- GTFS - Réseau urbain Baïa - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/9564e981-7d13-481d-a29f-452025af7432>
+- GTFS - Réseau urbain Bibus - Horaires théoriques au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/583d1419-058b-481b-b378-449cab744c82>
+- GTFS - Réseau urbain Brévibus - Données théoriques au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/b8d1007f-567e-48c4-9c40-bee205f1e688>
+- GTFS - Réseau urbain Buss - Horaires théoriques du réseau BUSS - Saintes (GTFS) — <https://www.data.gouv.fr/api/1/datasets/r/f2d4be3b-50bc-4f9b-9818-30860890a864>
+- GTFS - Réseau urbain CA2BM - CA2BM-Lignes-Regulieres_V6-Modif-arret-MAYVILLAGE_gtfs_2025-06-26_08-15-46.zip — <https://www.data.gouv.fr/api/1/datasets/r/db348d20-dc9a-48c7-8120-30afa160a921>
+- GTFS - Réseau urbain CABUS - Horaires théoriques du réseau Cabus (Sarreguemines Confluences) - GTFS — <https://transport.data.gouv.fr/resources/80469/download>
+- GTFS - Réseau urbain CC Sud Gironde Mobilités - Offre transport NA Mobilités GTFS — <https://transport.data.gouv.fr/resources/83853/download>
+- GTFS - Réseau urbain CITALIS - GTFS_CITALIS_BUS.zip — <https://www.data.gouv.fr/api/1/datasets/r/fc065c47-8644-4941-a8ca-4d8322a45749>
+- GTFS - Réseau urbain CTS - Données théoriques (GTFS) — <https://www.data.gouv.fr/api/1/datasets/r/eeea9e52-4f8a-459e-aef5-a093a3b05356>
+- GTFS - Réseau urbain CVL Mobilité - cvlm-lignea-05012025.zip — <https://www.data.gouv.fr/api/1/datasets/r/6348dadb-600c-42c8-bbea-f6ac09505ed3>
+- GTFS - Réseau urbain Calibus - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/c521df03-4d5c-4b38-afee-ef6c0f43a491>
+- GTFS - Réseau urbain Cap Cotentin - Horaires théoriques des lignes régulières et secondaires du réseau Cap Cotentin — <https://www.data.gouv.fr/api/1/datasets/r/2e97c9b3-a59f-42dd-9b9e-a232fa771f21>
+- GTFS - Réseau urbain Cap’Bus - GTFS CapBus — <https://www.data.gouv.fr/api/1/datasets/r/8ce8ad14-836e-427d-bb43-a6ce0ab5ecda>
+- GTFS - Réseau urbain CarSud - gtfs-carsud-20082026.zip — <https://www.data.gouv.fr/api/1/datasets/r/8f3642e3-9fc3-45ed-af46-8c532966ace3>
+- GTFS - Réseau urbain Cara'bus - GTFS — <https://www.data.gouv.fr/api/1/datasets/r/d4915904-ebd0-43cf-9b35-fbfc04ce91fd>
+- GTFS - Réseau urbain Cara'bus - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/3af621da-a600-4da9-92c4-dfd994b22c31>
+- GTFS - Réseau urbain Chamonix - Données théoriques au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/83a2f241-a0a4-4901-b77b-8a71572a9f6a>
+- GTFS - Réseau urbain Cherpa - gtfs-20250113-au-20251228.zip — <https://www.data.gouv.fr/api/1/datasets/r/7d54a219-8fe7-4635-a9fc-cefe5e57462e>
+- GTFS - Réseau urbain Choletbus - gtfs.zip — <https://www.data.gouv.fr/api/1/datasets/r/71e8ee8e-0b55-40a1-a297-21ef89aba4dc>
+- GTFS - Réseau urbain Citibus - Citibus - Offre théorique au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/21ca2b77-505b-4c4c-9154-a044e61b8560>
+- GTFS - Réseau urbain Citéa - gtfs-citea-sept2024.zip — <https://www.data.gouv.fr/api/1/datasets/r/46bf6b5c-68c1-4198-a982-caeee88540a3>
+- GTFS - Réseau urbain Cmonbus - GTFS réseau Cmonbus — <https://www.data.gouv.fr/api/1/datasets/r/a6a32465-7366-47dc-a6fc-96f1d52b09d8>
+- GTFS - Réseau urbain Cmonbus - Horaires théoriques du réseau Cmonbus (GTFS) — <https://transport.data.gouv.fr/resources/80410/download>
+- GTFS - Réseau urbain Colibri - Horaires théoriques du réseau Colibri (Terres Touloises) - GTFS — <https://transport.data.gouv.fr/resources/80463/download>
+- GTFS - Réseau urbain Colibri - Offre TC théorique Colibri — <https://www.data.gouv.fr/api/1/datasets/r/dbd0bd0e-933a-4a21-8772-efdf41778e64>
+- GTFS - Réseau urbain Compagnie d'Autobus de Monaco - gtfs.zip — <https://www.data.gouv.fr/api/1/datasets/r/2f510784-2957-48e3-b01c-b0e4f9938da7>
+- GTFS - Réseau urbain CoqueliGO - GTFS Nouveau réseau urbain CoqueliGO au 01_12_2025 — <https://www.data.gouv.fr/api/1/datasets/r/3bfed862-eba7-4480-9fd5-609b90f8a282>
+- GTFS - Réseau urbain Coralie - CORALIE — <https://www.data.gouv.fr/api/1/datasets/r/becd68ea-3e7a-4336-b14a-dc3bdcf493c2>
+- GTFS - Réseau urbain Corolis - Arrêts, horaires et parcours théoriques (GTFS) - réseau Corolis (urbain) — <https://www.data.gouv.fr/api/1/datasets/r/2b8e53ce-a26c-4986-8d33-505e1b680bb4>
+- GTFS - Réseau urbain Cosibus - Jeu de données théorique du réseau Cosibus (Coutances Mer et Bocage) — <https://transport.data.gouv.fr/resources/82312/download>
+- GTFS - Réseau urbain Couralin - GTFS - COURALIN - GRAND DAX - ETE 2026 — <https://www.data.gouv.fr/api/1/datasets/r/3a010c2b-67da-404c-8cbb-85e62cae129c>
+- GTFS - Réseau urbain Côte&Bus - coteetbus-sae-30-12-2025.zip — <https://www.data.gouv.fr/api/1/datasets/r/c00d487c-4766-4ca1-b736-e7de110331d9>
+- GTFS - Réseau urbain DIGO - Offre transport NA Mobilités GTFS — <https://transport.data.gouv.fr/resources/83870/download>
+- GTFS - Réseau urbain DK'BUS - Réseau Transports Dk'Bus — <https://www.data.gouv.fr/api/1/datasets/r/f51fabfb-9d7a-44b7-bd03-d1032337fb80>
+- GTFS - Réseau urbain DeepMob - pt-th-offer-deepmob-gtfs-20241023-833-opendata.zip — <https://transport.data.gouv.fr/resources/80680/download>
+- GTFS - Réseau urbain Dinamo - Données théoriques au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/7ec415c9-a963-40fc-8350-7ca77cb824c8>
+- GTFS - Réseau urbain Distribus - Données théoriques au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/148bf3a3-792f-44e2-9757-e0cc0d83afae>
+- GTFS - Réseau urbain Distribus - Horaires théoriques du réseau Distribus (Saint-Louis Agglomération) - GTFS — <https://transport.data.gouv.fr/resources/80437/download>
+- GTFS - Réseau urbain DiviaMobilités - gtfs-diviamobilites-current.zip — <https://www.data.gouv.fr/api/1/datasets/r/e0dbd217-15cd-4e28-9459-211a27511a34>
+- GTFS - Réseau urbain Duobus - GTFS du réseau DUOBUS — <https://transport.data.gouv.fr/resources/84112/download>
+- GTFS - Réseau urbain ECLA Mobilité - gtfs-ecla-l1-l2-l3-l4-07-05-2025.zip — <https://www.data.gouv.fr/api/1/datasets/r/ec61df69-830c-4ca7-9d78-9a81c515e9de>
+- GTFS - Réseau urbain ELSA - Horaires théoriques du réseau ELSA (PETR Sélestat Alsace Centrale) - GTFS — <https://transport.data.gouv.fr/resources/80401/download>
+- GTFS - Réseau urbain ENVIBUS - Réseau des transports pubics Envibus  — <https://www.data.gouv.fr/api/1/datasets/r/344e5a88-e993-4952-a8bf-503048020116>
+- GTFS - Réseau urbain EVA'D - Données GTFS réseau EVA'D — <https://www.data.gouv.fr/api/1/datasets/r/429c8587-676a-4ed3-8279-e67403bc36f4>
+- GTFS - Réseau urbain EVA'D - GFTS réseau scolaire — <https://www.data.gouv.fr/api/1/datasets/r/e8b38261-a2df-4f48-8749-93d56c468454>
+- GTFS - Réseau urbain Elios - Données GTFS du réseau urbain Elios du Grand Villeneuvois — <https://www.data.gouv.fr/api/1/datasets/r/9248b0d3-3675-491b-8990-8058f0fdbcb5>
+- GTFS - Réseau urbain Envia - GTFS Théorique — <https://www.data.gouv.fr/api/1/datasets/r/52216d2f-072e-4b7d-af0c-15d8d4e98b09>
+- GTFS - Réseau urbain Estival - GTFS 2026-SPLESTIVAL.zip — <https://www.data.gouv.fr/api/1/datasets/r/3b659ebb-8c17-46f4-a8ac-78c4129a4a29>
+- GTFS - Réseau urbain Evalys - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/4ea5fb1f-3b42-4bc4-a255-303250fca10d>
+- GTFS - Réseau urbain Eveole - GTFS_EVEOLE_DOUAI — <https://www.data.gouv.fr/api/1/datasets/r/99cf5e2f-87c2-4ff1-bc0d-32f04cc213ab>
+- GTFS - Réseau urbain Evidence - gtfs-2024.zip — <https://www.data.gouv.fr/api/1/datasets/r/1f768fa6-ee56-44d8-b322-75b946128fd8>
+- GTFS - Réseau urbain Fablio - GTFS 2026 -Fablio.zip — <https://www.data.gouv.fr/api/1/datasets/r/37ea6578-7f6d-4124-a150-3d450a529d69>
+- GTFS - Réseau urbain Ficibus - Jeu de données théorique du réseau Ficibus (Fécamp Caux Littoral) — <https://transport.data.gouv.fr/resources/82311/download>
+- GTFS - Réseau urbain Figeac - Le Bus - Horaires théoriques du réseau Figeac - Le Bus (GTFS) — <https://www.data.gouv.fr/api/1/datasets/r/ab2d1451-dddd-4814-bc5c-8e219834a3e3>
+- GTFS - Réseau urbain Filibus - chartres.zip — <https://www.data.gouv.fr/api/1/datasets/r/8d4c3e5c-1702-4649-b47a-b16c6016dcc6>
+- GTFS - Réseau urbain Forbus - Horaires théoriques du réseau Forbus (GTFS) — <https://transport.data.gouv.fr/resources/80467/download>
+- GTFS - Réseau urbain Ginko - GTFS du réseau Ginko (lignes urbaines et périurbaines) — <https://www.data.gouv.fr/api/1/datasets/r/e18e0aeb-8805-47fd-bcdb-c226d21c96fe>
+- GTFS - Réseau urbain Glazgo - Données théoriques au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/4dc52cb9-909e-40dd-80e5-a90073bc80fc>
+- GTFS - Réseau urbain Grand Reims Mobilités - Horaires théoriques du réseau Grand Reims Mobilités (GTFS) — <https://transport.data.gouv.fr/resources/80594/download>
+- GTFS - Réseau urbain Grandole Mobilités - gtfs-dole.zip — <https://transport.data.gouv.fr/resources/81254/download>
+- GTFS - Réseau urbain Hilagobus et Gillobus - Transport urbain du 15062026 au 30062027 — <https://www.data.gouv.fr/api/1/datasets/r/34972a83-5b0f-4f99-b9b7-19593a4c6e1d>
+- GTFS - Réseau urbain Hobus - pt-th-offer-hobus-gtfs-20250109-812-opendata.zip — <https://transport.data.gouv.fr/resources/82711/download>
+- GTFS - Réseau urbain Hop Bus - Lien pour la mise à jour du GTFS du réseau Hop Bus — <https://www.data.gouv.fr/api/1/datasets/r/d10fb9b2-1a5a-498c-ba55-e89cf0136ef1>
+- GTFS - Réseau urbain Hoplà - Arrêts, horaires et parcours théoriques (GTFS) - réseau Hoplà — <https://www.data.gouv.fr/api/1/datasets/r/b892a9c7-eda3-4d95-a70b-89b2391e81b0>
+- GTFS - Réseau urbain Hoplà - Description du TAD zonal (GTFS-Flex) - réseau Hoplà — <https://www.data.gouv.fr/api/1/datasets/r/c6279e07-8e38-459a-b96a-96e4109d0816>
+- GTFS - Réseau urbain Horizon - GTFS-20260901.zip — <https://www.data.gouv.fr/api/1/datasets/r/7edd0b40-0936-4adf-88ed-5e9fe9c3977f>
+- GTFS - Réseau urbain Horizon - gtfs-20231109-115706.zip — <https://www.data.gouv.fr/api/1/datasets/r/7e14bf5c-6afb-452f-a469-02e6f44fcfdd>
+- GTFS - Réseau urbain Idelis - https://opendata.idelis.fr/?file=GTFS_MultiRoutes/Data.GTFS.zip — <https://www.data.gouv.fr/api/1/datasets/r/25c5caff-fb19-4358-bb83-7f18d320bea8>
+- GTFS - Réseau urbain Illygo - Données théoriques au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/024123a0-8665-4983-90bd-134ef7d70383>
+- GTFS - Réseau urbain Imagine - Horaires théoriques du réseau Imagine (CA d'Epinal) - GTFS — <https://transport.data.gouv.fr/resources/80461/download>
+- GTFS - Réseau urbain Impulsyon - GTFS Impulsyon — <https://www.data.gouv.fr/api/1/datasets/r/735f1b54-94ee-4a21-b378-05c2b44ad70f>
+- GTFS - Réseau urbain Intercom - gtfs-open-data.zip — <https://www.data.gouv.fr/api/1/datasets/r/5f2edbfa-9025-467d-b769-80f4b1ec4ba6>
+- GTFS - Réseau urbain Irigo - irigo-angers-gtfs — <https://www.data.gouv.fr/api/1/datasets/r/32f30b64-33f7-43bb-9b6f-34c21c2f83a3>
+- GTFS - Réseau urbain Isibus - Horaires théoriques du réseau iSibus (Sarrebourg Moselle Sud) - GTFS — <https://transport.data.gouv.fr/resources/80447/download>
+- GTFS - Réseau urbain Izilo - Lien vers les données théoriques GTFS du SAEIV de Lorient Agglomération — <https://www.data.gouv.fr/api/1/datasets/r/c32dc40b-3538-4796-a6c6-fd239d6c1364>
+- GTFS - Réseau urbain Jybus - Horaires Théoriques du réseau GTFS — <https://www.data.gouv.fr/api/1/datasets/r/9ba40024-aa3c-4e5c-b065-47eef0edf4e6>
+- GTFS - Réseau urbain KARU'LIS - gtfs-smtpcsm-2026.zip — <https://www.data.gouv.fr/api/1/datasets/r/ac89688b-252b-4b23-9e97-39226402cf2b>
+- GTFS - Réseau urbain Kar'Ouest - gtfs-ko.zip — <https://www.data.gouv.fr/api/1/datasets/r/c9c2f609-d0cd-4233-ad1b-cf86b9bf2dc8>
+- GTFS - Réseau urbain Kicéo - Données théoriques au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/565533c0-64ae-44d6-9dfa-169be5b805c6>
+- GTFS - Réseau urbain L'Agglo en Bus - GTFS_CAGTD — <https://www.data.gouv.fr/api/1/datasets/r/78b7910e-1e31-4f47-b0a8-949647205ffa>
+- GTFS - Réseau urbain L'va - L'va - Offre théorique au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/e0831d78-5577-4cae-aa00-de5eeaf3ecb6>
+- GTFS - Réseau urbain LISATIS - GTFS — <https://www.data.gouv.fr/api/1/datasets/r/9364a3b9-6cc7-4543-a927-b31056d07eac>
+- GTFS - Réseau urbain La Croix Valmer - données statiques — <https://www.data.gouv.fr/api/1/datasets/r/bf169a63-e51b-44b3-bca0-e7aaa3335109>
+- GTFS - Réseau urbain La Navette (Gaillac) - gtfs-gaillac.zip — <https://www.data.gouv.fr/api/1/datasets/r/d0579894-2c5a-42c1-a44c-d550af952f49>
+- GTFS - Réseau urbain La Navette (Graulhet) - gtfs_graulhet — <https://www.data.gouv.fr/api/1/datasets/r/257e5818-a7cc-49a4-8ad1-3e84827e6458>
+- GTFS - Réseau urbain La Navette Oloron Sainte-Marie - Horaires théoriques du réseau Oloron Sainte-Marie (GTFS) — <https://www.data.gouv.fr/api/1/datasets/r/10bb8fff-521d-4b27-a85e-79ae704f1ccc>
+- GTFS - Réseau urbain Le 37 - Offre TC théorique le 37 — <https://transport.data.gouv.fr/resources/83725/download>
+- GTFS - Réseau urbain Le Bus - Arrêts, horaires et parcours théoriques (GTFS) - réseau Le Bus — <https://www.data.gouv.fr/api/1/datasets/r/960fa36a-d183-4140-ae64-462d92a06eb8>
+- GTFS - Réseau urbain Le Bus - Description du TAD zonal (GTFS-Flex) - réseau Le Bus — <https://www.data.gouv.fr/api/1/datasets/r/ef552f35-b49b-43d5-8bbc-ad95efdc3d95>
+- GTFS - Réseau urbain Le Bus - Horaires théoriques du réseau LE BUS (Bassin de Pont-A-Moussin) - GTFS — <https://transport.data.gouv.fr/resources/80465/download>
+- GTFS - Réseau urbain Le Bus - Horaires théoriques du réseau Le Bus.GTFS.zip — <https://www.data.gouv.fr/api/1/datasets/r/11e73e58-edb0-4fab-a220-61a659cf6423>
+- GTFS - Réseau urbain Le Bus - pt-th-offer-lebus-gtfs-20240619-303-opendata.zip — <https://transport.data.gouv.fr/resources/82310/download>
+- GTFS - Réseau urbain Le Bus de la Ville d’Amboise - GTFS Amboise — <https://www.data.gouv.fr/api/1/datasets/r/937d0757-36c0-4f96-95a4-287b58048c2d>
+- GTFS - Réseau urbain Le Fil - Horaires théoriques du réseau LE FIL (ST2B) - GTFS — <https://transport.data.gouv.fr/resources/80445/download>
+- GTFS - Réseau urbain Le Met' - Transport - Données GTFS LEMET — <https://www.data.gouv.fr/api/1/datasets/r/92af6161-1b1a-4e0b-8f60-d97f213d993a>
+- GTFS - Réseau urbain Le Passe Pont - gtfs-passe-pont.zip — <https://www.data.gouv.fr/api/1/datasets/r/6f4deabd-1cad-435c-8915-235132d74291>
+- GTFS - Réseau urbain Le SIT - Horaires théoriques du réseau LE SIT (Bassin de Pompey) - GTFS — <https://transport.data.gouv.fr/resources/80475/download>
+- GTFS - Réseau urbain Le TACO - GTFS_2026-2027_TDV_TACO — <https://www.data.gouv.fr/api/1/datasets/r/5b2dfdce-8ab2-41b2-a318-65f884e3ead2>
+- GTFS - Réseau urbain Le Vib' - Données théoriques au format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/87091347-c7fa-4e63-8fb5-005891ece43b>
+- GTFS - Réseau urbain LiA - Offre de transport LiA format GTFS — <https://www.data.gouv.fr/api/1/datasets/r/2178bfa8-9fe0-4633-8223-8c151728ef28>
+- GTFS - Réseau urbain Lib'Bus - Arrêts, horaires et parcours théoriques (GTFS) - réseau Lib'Bus — <https://www.data.gouv.fr/api/1/datasets/r/3074dfb5-2209-44b4-891a-a86694ecaeec>
+- GTFS - Réseau urbain Libellus - libellus.zip — <https://www.data.gouv.fr/api/1/datasets/r/70c9f936-129e-41f4-940a-8e6f272535d1>
+- GTFS - Réseau urbain Libéo - Offre transport NA Mobilités GTFS — <https://www.data.gouv.fr/api/1/datasets/r/87a0b98b-8a5a-4ba7-ad93-5a1fb9924844>
+- GTFS - Réseau urbain Lignes d'Azur - Flux GTFS du réseau de transport public Lignes d'Azur — <https://www.data.gouv.fr/api/1/datasets/r/f5678ab2-c863-4b48-ba1f-9021c7d97634>
+- GTFS - Réseau urbain Linead - GTFS Dreux agglomération — <https://www.data.gouv.fr/api/1/datasets/r/c654db3d-a710-4ed5-a327-417f812bf9a0>
+- GTFS - Réseau urbain Linggo En Ville - Horaires théoriques du réseau Linggo En Ville (PETR du Pays de Langres) - GTFS — <https://transport.data.gouv.fr/resources/80403/download>
+- GTFS - Réseau urbain Linéotim - Linéotim - Morlaix Communauté — <https://www.data.gouv.fr/api/1/datasets/r/6866358a-cb32-451b-8a88-067f704cc770>
+- GTFS - Réseau urbain Lislenbus - lislenbus-lislesurtarn.zip — <https://www.data.gouv.fr/api/1/datasets/r/75f3dd86-0840-445a-92a6-b329bdc61e0c>
+- GTFS - Réseau urbain Lunéo - GTFS Lulu en Bus (Ex LUNEO) — <https://www.data.gouv.fr/api/1/datasets/r/94b9beba-c897-46ca-98a4-a78bf320047a>
+- GTFS - Réseau urbain Lyneo - Données GTFS du réseau de mobilité Lyneo — <https://www.data.gouv.fr/api/1/datasets/r/6b80d2f2-ecd4-4b52-b481-c8b715ae8948>
+- GTFS - Réseau urbain Léo - gtfs-mdma.zip — <https://transport.data.gouv.fr/resources/78934/download>
+- GTFS - Réseau urbain MAT - Réseau_MAT_06102026_au_31122026 — <https://www.data.gouv.fr/api/1/datasets/r/3bd31fbe-93f4-432d-ade7-ee8d69897880>
+- GTFS - Réseau urbain MOCA - Jeu de données théorique du réseau MOCA (Communauté de Communes Caux Austreberthe) — <https://transport.data.gouv.fr/resources/82309/download>
+- GTFS - Réseau urbain Maelis - GTFS mis à jour — <https://www.data.gouv.fr/api/1/datasets/r/4b0bc62d-0854-4ddb-b703-0882e5ad5981>
+- GTFS - Réseau urbain Maelis - GTFS théorique 31/08/26 au 03/01/2027 — <https://www.data.gouv.fr/api/1/datasets/r/e8599784-71ba-4814-a905-4e215295109f>
+- GTFS - Réseau urbain Marinéo - GTFS Données théoriques   — <https://www.data.gouv.fr/api/1/datasets/r/579e4f5e-2916-4b95-90b8-f675943d0136>
+- GTFS - Réseau urbain May'bus - Horaires théoriques du réseau May'bus - Mayenne (GTFS) — <https://www.data.gouv.fr/api/1/datasets/r/220e0fb8-fe04-4d99-9fca-cc812eaadfc3>
+- GTFS - Réseau urbain Mio - Fiches horaires Réseau transports urbains - Mio 2026 — <https://www.data.gouv.fr/api/1/datasets/r/b1b9a7a6-1baf-4113-a6c3-4c5713764ffd>
+- GTFS - Réseau urbain Mistral - Horaires théoriques du Réseau de transport urbain de la Métropole Toulon Provence Méditerranée — <https://www.data.gouv.fr/api/1/datasets/r/b0789d9e-5077-4124-b6b2-773353ada8cf>
+- GTFS - Réseau urbain Mobi - Arrêts, horaires et parcours théoriques (GTFS) - réseau Mobi — <https://www.data.gouv.fr/api/1/datasets/r/ad0a4757-eb8a-4c06-b459-51442466d5c4>
+- GTFS - Réseau urbain Mobi'Vals - Offre théorique Mobi'Vals GTFS — <https://www.data.gouv.fr/api/1/datasets/r/bdbc488f-d0fa-42ae-8e05-a1c291a9abdf>
+- GTFS - Réseau urbain Mobilité en Velay - GTFS Urbain - Fichier ZIP — <https://www.data.gouv.fr/api/1/datasets/r/c3d26d87-0b2d-4d26-83b5-9474f12e31a4>
+- GTFS - Réseau urbain Mobilité en Velay - GTFS Urbain - Fichiers TXT — <https://www.data.gouv.fr/api/1/datasets/r/0bdd928a-c207-4d69-9a0b-cd520e870d7f>
+- ... et 247 autres (voir `data/raw/manifest.csv`)
+
+## Arrêts nationaux
+
+- Arrêts de transport en France (agrégat national GTFS, non dédoublonné) - data.gouv.fr — <https://www.data.gouv.fr/api/1/datasets/r/69cf54c6-6591-4920-b1d6-2a5292964606>
+
+## Catalogue GBFS
+
+- Catalogue mondial des flux GBFS - MobilityData — <https://raw.githubusercontent.com/MobilityData/gbfs/master/systems.csv>
+
+## INSEE
+
+- INSEE BPE 2025 - équipements géolocalisés (commerces, santé, écoles...) — <https://www.insee.fr/fr/statistiques/fichier/8217525/BPE25.parquet>
+- INSEE Filosofi 2021 - population et revenus par carreau de 200 m (GeoPackage) — <https://www.insee.fr/fr/statistiques/fichier/8735162/Filosofi2021_carreaux_200m_gpkg.zip>
+- INSEE Omphale - projections de population 2021-2070 par département et région (tous scénarios) — <https://www.insee.fr/fr/statistiques/fichier/6652134/projdepreg_2021-2070_excel.zip>
+- INSEE Recensement 2023 - Logement par IRIS (dont motorisation des ménages) - France hors Mayotte — <https://www.insee.fr/fr/statistiques/fichier/9061333/base_ic_logement_2023_xlsx.zip>
+- INSEE Recensement 2023 - Logement par IRIS, DOM (Parquet) — <https://api.insee.fr/melodi/file/DS_RP_LOGEMENT_DOM_PRINC_IRIS_2023/PARQUET>
+
+## Sécurité (SSMSI)
+
+- SSMSI (ministère de l'Intérieur) - Base statistique communale de la délinquance enregistrée 2025, géographie 2026 — <https://static.data.gouv.fr/resources/bases-statistiques-communale-departementale-et-regionale-de-la-delinquance-enregistree-par-la-police-et-la-gendarmerie-nationales/20260709-120017/donnee-comm-data.gouv-parquet-2025-geographie2026-produit-le2026-06-25.parquet>
+
+## IGN
+
+- IGN ADMIN EXPRESS COG - limites administratives (communes, EPCI, départements) (ADMIN-EXPRESS-COG_4-0__GPKG_WGS84G_FRA_2026-01-01) — <https://data.geopf.fr/telechargement/download/ADMIN-EXPRESS-COG/ADMIN-EXPRESS-COG_4-0__GPKG_WGS84G_FRA_2026-01-01/ADMIN-EXPRESS-COG_4-0__GPKG_WGS84G_FRA_2026-01-01.7z>
+- IGN CONTOURS IRIS - découpage IRIS (CONTOURS-IRIS_3-0__GPKG_WGS84G_FRA_2026-01-01) — <https://data.geopf.fr/telechargement/download/CONTOURS-IRIS/CONTOURS-IRIS_3-0__GPKG_WGS84G_FRA_2026-01-01/CONTOURS-IRIS_3-0__GPKG_WGS84G_FRA_2026-01-01.7z>
+
+## OpenStreetMap
+
+- OpenStreetMap - rhone-alpes (Geofabrik) — <https://download.geofabrik.de/europe/france/rhone-alpes-latest.osm.pbf>
+
+## Hypothèses de coût et d'impact (config/costs.yaml)
+
+Chaque valeur de `config/costs.yaml` renvoie à l'une de ces sources ou est marquée « hypothèse à valider ».
+
+- [S1] ADEME / 6t, *Enquête nationale sur l'autopartage 2022* : 1 voiture en autopartage remplace 5 à 8 voitures personnelles, supprime 10 000 à 19 000 km/an, libère 0,9 à 3 places — <https://www.ort.bourgogne-franche-comte.developpement-durable.gouv.fr/IMG/pdf/ademe_cp_autopartage_22092022.pdf>, rapport complet <https://www.ort.bourgogne-franche-comte.developpement-durable.gouv.fr/IMG/pdf/enquete-autopartage-2022-rapport.pdf>
+- [S2] GART, coût moyen d'un vélo en libre-service 2 000 à 3 000 €/vélo/an, cité par la Banque des Territoires — <https://www.banquedesterritoires.fr/velos-en-libre-service-un-bilan-coutsavantages-juge-globalement-equilibre>
+- [S3] Commune de Beyne-Heusay (Belgique), tableau de bord : arrêt de bus PMR, quais, abribus (ordre de grandeur, prix belges) — <https://beyne-heusay.be/sites/default/files/documents/news/Tableau-de-bord%20.pdf>
+- [S4] Transition Vélo, ordres de grandeur assurance et entretien d'une voiture (particulier) — <https://www.transitionvelo.com/?p=32352>
+- [S5] Base Empreinte ADEME (voiture thermique 218 gCO2e/km, électrique 103 gCO2e/km), via Greenly — <https://greenly.earth/blog/secteurs/empreinte-carbone-comparatif-transports> ; à vérifier sur <https://base-empreinte.ademe.fr>
+- [S6] ADEME Impact CO2, comparateur transport — <https://impactco2.fr/outils/transport>
+- [S7] Citiz, *Livre blanc de l'autopartage 2026* (non vérifié : aucun chiffre utilisé) — <https://www.citiz.coop/uploads/2026/02/2026-CITIZ-livre_blanc.pdf>
+
+## Services et API utilisés
+
+- geo.api.gouv.fr (API Découpage administratif, Etalab) : rattachement des stations aux communes et EPCI, contour provisoire de la zone — <https://geo.api.gouv.fr>
+- transport.data.gouv.fr, API et métadonnées de validation des GTFS — <https://transport.data.gouv.fr/api/datasets>

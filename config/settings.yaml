@@ -1,0 +1,66 @@
+# Paramètres centraux du projet. Chargés par src/common/config.py (load_settings()).
+# Toute valeur marquée "hypothèse à valider" doit être justifiée dans docs/methodologie.md.
+
+study_area:
+  name: Grenoble-Alpes-Métropole   # choisi en phase 1 (densité Citiz, GTFS TAG propre, 4 types d'offre)
+  insee_communes: []      # vide = toutes les communes de l'EPCI ci-dessous (ADMIN EXPRESS)
+  epci_siren: "200040715"
+  osm_region: rhone-alpes   # Geofabrik : régions d'avant 2016
+  gtfs_keywords: [grenoble, reseau-interurbain-cars-region-isere, cars-region-express, horaires-sncf]
+  citiz_networks: [citiz_auvergne_rhone_alpes]
+  # GBFS à exclure : "Dott France" duplique les flux Dott locaux
+  gbfs_exclude_datasets: [tier-dott-gbfs-france]
+
+crs:
+  metric: "EPSG:2154"     # Lambert-93 : tous les calculs de distance / surface
+  wgs84: "EPSG:4326"      # stockage d'échange et affichage web
+
+walk:
+  minutes: 5
+  speed_kmh: 4.8          # vitesse de marche usuelle -> 5 min ≈ 400 m
+  radius_m: 400           # rayon "5 minutes à pied"
+  radius_large_m: 800     # variable du modèle (≈ 10 min)
+
+offer:
+  buffer_m: 800           # l'offre est chargée sur la zone + 800 m : les carreaux en limite voient les arrêts voisins
+  dedup_m: 40             # fusion des arrêts d'un même mode distants de moins de 40 m
+  dedup_m_by_type: {train: 150}   # grandes gares : quais TER / TGV distants de plus de 40 m
+  typical_weekday: null   # date GTFS de référence (AAAA-MM-JJ) ; null = mardi le plus chargé des 8 prochaines semaines
+  exclude_name_patterns: ["réservé", "demobox"]   # emplacements GBFS non ouverts au public (insensible à la casse)
+
+# Poids par mode dans l'indicateur d'accessibilité (hypothèse à valider).
+# Un arrêt de bus = 1 ; un mode lourd (fréquence, capacité) pèse plus.
+mode_weights:
+  bus: 1.0
+  tram: 2.0
+  metro: 3.0
+  train: 3.0
+  velo: 1.0
+  trottinette: 0.5
+  citiz: 1.5
+# Free-floating (zones Voi) : chaque zone compte une option PAR MODE (vélo, trottinette), au poids ci-dessous
+# à la place du poids du mode ; sinon les ~700 zones de stationnement écrasent le reste de la carte.
+free_floating_weight: 0.5
+# Pondération par la fréquence (TC) : facteur = clip(passages_jour / reference, min, max)
+frequency:
+  enabled: true
+  reference_passages_jour: 100   # ≈ 1 passage / 10 min sur 16 h
+  min_factor: 0.25
+  max_factor: 2.0
+
+candidates:
+  # Pas de vélo en libre-service à stations fixes à Grenoble (Métrovélo = location en agence) :
+  # la station vélo est exclue par défaut, la zone free-floating est conservée.
+  default_types: [citiz_station, bus_stop, free_floating_zone]
+
+# Coûts et paramètres d'impact (fourchettes sourcées) : config/costs.yaml
+costs:
+  file: config/costs.yaml
+
+privacy:
+  min_households: 11      # aucun carreau < 11 ménages affiché isolément (règle du secret statistique INSEE)
+
+paths:
+  raw: data/raw
+  processed: data/processed
+  docs: docs
