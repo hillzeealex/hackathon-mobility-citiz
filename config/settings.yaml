@@ -37,13 +37,9 @@ mode_weights:
   trottinette: 0.5
   citiz: 1.5
 
-# Hypothèses de coût moyennes (€). Fourchettes basse/moyenne/haute sourcées : config/costs.yaml (phase 6).
+# Coûts et paramètres d'impact (fourchettes sourcées) : config/costs.yaml
 costs:
   file: config/costs.yaml
-  defaults:               # hypothèse à valider
-    citiz_station:  {capex: 30000, opex_year: 8000}
-    bus_stop:       {capex: 15000, opex_year: 1000}
-    bike_station:   {capex: 40000, opex_year: 6000}
 
 privacy:
   min_households: 11      # aucun carreau < 11 ménages affiché isolément (règle du secret statistique INSEE)
