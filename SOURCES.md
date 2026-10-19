@@ -9,6 +9,8 @@ Téléchargées le 19/10/2026. Dossier local : `data/`.
 | `data/gbfs/systems.csv` | Catalogue mondial des flux GBFS | https://github.com/MobilityData/gbfs/blob/master/systems.csv | CC-BY |
 | `data/population/` | Filosofi 2021, carreaux de 200 m (métropole, Martinique, La Réunion), GeoPackage | https://www.insee.fr/fr/statistiques/8735162 | Licence Ouverte |
 | `data/projections/` | Omphale, projections de population 2021-2070 par département et région | https://www.insee.fr/fr/statistiques/6652134 | Licence Ouverte |
+| `data/menages/rp2023/` | Recensement 2023, base infracommunale Logement (IRIS), format long Melodi : ménages par nombre de voitures (`CARS` = C0, C1, C_GE1, C_GE2, avec `OCS=DW_MAIN`, autres dimensions `_T`). `GEO` = code IRIS, ou code commune pour les communes non découpées (`+ "0000"` pour joindre aux contours IRIS) | https://www.insee.fr/fr/statistiques/9061333 | Licence Ouverte |
+| `data/stationnement/bnls.csv` | Base nationale des lieux de stationnement hors voirie (826 parkings, non exhaustive) : tarifs 1h-24h, abonnements résident / non résident, places autopartage (`nb_autopartage`) | https://transport.data.gouv.fr/datasets/base-nationale-des-lieux-de-stationnement | Licence Ouverte |
 | `data/admin/` | IGN ADMIN-EXPRESS-COG 4.0 (01/01/2026) et CONTOURS-IRIS 3.0 (01/01/2026), GeoPackage WGS84 | https://geoservices.ign.fr/adminexpress | Licence Ouverte 2.0 |
 
 Non téléchargés :
