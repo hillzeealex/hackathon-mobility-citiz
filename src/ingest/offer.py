@@ -114,20 +114,42 @@ def trip_departures(freq: pd.DataFrame) -> pd.Series:
     return n.groupby(freq["trip_id"]).sum()
 
 
-def gtfs_stop_frequencies(path: Path, area_wgs84, forced_day: str | None = None) -> tuple[pd.DataFrame, dict]:
-    """[stop_id, nom, lon, lat, type, passages_jour] pour les arrêts de `area_wgs84`."""
+def last_valid_weekday(cal: pd.DataFrame, cal_dates: pd.DataFrame, trips: pd.DataFrame, weeks: int = 8) -> dt.date | None:
+    """Flux expiré : mardi le plus chargé des `weeks` dernières semaines de SA période de validité."""
+    dates = pd.concat([cal.get("end_date", pd.Series(dtype=str)), cal_dates.get("date", pd.Series(dtype=str))]).dropna()
+    if dates.empty:
+        return None
+    end = dt.datetime.strptime(dates.max(), "%Y%m%d").date()
+    end -= dt.timedelta(days=(end.weekday() - 1) % 7)  # dernier mardi
+    trips_by_service = trips.groupby("service_id").size()
+    best, best_n = None, 0
+    for k in range(weeks):
+        day = end - dt.timedelta(weeks=k)
+        n = int(trips_by_service.reindex(list(active_services(cal, cal_dates, day))).fillna(0).sum())
+        if n > best_n:
+            best, best_n = day, n
+    return best
+
+
+def gtfs_stop_frequencies(path: Path, area_wgs84=None, forced_day: str | None = None,
+                          coord_mask=valid_coords) -> tuple[pd.DataFrame, dict]:
+    """[stop_id, nom, lon, lat, type, passages_jour] pour les arrêts de `area_wgs84` (tous si None).
+
+    `coord_mask(lon, lat)` filtre les coordonnées aberrantes (par défaut : métropole uniquement).
+    """
     with zipfile.ZipFile(path) as z:
         stops = _read(z, "stops.txt")
-        if stops.empty:
-            return pd.DataFrame(), {"fichier": path.name, "erreur": "stops.txt absent"}
+        if stops.empty or not {"stop_lon", "stop_lat", "stop_id"} <= set(stops.columns):
+            return pd.DataFrame(), {"fichier": path.name, "erreur": "stops.txt absent ou incomplet"}
         if "location_type" in stops:
             stops = stops[stops["location_type"].fillna("0").isin(["0", ""])]
-        stops = stops[valid_coords(stops["stop_lon"], stops["stop_lat"])]
-        minx, miny, maxx, maxy = area_wgs84.bounds
-        lon, lat = stops["stop_lon"].astype(float), stops["stop_lat"].astype(float)
-        stops = stops[lon.between(minx, maxx) & lat.between(miny, maxy)]
-        pts = gpd.GeoSeries(gpd.points_from_xy(stops["stop_lon"].astype(float), stops["stop_lat"].astype(float)), crs=4326)
-        stops = stops[pts.within(area_wgs84).to_numpy()]
+        stops = stops[coord_mask(stops["stop_lon"], stops["stop_lat"])]
+        if area_wgs84 is not None:
+            minx, miny, maxx, maxy = area_wgs84.bounds
+            lon, lat = stops["stop_lon"].astype(float), stops["stop_lat"].astype(float)
+            stops = stops[lon.between(minx, maxx) & lat.between(miny, maxy)]
+            pts = gpd.GeoSeries(gpd.points_from_xy(stops["stop_lon"].astype(float), stops["stop_lat"].astype(float)), crs=4326)
+            stops = stops[pts.within(area_wgs84).to_numpy()]
         info = {"fichier": path.name, "arrets_zone": len(stops)}
         if stops.empty:
             return pd.DataFrame(), info
@@ -137,6 +159,11 @@ def gtfs_stop_frequencies(path: Path, area_wgs84, forced_day: str | None = None)
         cal_dates = _read(z, "calendar_dates.txt")
         day = pick_weekday(cal, cal_dates, trips, forced_day)
         act = active_services(cal, cal_dates, day)
+        if not forced_day and not trips["service_id"].isin(act).any():   # flux expiré ou pas encore valide
+            fallback = last_valid_weekday(cal, cal_dates, trips)
+            if fallback is not None:
+                day, info["jour_type_hors_periode"] = fallback, True
+                act = active_services(cal, cal_dates, day)
         trips = trips[trips["service_id"].isin(act)].merge(routes, on="route_id", how="left")
         trips["type"] = trips["route_type"].map(route_mode)
         trip_mode = trips.dropna(subset=["type"]).set_index("trip_id")["type"]
@@ -203,7 +230,9 @@ def _text(v) -> str:
     return (v[0].get("text", "") if v else "") if isinstance(v, list) else (v or "")
 
 
-def gbfs_offer(area_wgs84, exclude: set[str], name_patterns: tuple[str, ...] = ()) -> pd.DataFrame:
+def gbfs_offer(area_wgs84, exclude: set[str], name_patterns: tuple[str, ...] = (),
+               coord_mask=valid_coords) -> pd.DataFrame:
+    """Stations et zones GBFS dans `area_wgs84` (toutes si None) ; coord_mask filtre les coordonnées aberrantes."""
     catalog = {d["slug"]: d for d in json.loads(raw("transport_data_gouv", "catalogue_datasets.json").read_text(encoding="utf-8"))}
     rows = []
     for root, is_citiz in ((raw("gbfs_citiz"), True), (raw("gbfs_all"), False)):
@@ -230,9 +259,11 @@ def gbfs_offer(area_wgs84, exclude: set[str], name_patterns: tuple[str, ...] = (
     df = pd.DataFrame(rows)
     if df.empty:
         return df
-    df = df[valid_coords(df["lon"], df["lat"])]
+    df = df[coord_mask(df["lon"], df["lat"])]
     if name_patterns:
         df = df[~df["nom"].str.lower().str.contains("|".join(name_patterns), regex=True)]
+    if area_wgs84 is None:
+        return df.copy()
     pts = gpd.GeoSeries(gpd.points_from_xy(df["lon"].astype(float), df["lat"].astype(float)), crs=4326)
     return df[pts.within(area_wgs84).to_numpy()].copy()
 
