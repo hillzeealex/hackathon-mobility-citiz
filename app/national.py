@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import geopandas as gpd
 import pandas as pd
+import shapely
 import pydeck as pdk
 import streamlit as st
 
@@ -24,18 +25,26 @@ METRICS = {
 EPCI_ONLY = {"score_potentiel_citiz": ("Potentiel Citiz (score 0-1)", lambda v: fr(v, 2), True)}
 
 
+def light(g: gpd.GeoDataFrame, tolerance: float) -> gpd.GeoDataFrame:
+    """Contours allégés pour l'affichage (degrés WGS84) : moins de points et de décimales à envoyer au navigateur."""
+    g = g.copy()
+    g["geometry"] = shapely.set_precision(g.geometry.simplify(tolerance, preserve_topology=True).values, tolerance / 3)
+    return g[~g.geometry.is_empty]
+
+
 @st.cache_resource(show_spinner="Chargement de la carte nationale…")
 def national_layers() -> dict:
-    return {"Départements": gpd.read_parquet(APP / "departements.parquet"),
-            "EPCI": gpd.read_parquet(APP / "epci.parquet")}
+    return {"Départements": light(gpd.read_parquet(APP / "departements.parquet"), 0.003),
+            "EPCI": light(gpd.read_parquet(APP / "epci.parquet"), 0.003)}
 
 
 @st.cache_resource(show_spinner="Chargement du département…", max_entries=6)
 def dep_layer(dep: str, kind: str) -> gpd.GeoDataFrame:
-    return gpd.read_parquet(APP / "dep" / f"{dep}_{kind}.parquet")
+    return light(gpd.read_parquet(APP / "dep" / f"{dep}_{kind}.parquet"), 0.0003)
 
 
-def choropleth(g: gpd.GeoDataFrame, metric: str, label_col: str, metrics: dict, zoom: float):
+def choropleth(g: gpd.GeoDataFrame, metric: str, label_col: str, metrics: dict, zoom: float, frame=None):
+    """frame : géométries sur lesquelles centrer la carte (par défaut toutes)."""
     label, fmt_, hot = metrics[metric]
     g = g[[label_col, metric, "population", "geometry"]].copy()
     g["color"] = colorize(g[metric], reverse=not hot)
@@ -44,7 +53,8 @@ def choropleth(g: gpd.GeoDataFrame, metric: str, label_col: str, metrics: dict, 
     layer = pdk.Layer("GeoJsonLayer", g.drop(columns=[metric, "population"]).__geo_interface__,
                       get_fill_color="properties.color", get_line_color=[255, 255, 255, 80], line_width_min_pixels=0.3,
                       opacity=0.75, pickable=True)
-    st.pydeck_chart(deck([layer], g, f"<b>{{{label_col}}}</b><br/>{label} : {{val}}<br/>Habitants : {{pop}}", zoom))
+    st.pydeck_chart(deck([layer], g if frame is None else frame,
+                         f"<b>{{{label_col}}}</b><br/>{label} : {{val}}<br/>Habitants : {{pop}}", zoom))
 
 
 def render() -> None:
@@ -55,7 +65,7 @@ def render() -> None:
                  "Les reconstruire : `python -m src.national.build_all` (≈ 5 min), ou télécharger la Release "
                  "« donnees-v2 » du dépôt (voir docs/RECUPERER_LES_DONNEES.md).")
         return
-    st.title("France entière : accès à une option de mobilité à 5 minutes à pied")
+    st.title("France entière · accès à la mobilité à 5 min à pied")
     st.markdown("**Cette carte montre**, pour chaque département ou intercommunalité, la part des habitants qui ont "
                 "un bus, un tram, un vélo en libre-service ou une voiture partagée à moins de 5 minutes à pied de chez eux.")
     layers = national_layers()
@@ -71,7 +81,7 @@ def render() -> None:
     metrics = {**METRICS, **(EPCI_ONLY if level == "EPCI" else {})}
     metric = c2.selectbox("Indicateur", list(metrics), format_func=lambda m: metrics[m][0])
     g = layers[level].rename(columns={"nom": "nom_aff"})
-    choropleth(g, metric, "nom_aff", metrics, zoom=4.8)
+    choropleth(g, metric, "nom_aff", metrics, zoom=4.8, frame=g.cx[-5.5:10, 41:51.5])   # centrée sur la métropole
     st.caption("Couleur : du plus froid au plus chaud. Les zones froides signalent un **potentiel d'amélioration**. "
                "Accessibilité calculée à 400 m à vol d'oiseau : c'est une borne haute (la marche réelle, mesurée à "
                "Grenoble et Nantes, donne moins d'accès).")
@@ -95,8 +105,13 @@ def render() -> None:
 
     st.subheader("Zoom sur un département")
     deps = layers["Départements"].sort_values("dep")
-    dep = st.selectbox("Département", deps["dep"], format_func=lambda d: f"{d} · {deps.set_index('dep').at[d, 'nom']}")
-    kind = st.radio("Détail", ["IRIS", "Carreaux 200 m (≥ 11 ménages)"], horizontal=True)
+    names = deps.set_index("dep")["nom"]
+    c1, c2 = st.columns([2, 1])
+    dep = c1.selectbox("Département", deps["dep"], index=None, placeholder="Choisir un département…",
+                       format_func=lambda d: f"{d} · {names[d]}")
+    kind = c2.radio("Détail", ["IRIS", "Carreaux 200 m (≥ 11 ménages)"], horizontal=True)
+    if dep is None:
+        return
     if not (APP / "dep" / f"{dep}_{'iris' if kind == 'IRIS' else 'carreaux'}.parquet").exists():
         st.info("Pas de population au carreau (Filosofi ne couvre ni la Guadeloupe, ni la Guyane, ni Mayotte) : "
                 "aucun indicateur d'accessibilité par habitant pour ce territoire. Son offre de transport est connue.")

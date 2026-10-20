@@ -24,11 +24,11 @@ def test_nantes_all_tabs_greedy_then_ilp():
     assert len(at.tabs) == 5
     assert not any("FACTICES" in w.value for w in at.warning)
     labels = [m.label for m in at.metric]
-    assert "Habitants nouvellement à 5 min d'un autopartage" in labels and "CO₂ évité (estimation prudente)" in labels
+    assert "Habitants gagnés" in labels and "CO₂ évité (prudent)" in labels
     assert at.dataframe, "liste priorisée absente"
     next(r for r in at.radio if r.label == "Méthode").set_value("ilp").run()
     at.select_slider(key="budget").set_value(1_000_000).run()
-    at.slider(key="equity").set_value(2.0).run()
+    at.select_slider(key="equity").set_value(2.0).run()
     next(r for r in at.radio if r.label == "Échelle").set_value("Carreaux 200 m").run()
     next(r for r in at.radio if r.label == "Indicateur").set_value("Options pour 1 000 habitants (2SFCA)").run()
     assert not at.exception, at.exception
@@ -65,13 +65,13 @@ def metric(at: AppTest, label: str) -> str:
                     reason="données de Nantes absentes (python -m scripts.build_all --ville nantes)")
 def test_nantes_demo_button_and_precomputed_matches_live():
     at = start(NANTES)
-    pre = metric(at, "Habitants nouvellement à 5 min d'un autopartage")      # 500 000 € : scénario précalculé
+    pre = metric(at, "Habitants gagnés")      # 500 000 € : scénario précalculé
     assert any("précalculé" in c.value for c in at.caption)
-    at.slider(key="equity").set_value(0.6).run()                             # autre équité : calcul en direct
+    at.select_slider(key="equity").set_value(0.6).run()                             # autre équité : calcul en direct
     assert any("calculé en direct" in c.value for c in at.caption)
-    at.slider(key="equity").set_value(0.5).run()
+    at.select_slider(key="equity").set_value(0.5).run()
     at.select_slider(key="budget").set_value(750_000).run()
     next(b for b in at.sidebar.button if "Scénario démo" in b.label).click().run()
     assert at.select_slider(key="budget").value == 500_000 and metric(at, "Stations Citiz recommandées") == "12"
-    assert metric(at, "Habitants nouvellement à 5 min d'un autopartage") == pre
+    assert metric(at, "Habitants gagnés") == pre
     assert not at.exception, at.exception
