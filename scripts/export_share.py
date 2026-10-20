@@ -1,8 +1,8 @@
 """
 Export des données nettoyées pour l'équipe -> data/share/
 
-    python scripts/export_share.py                 # Grenoble + France entière
-    python scripts/export_share.py --only grenoble # ou --only france
+    python scripts/export_share.py                 # Grenoble + Nantes + France entière
+    python scripts/export_share.py --only nantes   # ou --only grenoble / --only france
     python scripts/export_share.py --estimate-raw-zone   # taille estimée d'un zip des données BRUTES de la zone
 
 Grenoble (data/share/), pour chaque table de data/processed/ (zone, population, offre, accessibilité) :
@@ -10,6 +10,8 @@ Grenoble (data/share/), pour chaque table de data/processed/ (zone, population, 
   - <table>.csv      pour Excel (séparateur ;, UTF-8 avec BOM, virgule décimale, latitude/longitude WGS84)
   - <table>.geojson  pour le web (WGS84), seulement s'il fait moins de 50 Mo
   + carte_apercu.html (folium) + hackathon_grenoble_donnees_propres_AAAAMMJJ.zip
+Nantes (data/share/nantes/) : mêmes tables préfixées nantes_ (GPKG + CSV), offre avec population desservie,
+  recommandations Citiz (V2 marche réelle et V1), carte_nantes.html + hackathon_nantes_donnees_propres_AAAAMMJJ.zip
 France entière (data/share/france/), AGRÉGATS seulement (pas de carreaux : trop lourd) :
   - france_departements / france_epci / france_communes  .gpkg (WGS84, toutes les géométries) + .csv
   - france_classement_epci.csv (EPCI classés, pour Excel) + carte_france_departements.html
@@ -22,6 +24,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import re
 import sys
 import zipfile
 from pathlib import Path
@@ -35,6 +38,7 @@ from src.common.config import ROOT, city_processed, load_settings, processed, ra
 
 SHARE = ROOT / "data" / "share"
 FRANCE = "france"            # sous-dossier de SHARE
+NANTES = "nantes"
 EXPORTS_META = ".exports.json"   # tables exportées par partie (le dictionnaire couvre les deux même si une seule est relancée)
 GEOJSON_MAX = 50 * 1024 ** 2
 RISK_MIN_POP = 10_000        # taux de vols par commune publiés seulement au-delà (petits effectifs : bruit, stigmatisation)
@@ -116,6 +120,34 @@ COLUMNS: dict[str, tuple[str, str, str]] = {
 for _t in ("bus", "tram", "train", "telepherique", "velo", "trottinette", "citiz", "metro"):
     COLUMNS[f"n_{_t}_v2"] = (f"Points « {_t} » à 5 min de marche", "points", CALC)
 
+for _t in ("autopartage",):
+    COLUMNS[f"n_{_t}_v2"] = ("Stations d'autopartage hors Citiz (Marguerite) à 5 min de marche", "points", CALC)
+    COLUMNS[f"n_{_t}_v1"] = ("Stations d'autopartage hors Citiz (Marguerite) à 400 m à vol d'oiseau", "points", CALC)
+for _t in ("bus", "tram", "train", "telepherique", "velo", "trottinette", "citiz", "metro"):
+    COLUMNS[f"n_{_t}_v1"] = (f"Points « {_t} » à 400 m à vol d'oiseau", "points", CALC)
+COLUMNS.update({
+    "n_options_v1_sans_poids_ff": ("Comme n_options_v1, free-floating au poids normal du mode", "options", CALC),
+    "part_pop_couverte_v1": ("Part de la population avec au moins une option à 400 m à vol d'oiseau", "0-1", CALC),
+    "acces_1000_v1": ("Options pour 1 000 habitants (2SFCA), vol d'oiseau", "options / 1 000 hab.", CALC),
+    "pop_desservie": ("Habitants (population calée) à 5 min de ce point (V2 marche réelle si disponible, sinon V1)", "habitants", CALC),
+    "pop_seule_option": ("Habitants pour qui ce point est la SEULE option à 5 min", "habitants", CALC),
+    "part_seule_option": ("pop_seule_option / pop_desservie", "0-1", CALC),
+    "version": ("Accessibilité utilisée : v1 vol d'oiseau, v2 marche réelle", "-", CALC),
+    "rang": ("Rang dans la liste priorisée (1 = première station à installer)", "rang", CALC),
+    "cout": ("Coût total de la station sur l'horizon (3 ans, scénario moyen) + surcoût de risque", "€", "config/costs.yaml"),
+    "pop_nouvellement_desservie": ("Habitants qui passent à moins de 5 min d'un autopartage grâce à cette station", "habitants", CALC),
+    "usage_predit": ("Probabilité du modèle qu'une station Citiz soit à 400 m (prédite sans le réseau de la ville)", "0-1", CALC),
+    "cout_par_habitant": ("cout / pop_nouvellement_desservie", "€ / habitant", CALC),
+    "budget_cumule": ("Coût cumulé des stations de rang ≤ celui-ci", "€", CALC),
+    "gain_objectif": ("Gain de la fonction objectif (habitants × équité × usage relatif)", "-", CALC),
+    "origine": ("Type d'emplacement candidat : carreau (centre d'un carreau habité) ou arret_tc", "-", CALC),
+    "commune": ("Commune de l'emplacement", "-", IGN_ADE),
+    "surcout_risque": ("Surcoût de risque de vol inclus dans cout (HYPOTHÈSE À VALIDER AVEC CITIZ)", "€", "config/costs.yaml"),
+    "x": ("Coordonnée X Lambert-93", "m", CALC),
+    "y": ("Coordonnée Y Lambert-93", "m", CALC),
+    "budget_eur": ("Budget du scénario", "€", CALC),
+    "acces": ("Accessibilité utilisée pour la recommandation (v1 / v2)", "-", CALC),
+})
 SSMSI = "SSMSI, délinquance enregistrée par commune 2023-2025"
 V1 = "calcul du projet (V1 : 400 m à vol d'oiseau)"
 COLUMNS.update({
@@ -180,14 +212,17 @@ def describe(table: str, col: str) -> tuple[str, str, str] | None:
 
 
 TABLES = {  # nom exporté -> (description, ce qui a été fait)
-    "zone_communes": ("Les 49 communes de Grenoble-Alpes-Métropole (périmètre d'étude).", []),
+    "zone_communes": ("Les communes de la métropole (périmètre d'étude).", []),
     "population_carreaux": ("Population et caractéristiques socio-économiques par carreau de 200 m.", []),
     "population_iris": ("Agrégat par IRIS de TOUS les carreaux (y compris < 11 ménages) : affichage public recommandé. "
                         "**Effectifs (pop_calee, ind, men, men_pauv) arrondis à 5 près** (secret statistique) ; "
                         "ratios calculés sur les valeurs exactes.", []),
-    "offre": ("Tous les points d'offre de mobilité (arrêts TC, stations Citiz, zones Voi) sur la zone + 800 m.", []),
-    "acces_carreaux": ("Indicateurs d'accessibilité à 5 min par carreau (phase 3).", []),
-    "acces_iris": ("Indicateurs d'accessibilité agrégés par IRIS (phase 3).", []),
+    "offre": ("Tous les points d'offre de mobilité (arrêts TC, stations d'autopartage, vélos, trottinettes) sur la zone "
+              "+ 800 m, avec la population desservie (objectif 2).", []),
+    "recommandations": ("Stations Citiz recommandées (500 000 €, ILP, équité 0,5), dans l'ordre de priorité ; accessibilité "
+                        "en marche réelle (V2). Les fichiers recommandations_*.csv donnent tous les budgets et méthodes.", []),
+    "acces_carreaux": ("Indicateurs d'accessibilité à 5 min par carreau (V1 vol d'oiseau et V2 marche réelle).", []),
+    "acces_iris": ("Indicateurs d'accessibilité agrégés par IRIS.", []),
     "france_departements": ("France entière (DROM inclus) : un indicateur par département. Guadeloupe, Guyane et Mayotte : "
                             "pas de population au carreau (Filosofi), indicateurs vides. Dossier `france/`.", []),
     "france_epci": ("France entière : toutes les intercommunalités, indicateurs + classement du potentiel Citiz "
@@ -267,7 +302,8 @@ def fr(n: float, decimals: int = 0) -> str:
     return f"{n:,.{decimals}f}".replace(",", " ").replace(".", ",")
 
 
-def cleaning_notes() -> list[str]:
+def cleaning_notes(ville: str = "grenoble") -> list[str]:
+    set_city(ville)
     s = load_settings()
     notes = []
     rep = city_processed("population_rapport.json")
@@ -303,11 +339,19 @@ def cleaning_notes() -> list[str]:
                      f"({', '.join(days)}) : évite les vacances scolaires. `frequencies.txt` converti en départs réels.")
     notes += [
         f"**Zone tampon** : l'offre est chargée sur la métropole + {s['offer']['buffer_m']} m (colonne `dans_zone`).",
-        "**Exclusions** : lignes de covoiturage M covoit' ; flux GBFS « Dott France » (doublon) ; emplacement interne "
-        "« DEMOBOX (Réservé Citiz) ».",
+        f"**GTFS retenus** (`config/settings.yaml`, cities.{ville}.gtfs_feeds) : " + ", ".join(
+            f"`{f}`" for f in s["cities"][ville]["gtfs_feeds"]) + " ; exclus partout : covoiturage, Flixbus, BlaBlaCar ; "
+        f"jour type figé au mardi {s['offer']['typical_weekday']}.",
+        "**Exclusions** : flux GBFS « Dott France » (doublon) ; emplacement interne « DEMOBOX (Réservé Citiz) ».",
         "**Corrections de typage GTFS** : `route_type = 5` du téléphérique -> téléphérique ; arrêts SNCF « OCECar » "
         "(autocars de substitution) -> bus.",
-        "**Zones Voi** : chaque zone de stationnement donne un point `velo` et un point `trottinette`.",
+        "**Zones free-floating** : chaque zone de stationnement donne un point `velo` et un point `trottinette`.",
+    ] + ([
+        "**Marguerite** : 61 stations d'autopartage publiées par Nantes Métropole (open data, Licence Ouverte), type "
+        "`autopartage` ; les stations Citiz viennent du GBFS Citiz. Getaround : aucune donnée ouverte.",
+        "**Recommandations** : `src/optim/build_reco.py` ; candidats hors des 5 min de marche d'un autopartage ; coût "
+        "avec surcoût de risque de vol (**hypothèse à valider avec Citiz**) ; voir `docs/chiffres_cles.md`.",
+    ] if ville == "nantes" else []) + [
         "**Coordonnées** : filtrage des points (0,0) ou hors de France métropolitaine.",
     ]
     return notes
@@ -359,14 +403,16 @@ def load_exports_meta() -> dict:
 
 
 def write_dictionary(meta: dict[str, list[dict]], log: list) -> Path:
-    lines = ["# Dictionnaire des données — Hackathon Mobility (Epitech × Citiz) : Grenoble et France entière", "",
+    lines = ["# Dictionnaire des données — Hackathon Mobility (Epitech × Citiz) : Grenoble, Nantes et France entière", "",
              f"Généré par `scripts/export_share.py` le {dt.date.today().isoformat()}. "
              "Méthode détaillée : `docs/methodologie.md` ; sources : `docs/sources.md` ; éthique : `docs/ethique.md`.", "",
              "## Contenu", "",
              "| Dossier / fichier | Contenu |", "|---|---|",
              "| `data/share/` | Grenoble-Alpes-Métropole : carreaux, IRIS, communes, offre (+ accessibilité quand elle est calculée) |",
+             "| `data/share/nantes/` | Nantes Métropole : mêmes tables préfixées `nantes_`, offre avec population desservie, recommandations Citiz |",
              "| `data/share/france/` | France entière : **agrégats** par département, EPCI et commune, classement des EPCI |",
              "| `hackathon_grenoble_donnees_propres_AAAAMMJJ.zip` | tout `data/share/` (hors `france/`) + ce dictionnaire + méthodologie |",
+             "| `hackathon_nantes_donnees_propres_AAAAMMJJ.zip` | tout `data/share/nantes/` + ce dictionnaire + méthodologie, modèle, décisions, chiffres clés |",
              "| `hackathon_france_donnees_propres_AAAAMMJJ.zip` | tout `data/share/france/` + ce dictionnaire + méthodologie, éthique |",
              "", "## Formats", "",
              "| Format | Pour qui | Détails |", "|---|---|---|",
@@ -376,13 +422,15 @@ def write_dictionary(meta: dict[str, list[dict]], log: list) -> Path:
              "| `carte_apercu.html` | tout le monde | double-clic : carte interactive de Grenoble (connexion internet requise pour le fond de carte) |",
              "| `france/carte_france_departements.html` | tout le monde | double-clic : carte nationale par département, un indicateur à la fois |",
              ""]
-    sections = [("grenoble", "Grenoble-Alpes-Métropole", cleaning_notes), ("france", "France entière (niveau 1)", france_notes)]
+    sections = [("grenoble", "Grenoble-Alpes-Métropole (ville exemple)", lambda: cleaning_notes("grenoble")),
+                ("nantes", "Nantes Métropole (ville des recommandations)", lambda: cleaning_notes("nantes")),
+                ("france", "France entière (niveau 1)", france_notes)]
     for part, title, notes in sections:
         if part not in meta:
             continue
         lines += [f"# {title}", "", "## Choix de nettoyage", ""] + [f"- {n}" for n in notes()] + [""]
         for info in meta[part]:
-            desc = TABLES.get(info["table"], ("", []))[0]
+            desc = TABLES.get(info["table"], TABLES.get(info["table"].removeprefix("nantes_"), ("", [])))[0]
             prefix = f"{info['dossier']}/" if info.get("dossier") else ""
             size = ", ".join(f"`{prefix}{info['table']}.{k}` {fr(v / 1024 ** 2, 1)} Mo" for k, v in info["fichiers"].items())
             lines += [f"## {info['table']}", "", desc, "", f"**{fr(info['lignes'])} lignes** — fichiers : {size}", "",
@@ -404,7 +452,7 @@ TYPE_COLORS = {"bus": "#0072b2", "tram": "#d55e00", "train": "#555555", "telephe
                "velo": "#2ca02c", "trottinette": "#bcbd22", "citiz": "#e6007e", "metro": "#cc79a7"}
 
 
-def write_map(layers: dict[str, gpd.GeoDataFrame]) -> Path:
+def write_map(layers: dict[str, gpd.GeoDataFrame], path: Path | None = None) -> Path:
     import folium
     import branca.colormap as cm
 
@@ -457,7 +505,7 @@ def write_map(layers: dict[str, gpd.GeoDataFrame]) -> Path:
                        style_function=lambda f: {"fillColor": cm3(min(f["properties"]["n_options_v2"] or 0, cm3.vmax)),
                                                  "color": "#999", "weight": 0.3, "fillOpacity": 0.6}).add_to(m)
     folium.LayerControl(collapsed=False).add_to(m)
-    path = SHARE / "carte_apercu.html"
+    path = path or SHARE / "carte_apercu.html"
     m.save(str(path))
     return path
 
@@ -643,8 +691,8 @@ def export_france(log: list) -> tuple[list[dict], list[Path]]:
     return infos, [carte]
 
 
-def export_grenoble(log: list) -> tuple[list[dict], list[Path]]:
-    set_city("grenoble")
+def export_city(ville: str, log: list, sub: str = "", prefix: str = "") -> tuple[list[dict], list[Path]]:
+    set_city(ville)
     layers: dict[str, gpd.GeoDataFrame] = {}
 
     zone = gpd.read_file(city_processed("zone.gpkg"))
@@ -657,29 +705,47 @@ def export_grenoble(log: list) -> tuple[list[dict], list[Path]]:
     layers["population_carreaux"] = cells[cells.men >= MIN_MEN].assign(nom_commune=lambda d: d.code_insee.map(nom))
     iris = iris_aggregate(cells)
     layers["population_iris"] = round_counts(iris[iris.men >= MIN_MEN])
-    log.append(f"carreaux exclus (< {MIN_MEN} ménages) : {int((cells.men < MIN_MEN).sum())} ; "
+    log.append(f"{ville} : carreaux exclus (< {MIN_MEN} ménages) : {int((cells.men < MIN_MEN).sum())} ; "
                f"IRIS exclus : {int((iris.men < MIN_MEN).sum())}")
 
-    layers["offre"] = gpd.read_parquet(city_processed("offer.parquet"))
+    served = city_processed("offer_served.parquet")
+    layers["offre"] = gpd.read_parquet(served if served.exists() else city_processed("offer.parquet"))
     if city_processed("access_cells.parquet").exists():
         ac = gpd.read_parquet(city_processed("access_cells.parquet"))
         layers["acces_carreaux"] = ac[ac.men >= MIN_MEN]
     if city_processed("access_iris.parquet").exists():
         ai = gpd.read_parquet(city_processed("access_iris.parquet"))
         layers["acces_iris"] = round_counts(ai[ai.menages >= MIN_MEN] if "menages" in ai else ai)
-    else:
-        log.append("tables d'accessibilité absentes (phase 3 en cours) : non exportées")
+    reco = sorted(city_processed().glob("recommandations_ilp_500000_v2.csv")) or sorted(city_processed().glob("recommandations_ilp_500000*.csv"))
+    if reco:
+        r = pd.read_csv(reco[0], sep=";", decimal=",", dtype={"code_iris": str})
+        layers["recommandations"] = gpd.GeoDataFrame(r, geometry=gpd.points_from_xy(r["x"], r["y"]), crs=zone.crs)
 
-    infos = [export_table(name, g, log) for name, g in layers.items()]
-    return infos, [write_map(layers)]
+    folder = SHARE / sub
+    infos = [export_table(prefix + name, g, log, sub=sub, geojson=not sub) for name, g in layers.items()]
+    for f in sorted(city_processed().glob("recommandations_*_v[12].csv")) if sub else []:   # tous budgets / méthodes, V1 et V2
+        (folder / f.name).write_bytes(f.read_bytes())
+    for f in ("reco_resume_v1.json", "reco_resume_v2.json", "served_by_type.csv", "access_comparaison.json") if sub else ():
+        if city_processed(f).exists():
+            (folder / f).write_bytes(city_processed(f).read_bytes())
+    carte = folder / ("carte_apercu.html" if not sub else f"carte_{ville}.html")
+    return infos, [write_map(layers, carte)]
 
 
-def export_all(parts: tuple[str, ...] = ("grenoble", "france")) -> None:
+def export_grenoble(log: list) -> tuple[list[dict], list[Path]]:
+    return export_city("grenoble", log)
+
+
+def export_nantes(log: list) -> tuple[list[dict], list[Path]]:
+    return export_city("nantes", log, sub=NANTES, prefix="nantes_")
+
+
+def export_all(parts: tuple[str, ...] = ("grenoble", "nantes", "france")) -> None:
     SHARE.mkdir(parents=True, exist_ok=True)
     log: list[str] = []
     meta = load_exports_meta()
     maps: list[Path] = []
-    for part, fn in (("grenoble", export_grenoble), ("france", export_france)):
+    for part, fn in (("grenoble", export_grenoble), ("nantes", export_nantes), ("france", export_france)):
         if part in parts:
             meta[part], m = fn(log)
             maps += m
@@ -693,6 +759,11 @@ def export_all(parts: tuple[str, ...] = ("grenoble", "france")) -> None:
         files = [(f, f.name) for f in sorted(SHARE.iterdir())
                  if f.is_file() and f.suffix != ".zip" and not f.name.startswith(".")]
         zips.append(write_zip(SHARE / f"hackathon_grenoble_donnees_propres_{stamp}.zip", files + docs[:2]))
+    if "nantes" in parts:
+        files = [(f, f"{NANTES}/{f.name}") for f in sorted((SHARE / NANTES).iterdir())
+                 if f.is_file() and not re.fullmatch(r"recommandations_[a-z]+_\d+\.csv", f.name)]   # anciennes sorties sans version
+        extra = [(ROOT / "docs" / d, d) for d in ("modele.md", "decisions.md", "choix_ville.md", "chiffres_cles.md")]
+        zips.append(write_zip(SHARE / f"hackathon_nantes_donnees_propres_{stamp}.zip", files + [(dico, dico.name)] + docs + extra))
     if "france" in parts:
         files = [(f, f"{FRANCE}/{f.name}") for f in sorted((SHARE / FRANCE).iterdir()) if f.is_file()]
         zips.append(write_zip(SHARE / f"hackathon_france_donnees_propres_{stamp}.zip", files + [(dico, dico.name)] + docs))
@@ -775,6 +846,6 @@ if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--estimate-raw-zone", action="store_true", help="estime la taille d'un zip des données brutes de la zone")
-    ap.add_argument("--only", choices=["grenoble", "france"], help="n'exporter qu'une partie (défaut : les deux)")
+    ap.add_argument("--only", choices=["grenoble", "nantes", "france"], help="n'exporter qu'une partie (défaut : toutes)")
     a = ap.parse_args()
-    estimate_raw_zone() if a.estimate_raw_zone else export_all((a.only,) if a.only else ("grenoble", "france"))
+    estimate_raw_zone() if a.estimate_raw_zone else export_all((a.only,) if a.only else ("grenoble", "nantes", "france"))
