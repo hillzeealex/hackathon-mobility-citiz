@@ -22,6 +22,7 @@ cities:
     insee_communes: []
     osm_region: pays-de-la-loire
     v2: false                 # V2 à la fin, s'il reste du temps (decisions.md)
+    recommandations: true     # candidats + optimisation (src/optim/build_reco.py)
     # Naolib (bus, tram, Navibus), cars Aléop, SNCF, bacs de Loire. Exclus : agrégat Destineo (doublon de Naolib),
     # BreizhGo TER (doublon SNCF), navettes estivales, transport à la demande, autocars longue distance.
     gtfs_feeds: [reseau-de-transports-collectifs-naolib, arrets-horaires-et-circuits-des-lignes-de-transports-aleop,

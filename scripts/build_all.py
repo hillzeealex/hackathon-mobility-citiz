@@ -6,7 +6,8 @@ Commande unique : reconstruit tout le zoom d'une ville, des données brutes aux 
     python -m scripts.build_all --ville nantes --v2             # force la V2 (extrait OSM de la région requis)
 
 Étapes : zone -> population calée -> offre (GTFS de la ville, GBFS, autopartage local) -> accessibilité V1 [+ V2]
--> population desservie par arrêt / station.
+-> population desservie par arrêt / station -> recommandations (villes avec recommandations: true)
+ou fichiers de l'appli.
 Sorties : data/processed/<ville>/ ; cartes : docs/figures/<ville>/.
 Prérequis : données brutes (docs/RECUPERER_LES_DONNEES.md). Le niveau France entière se reconstruit à part :
 python -m src.national.build_all.
@@ -39,6 +40,12 @@ def main(argv: list[str] | None = None) -> None:
     steps = [("zone", build_zone), ("population", build_population), ("offre", build_offer),
              (f"accessibilité V1{' + V2' if with_v2 else ''}", lambda: build_access(with_v2=with_v2)),
              ("population desservie par arrêt / station", build_served)]
+    if study_area().get("recommandations"):
+        from src.optim.build_reco import build_reco
+        steps.append(("recommandations (modèle requis : python -m src.model.train)", build_reco))
+    else:
+        from src.optim.build_reco import build_app_files
+        steps.append(("fichiers de l'appli", build_app_files))
     t_all = time.perf_counter()
     print(f"=== {study_area()['name']} ({a.ville}) · jour type GTFS {load_settings()['offer']['typical_weekday']} ===",
           flush=True)

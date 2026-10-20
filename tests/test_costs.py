@@ -31,3 +31,10 @@ def test_co2_prudent_default():
 def test_unknown_scenario():
     with pytest.raises(ValueError):
         equipment_cost("bus_stop", "extreme")
+
+
+def test_risk_surcharge_only_above_reference_and_capped():
+    from src.optim.costs import risk_surcharge
+    out = risk_surcharge([0.5, 1.0, 1.5, 10.0, float("nan")], scenario="moyenne", horizon_ans=3)
+    # 3 ans × 1 700 € × 0,5 × excès (plafonné à 2)
+    assert out.tolist() == [0, 0, 1275.0, 5100.0, 0]
