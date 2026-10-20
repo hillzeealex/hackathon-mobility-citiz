@@ -42,6 +42,26 @@ def snap_to_edges(points_xy: np.ndarray, edges) -> pd.DataFrame:
                          "v": edges["v"].to_numpy()[e]})
 
 
+def nearest_walk_distance(graph, edges, from_xy: np.ndarray, to_xy: np.ndarray, cutoff: float = 3000) -> np.ndarray:
+    """Distance de marche (m) de chaque point `from_xy` au point `to_xy` le plus proche sur le réseau piéton
+    (Dijkstra multi-sources, rabattements compris) ; inf au-delà de `cutoff`."""
+    import networkx as nx
+
+    st, sf = snap_to_edges(to_xy, edges), snap_to_edges(from_xy, edges)
+    src = "__sources__"
+    for o in st.itertuples(index=False):
+        for node, w in ((o.u, o.d + o.a), (o.v, o.d + o.L - o.a)):
+            if not graph.has_edge(src, node) or graph[src][node]["length"] > w:
+                graph.add_edge(src, node, length=w)
+    try:
+        D = nx.single_source_dijkstra_path_length(graph, src, cutoff=cutoff, weight="length")
+    finally:
+        graph.remove_node(src)
+    du = sf.u.map(D).astype(float).fillna(np.inf).to_numpy() + sf.d.to_numpy() + sf.a.to_numpy()
+    dv = sf.v.map(D).astype(float).fillna(np.inf).to_numpy() + sf.d.to_numpy() + (sf.L - sf.a).to_numpy()
+    return np.minimum(du, dv)
+
+
 def coverage_network(graph, edges, cells_xy: np.ndarray, offer_xy: np.ndarray, radius: float) -> tuple[sp.csr_matrix, dict]:
     """Couverture par distance de marche ≤ radius sur le réseau piéton.
 
