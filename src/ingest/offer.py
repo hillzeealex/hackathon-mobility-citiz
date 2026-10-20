@@ -26,7 +26,7 @@ import geopandas as gpd
 import numpy as np
 import pandas as pd
 
-from src.common.config import load_settings, processed, raw
+from src.common.config import city_from_args, city_processed, load_settings, raw, study_area
 from src.common.geo import dedup_points, valid_coords
 from src.ingest.zone import buffer_area, load_zone
 
@@ -37,7 +37,7 @@ ROUTE_TYPES = {0: "tram", 1: "metro", 2: "train", 3: "bus", 4: "bus", 5: "teleph
 EXTENDED = [((100, 199), "train"), ((200, 299), "bus"), ((400, 499), "metro"), ((700, 799), "bus"),
             ((800, 899), "bus"), ((900, 999), "tram"), ((1300, 1399), "telepherique"),
             ((1400, 1499), "telepherique")]
-GTFS_EXCLUDE = ("covoit",)  # lignes de covoiturage : pas une offre de transport collectif
+GTFS_EXCLUDE = tuple(load_settings().get("gtfs_exclude_patterns") or ("covoit",))  # covoiturage, longue distance
 # Arrêts dont le mode ne se déduit pas du route_type : la SNCF type « train » des lignes TER dont certaines
 # courses sont assurées par autocar ; ces courses desservent des arrêts « OCECar » (gare routière).
 STOP_MODE_OVERRIDES = (("OCECar", "bus"),)
@@ -159,7 +159,7 @@ def gtfs_stop_frequencies(path: Path, area_wgs84=None, forced_day: str | None = 
         cal_dates = _read(z, "calendar_dates.txt")
         day = pick_weekday(cal, cal_dates, trips, forced_day)
         act = active_services(cal, cal_dates, day)
-        if not forced_day and not trips["service_id"].isin(act).any():   # flux expiré ou pas encore valide
+        if not trips["service_id"].isin(act).any():   # flux expiré (ou pas encore valide) au jour type
             fallback = last_valid_weekday(cal, cal_dates, trips)
             if fallback is not None:
                 day, info["jour_type_hors_periode"] = fallback, True
@@ -191,12 +191,26 @@ def gtfs_stop_frequencies(path: Path, area_wgs84=None, forced_day: str | None = 
     return out, info
 
 
-def gtfs_offer(area_wgs84, forced_day: str | None) -> tuple[pd.DataFrame, pd.DataFrame]:
-    rows, report = [], []
-    for path in sorted(raw("gtfs").glob("*.zip")):
-        if any(k in path.name.lower() for k in GTFS_EXCLUDE):
-            report.append({"fichier": path.name, "erreur": "exclu (covoiturage)"})
-            continue
+def select_feeds(paths: list[Path], feeds: list[str] | None, exclude=GTFS_EXCLUDE) -> tuple[list[Path], list[dict]]:
+    """Flux GTFS de la ville : préfixes `feeds` (cities.<ville>.gtfs_feeds), moins les motifs exclus."""
+    keep, report = [], []
+    for path in sorted(paths):
+        name = path.name.lower()
+        if any(k in name for k in exclude):
+            report.append({"fichier": path.name, "erreur": "exclu (covoiturage / longue distance)"})
+        elif feeds and not any(name.startswith(f.lower()) for f in feeds):
+            continue                                     # hors de la liste de la ville : ignoré silencieusement
+        else:
+            keep.append(path)
+    missing = [f for f in feeds or [] if not any(p.name.lower().startswith(f.lower()) for p in keep)]
+    report += [{"fichier": f, "erreur": "flux attendu absent de data/raw/gtfs"} for f in missing]
+    return keep, report
+
+
+def gtfs_offer(area_wgs84, forced_day: str | None, feeds: list[str] | None = None) -> tuple[pd.DataFrame, pd.DataFrame]:
+    paths, report = select_feeds(list(raw("gtfs").glob("*.zip")), feeds)
+    rows = []
+    for path in paths:
         try:
             df, info = gtfs_stop_frequencies(path, area_wgs84, forced_day)
         except (zipfile.BadZipFile, KeyError, ValueError, StopIteration) as e:
@@ -278,11 +292,11 @@ def build_offer(parts: tuple[str, ...] = ("gtfs", "gbfs")) -> gpd.GeoDataFrame:
 
     frames, gtfs_report = [], pd.DataFrame()
     if "gtfs" in parts:
-        gtfs, gtfs_report = gtfs_offer(area_wgs84, s["offer"].get("typical_weekday"))
+        gtfs, gtfs_report = gtfs_offer(area_wgs84, s["offer"].get("typical_weekday"), study_area().get("gtfs_feeds"))
         frames.append(gtfs)
         print(gtfs_report.to_string(index=False), end="\n\n")
     if "gbfs" in parts:
-        frames.append(gbfs_offer(area_wgs84, set(s["study_area"].get("gbfs_exclude_datasets") or []),
+        frames.append(gbfs_offer(area_wgs84, set(s.get("gbfs_exclude_datasets") or []),
                                  tuple(s["offer"].get("exclude_name_patterns") or ())))
     df = pd.concat([f for f in frames if not f.empty], ignore_index=True)
     for c in ("passages_jour", "capacite"):
@@ -296,10 +310,10 @@ def build_offer(parts: tuple[str, ...] = ("gtfs", "gbfs")) -> gpd.GeoDataFrame:
     out = out[cols[:-1] + ["n_fusionnes", "ids_fusionnes", "dans_zone", "geometry"]]
     out.attrs["zone_provisoire"] = zone.attrs.get("provisoire", False)
 
-    out.to_parquet(processed("offer.parquet"))
-    stats.to_csv(processed("offer_dedup_stats.csv"), index=False)
+    out.to_parquet(city_processed("offer.parquet"))
+    stats.to_csv(city_processed("offer_dedup_stats.csv"), index=False)
     if not gtfs_report.empty:
-        gtfs_report.to_csv(processed("offer_gtfs_report.csv"), index=False)
+        gtfs_report.to_csv(city_processed("offer_gtfs_report.csv"), index=False)
     print(stats.to_string(index=False), end="\n\n")
     print(f"offer.parquet : {len(out)} points ({int(out.dans_zone.sum())} dans la zone), parties : {', '.join(parts)}"
           + ("  [zone PROVISOIRE]" if zone.attrs.get("provisoire") else ""))
@@ -310,6 +324,8 @@ if __name__ == "__main__":
     import argparse
     import sys
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    ap = argparse.ArgumentParser(description="Construit data/processed/offer.parquet")
+    city_from_args()
+    ap = argparse.ArgumentParser(description="Construit data/processed/<ville>/offer.parquet")
+    ap.add_argument("--ville")
     ap.add_argument("--parts", nargs="+", choices=["gtfs", "gbfs"], default=["gtfs", "gbfs"])
     build_offer(tuple(ap.parse_args().parts))

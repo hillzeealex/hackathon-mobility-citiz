@@ -37,10 +37,10 @@ def test_geojson_skipped_when_too_big(tmp_path, monkeypatch):
     assert "geojson" not in info["fichiers"] and not (tmp_path / "zone_communes.geojson").exists() and log
 
 
-@pytest.mark.skipif(not processed("population.parquet").exists(), reason="données réelles absentes")
+@pytest.mark.skipif(not processed("grenoble", "population.parquet").exists(), reason="données réelles absentes")
 def test_every_real_column_is_documented():
-    tables = [gpd.read_file(processed("zone.gpkg")), gpd.read_parquet(processed("population.parquet")),
-              gpd.read_parquet(processed("offer.parquet"))]
+    tables = [gpd.read_file(processed("grenoble", "zone.gpkg")), gpd.read_parquet(processed("grenoble", "population.parquet")),
+              gpd.read_parquet(processed("grenoble", "offer.parquet"))]
     cols = {c for t in tables for c in t.columns if c != "geometry"} | {"latitude", "longitude", "nom_commune", "superficie_km2"}
     assert cols - set(es.COLUMNS) == set()
 

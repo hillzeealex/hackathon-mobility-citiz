@@ -31,7 +31,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from src.common.config import ROOT, load_settings, processed, raw  # noqa: E402
+from src.common.config import ROOT, city_processed, load_settings, processed, raw, set_city  # noqa: E402
 
 SHARE = ROOT / "data" / "share"
 FRANCE = "france"            # sous-dossier de SHARE
@@ -270,7 +270,7 @@ def fr(n: float, decimals: int = 0) -> str:
 def cleaning_notes() -> list[str]:
     s = load_settings()
     notes = []
-    rep = processed("population_rapport.json")
+    rep = city_processed("population_rapport.json")
     if rep.exists():
         r = json.loads(rep.read_text(encoding="utf-8"))
         notes += [
@@ -289,13 +289,13 @@ def cleaning_notes() -> list[str]:
             f"découpées en IRIS ; {r['repli_commune']} replis sur la valeur communale ; {fr(r['commune_non_irisee'])} "
             "carreaux de communes non découpées en IRIS (valeur communale).",
         ]
-    dd = processed("offer_dedup_stats.csv")
+    dd = city_processed("offer_dedup_stats.csv")
     if dd.exists():
         d = pd.read_csv(dd)
         detail = ", ".join(f"{x.type} {x.avant}→{x.apres}" for x in d.itertuples())
         notes.append(f"**Dédoublonnage de l'offre** : points d'un même mode à moins de {s['offer']['dedup_m']} m fusionnés "
                      f"(train : {s['offer'].get('dedup_m_by_type', {}).get('train', '-')} m) ; {detail}.")
-    gr = processed("offer_gtfs_report.csv")
+    gr = city_processed("offer_gtfs_report.csv")
     if gr.exists():
         g = pd.read_csv(gr)
         days = sorted(set(g["jour_type"].dropna()))
@@ -644,14 +644,15 @@ def export_france(log: list) -> tuple[list[dict], list[Path]]:
 
 
 def export_grenoble(log: list) -> tuple[list[dict], list[Path]]:
+    set_city("grenoble")
     layers: dict[str, gpd.GeoDataFrame] = {}
 
-    zone = gpd.read_file(processed("zone.gpkg"))
+    zone = gpd.read_file(city_processed("zone.gpkg"))
     zone["superficie_km2"] = zone.area / 1e6
     zone["date_du_recensement"] = pd.to_datetime(zone["date_du_recensement"]).dt.date.astype(str)
     layers["zone_communes"] = zone
 
-    cells = gpd.read_parquet(processed("population.parquet"))
+    cells = gpd.read_parquet(city_processed("population.parquet"))
     nom = zone.set_index("code_insee")["nom"]
     layers["population_carreaux"] = cells[cells.men >= MIN_MEN].assign(nom_commune=lambda d: d.code_insee.map(nom))
     iris = iris_aggregate(cells)
@@ -659,12 +660,12 @@ def export_grenoble(log: list) -> tuple[list[dict], list[Path]]:
     log.append(f"carreaux exclus (< {MIN_MEN} ménages) : {int((cells.men < MIN_MEN).sum())} ; "
                f"IRIS exclus : {int((iris.men < MIN_MEN).sum())}")
 
-    layers["offre"] = gpd.read_parquet(processed("offer.parquet"))
-    if processed("access_cells.parquet").exists():
-        ac = gpd.read_parquet(processed("access_cells.parquet"))
+    layers["offre"] = gpd.read_parquet(city_processed("offer.parquet"))
+    if city_processed("access_cells.parquet").exists():
+        ac = gpd.read_parquet(city_processed("access_cells.parquet"))
         layers["acces_carreaux"] = ac[ac.men >= MIN_MEN]
-    if processed("access_iris.parquet").exists():
-        ai = gpd.read_parquet(processed("access_iris.parquet"))
+    if city_processed("access_iris.parquet").exists():
+        ai = gpd.read_parquet(city_processed("access_iris.parquet"))
         layers["acces_iris"] = round_counts(ai[ai.menages >= MIN_MEN] if "menages" in ai else ai)
     else:
         log.append("tables d'accessibilité absentes (phase 3 en cours) : non exportées")
@@ -713,7 +714,8 @@ def export_all(parts: tuple[str, ...] = ("grenoble", "france")) -> None:
 
 # ---------------------------------------------------------------------------------------------
 def estimate_raw_zone() -> dict:
-    """Taille estimée d'un zip des données BRUTES limitées à la zone (rien n'est écrit)."""
+    """Taille estimée d'un zip des données BRUTES limitées à la zone de Grenoble (rien n'est écrit)."""
+    set_city("grenoble")
     from src.ingest.archives import filosofi_gpkg, ign_gpkg
     from src.ingest.zone import load_zone
     import pyogrio
@@ -739,7 +741,7 @@ def estimate_raw_zone() -> dict:
     filo = filosofi_gpkg()
     n_filo = len(pyogrio.read_dataframe(filo, bbox=bbox_l93, columns=["idcar_200m"], read_geometry=False))
     est["Filosofi 200 m (carreaux de la zone)"] = filo.stat().st_size * n_filo / pyogrio.read_info(filo)["features"]
-    est["ADMIN EXPRESS (communes + EPCI de la zone)"] = processed("zone.gpkg").stat().st_size * 1.2
+    est["ADMIN EXPRESS (communes + EPCI de la zone)"] = city_processed("zone.gpkg").stat().st_size * 1.2
     ir = ign_gpkg("iris")
     n_ir = len(pyogrio.read_dataframe(ir, bbox=bbox_wgs, columns=["code_iris"], read_geometry=False))
     est["Contours IRIS (zone)"] = ir.stat().st_size * n_ir / pyogrio.read_info(ir)["features"]

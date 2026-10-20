@@ -1,7 +1,8 @@
 """
 Niveau 1 : offre de mobilité de toute la France -> data/processed/national/offer.parquet (sans géométrie)
 
-- GTFS : chaque flux est traité une fois (cache data/processed/national/gtfs_stops/<flux>.parquet, reprise possible),
+- GTFS : chaque flux est traité une fois au jour type figé (cache data/processed/national/gtfs_stops_<jour>/<flux>.parquet,
+  reprise possible),
   2 processus en parallèle (mémoire bornée). Mêmes règles qu'à Grenoble (mardi type, frequencies.txt,
   route_type, autocars OCECar) ; flux expiré : mardi type pris dans sa propre période de validité (signalé).
 - GBFS : toutes les stations Citiz et autres (zones free-floating : une ligne par mode).
@@ -39,13 +40,18 @@ def coord_mask(lon: pd.Series, lat: pd.Series) -> pd.Series:
     return pd.Series(bbox_territory(lo, la) != "", index=lon.index)
 
 
+def stops_dir() -> str:
+    """Cache des arrêts GTFS, propre au jour type (settings.offer.typical_weekday)."""
+    return f"gtfs_stops_{load_settings()['offer']['typical_weekday']}"
+
+
 def process_feed(path: str) -> dict:
     """Traite un flux GTFS (exécuté dans un processus fils) et écrit son cache."""
     path = Path(path)
-    out = national("gtfs_stops", path.stem + ".parquet")
+    out = national(stops_dir(), path.stem + ".parquet")
     t0 = time.perf_counter()
     try:
-        df, info = gtfs_stop_frequencies(path, None, None, coord_mask)
+        df, info = gtfs_stop_frequencies(path, None, load_settings()["offer"]["typical_weekday"], coord_mask)
     except Exception as e:  # noqa: BLE001  (flux corrompu ou non conforme : signalé, non bloquant)
         df, info = pd.DataFrame(), {"fichier": path.name, "erreur": f"{type(e).__name__}: {str(e)[:150]}"}
     if not df.empty:
@@ -58,12 +64,12 @@ def process_feed(path: str) -> dict:
 
 
 def gtfs_national(workers: int = 2) -> pd.DataFrame:
-    national("gtfs_stops").mkdir(parents=True, exist_ok=True)
+    national(stops_dir()).mkdir(parents=True, exist_ok=True)
     report_path = national("gtfs_report.csv")
     done = pd.read_csv(report_path) if report_path.exists() else pd.DataFrame(columns=["fichier"])
     todo = [str(p) for p in sorted(raw("gtfs").glob("*.zip"))
             if not any(k in p.name.lower() for k in GTFS_EXCLUDE)
-            and not (national("gtfs_stops", p.stem + ".parquet").exists() and p.name in set(done["fichier"]))]
+            and not (national(stops_dir(), p.stem + ".parquet").exists() and p.name in set(done["fichier"]))]
     todo.sort(key=lambda p: -Path(p).stat().st_size)          # gros flux d'abord : meilleur équilibrage
     print(f"  GTFS : {len(todo)} flux à traiter ({len(done)} déjà en cache)", flush=True)
     rows = []
@@ -95,10 +101,10 @@ def build_offer() -> pd.DataFrame:
     with stage("GTFS France (2 processus)"):
         rep = gtfs_national()
     with stage("assemblage GTFS"):
-        gtfs = pd.concat([pd.read_parquet(f) for f in sorted(national("gtfs_stops").glob("*.parquet"))
-                          if f.stat().st_size > 0], ignore_index=True)
+        gtfs = pd.concat([pd.read_parquet(f) for f in sorted(national(stops_dir()).glob("*.parquet"))
+                          if f.stat().st_size > 0 and not any(k in f.name.lower() for k in GTFS_EXCLUDE)], ignore_index=True)
     with stage("GBFS France"):
-        gbfs = gbfs_offer(None, set(s["study_area"].get("gbfs_exclude_datasets") or []),
+        gbfs = gbfs_offer(None, set(s.get("gbfs_exclude_datasets") or []),
                           tuple(s["offer"].get("exclude_name_patterns") or ()), coord_mask=coord_mask)
     df = pd.concat([gtfs, gbfs.reindex(columns=COLS)], ignore_index=True)
     for c in ("passages_jour", "capacite", "lon", "lat"):
