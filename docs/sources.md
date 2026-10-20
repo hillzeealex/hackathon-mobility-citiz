@@ -524,3 +524,10 @@ Chaque valeur de `config/costs.yaml` renvoie à l'une de ces sources ou est marq
 
 - geo.api.gouv.fr (API Découpage administratif, Etalab) : rattachement des stations aux communes et EPCI, contour provisoire de la zone — <https://geo.api.gouv.fr>
 - transport.data.gouv.fr, API et métadonnées de validation des GTFS — <https://transport.data.gouv.fr/api/datasets>
+
+## Emploi et Activité Économique (Scénario Professionnel Nantes Métropole)
+
+- **INSEE / Base SIRENE géolocalisée (2024)** : Établissements actifs géocodés, tranches d'effectifs salariés INSEE, format Parquet — <https://static.data.gouv.fr/resources/sirene-geolocalise-parquet/20240107-143656/sirene2024-geo.parquet> (dataset data.gouv.fr : `6597e4bbbecab41da48717c7`).
+- **Nantes Métropole Open Data - Zones d'Activité Économique (ZAE)** : Emprises géographiques des parcs d'activités, pôles tertiaires et zones industrielles de la métropole — <https://data.nantesmetropole.fr/api/explore/v2.1/catalog/datasets/244400404_zones-activite-economique-zae-nantes-metropole/exports/geojson> (dataset `244400404_zones-activite-economique-zae-nantes-metropole`).
+- **INSEE Recensement de la population (MOBPRO / Emploi au lieu de travail)** : Référence de contrôle du volume d'emploi salarié et non salarié sur les 24 communes de Nantes Métropole (~357 000 emplois) — <https://www.insee.fr/fr/statistiques/dossier-complet?codgeo=EPCI-244400404>.
+- **OpenStreetMap** : Emprises foncières d'activités (`landuse in ['industrial', 'commercial', 'retail']`, `building in ['office', 'commercial', 'industrial']`) pour le repérage et la qualification des zones d'activités économiques métropolitaines.

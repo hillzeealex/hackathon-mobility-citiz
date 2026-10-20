@@ -53,6 +53,12 @@ candidates:
   # la station vélo est exclue par défaut, la zone free-floating est conservée.
   default_types: [citiz_station, bus_stop, free_floating_zone]
 
+# Scénario professionnel / flottes d'entreprises (B2B)
+# Score = habitants_couverts + alpha_pro * emplois_couverts
+# Un coefficient alpha de 0,3 pondère la demande d'usage professionnel en journée (déplacements d'affaires, missions) tout en préservant le socle résidentiel du soir et du week-end (hypothèse à valider avec Citiz).
+scenario_pro:
+  alpha_emplois: 0.3      # hypothèse à valider avec Citiz
+
 # Coûts et paramètres d'impact (fourchettes sourcées) : config/costs.yaml
 costs:
   file: config/costs.yaml

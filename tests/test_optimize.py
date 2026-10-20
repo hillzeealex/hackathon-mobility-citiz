@@ -75,6 +75,26 @@ def test_types_counted_separately_and_filter():
     assert only_bus["id"].tolist() == ["B"]
 
 
+def test_scenario_pro_and_mixte():
+    # Carreau 0-2: forte pop (300 hab), 0 emplois (B couvre 0-2)
+    # Carreau 3-5: faible pop (30 hab), très forts emplois (1000 emplois) (C couvre 3-5)
+    p = build()
+    p.cells["emplois"] = [0, 0, 0, 400, 300, 300, 0, 0, 0, 0]
+    # Particuliers : B choisi (300 hab > 270 hab)
+    sel_part = greedy(p, 20, scenario="particuliers").selection
+    assert sel_part["id"].tolist() == ["B"]
+    
+    # Pros : C choisi car 1000 emplois > 0 emplois
+    sel_pros = greedy(p, 20, scenario="pros").selection
+    assert sel_pros["id"].tolist() == ["C"]
+    assert "emplois_nouvellement_desservis" in sel_pros.columns
+    assert sel_pros["emplois_nouvellement_desservis"].iloc[0] == 1000
+
+    # Mixte avec alpha = 0.3 : score B = 300, score C = 270 + 0.3 * 1000 = 570 -> C gagne
+    sel_mixte = greedy(p, 20, scenario="mixte", alpha=0.3).selection
+    assert sel_mixte["id"].tolist() == ["C"]
+
+
 def test_invalid_problem():
     p = build()
     with pytest.raises(ValueError):

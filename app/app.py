@@ -324,6 +324,18 @@ with tab3:
     left, right = st.columns([1, 3])
     with left:
         budget = st.slider("Budget (€)", 20_000, 3_000_000, 100_000, step=10_000, format="%d €")
+        target_scenario = st.radio(
+            "Scénario d'usage",
+            ["Particuliers", "Mixte", "Pros"],
+            index=0,
+            help=(
+                "• Particuliers (officiel, α = 0) : priorité aux résidents (soirée & week-end, chiffres officiels inchangés).\n"
+                "• Mixte (recommandé, α = 0,3) : équilibre résidents et trajets professionnels de journée.\n"
+                "• Pros : flottes professionnelles B2B (maximise les emplois desservis)."
+            )
+        )
+        sc_map = {"Particuliers": ("particuliers", 0.0), "Mixte": ("mixte", 0.3), "Pros": ("pros", 1.0)}
+        sc_name, sc_alpha = sc_map[target_scenario]
         equity = st.slider(
             "Poids de l'équité",
             0.0, 2.0, 0.5, 0.1,
@@ -346,25 +358,39 @@ with tab3:
         st.stop()
 
     @st.cache_data(show_spinner="Optimisation…")
-    def run(folder: str, budget: float, equity: float, types: tuple, method: str):
+    def run(folder: str, budget: float, equity: float, types: tuple, method: str, scenario: str, alpha: float):
         r = optimize(problem(folder), budget, equity, method=method, types=list(types),
+                     scenario=scenario, alpha=alpha,
                      **({"time_limit": 20} if method == "ilp" else {}))
         return r.selection, r.summary
 
-    sel, summary = run(folder, budget, equity, tuple(chosen_types), method)
+    sel, summary = run(folder, budget, equity, tuple(chosen_types), method, sc_name, sc_alpha)
     n_citiz = int((sel.type == "citiz_station").sum())
     co2 = co2_avoided_t_per_year(n_citiz)
 
     with right:
-        m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Emplacements retenus", len(sel))
-        m2.metric("Habitants nouvellement desservis", fmt(summary["pop_nouvellement_desservie"]))
-        m3.metric("Coût par habitant", fmt(summary["cout_total"] / max(1, summary["pop_nouvellement_desservie"]), "€"))
-        m4.metric(
-            "CO₂ évité (estimation prudente)",
-            f"{co2:,.1f} t/an".replace(",", " "),
-            help="Stations Citiz uniquement : 10 000 km de voiture évités/véhicule/an × 0,142 kgCO₂e/km (ADEME, bornes basses)."
-        )
+        has_pro = "emplois_nouvellement_desservis" in summary and summary["emplois_nouvellement_desservis"] > 0
+        if has_pro:
+            m1, m2, m3, m4, m5 = st.columns(5)
+            m1.metric("Emplacements retenus", len(sel))
+            m2.metric("Habitants desservis", fmt(summary["pop_nouvellement_desservie"]))
+            m3.metric("Emplois desservis", fmt(summary["emplois_nouvellement_desservis"]))
+            tot_pers = summary["pop_nouvellement_desservie"] + summary["emplois_nouvellement_desservis"]
+            m4.metric("Coût / personne", fmt(summary["cout_total"] / max(1, tot_pers), "€"))
+            m5.metric("CO₂ évité", f"{co2:,.1f} t/an".replace(",", " "))
+        else:
+            m1, m2, m3, m4 = st.columns(4)
+            m1.metric("Emplacements retenus", len(sel))
+            m2.metric("Habitants nouvellement desservis", fmt(summary["pop_nouvellement_desservie"]))
+            m3.metric("Coût par habitant", fmt(summary["cout_total"] / max(1, summary["pop_nouvellement_desservie"]), "€"))
+            m4.metric(
+                "CO₂ évité (estimation prudente)",
+                f"{co2:,.1f} t/an".replace(",", " "),
+                help="Stations Citiz uniquement : 10 000 km de voiture évités/véhicule/an × 0,142 kgCO₂e/km (ADEME, bornes basses)."
+            )
+
+        if sc_name == "pros":
+            st.warning("⚠️ **Limite méthodologique** : le modèle prédictif d'usage a été entraîné sur les stations résidentielles historiques de Citiz ; il n'est pas calibré pour l'usage professionnel exclusif.")
 
         if not sel.empty:
             s = pd.DataFrame(sel)
@@ -392,6 +418,7 @@ with tab3:
                 )
             with map_c2:
                 show_radius = st.checkbox("Afficher le cercle de marche 5 min (400 m)", value=False, help="Active ou désactive le rayon de marche piéton pour garder une vue nette.")
+                show_jobs = st.checkbox("Afficher la densité d'emplois (Sirene)", value=(sc_name != "particuliers"), help="Affiche les zones d'emploi et pôles d'activités économiques.")
 
             # Coordonnées du centrage
             center_coords = None
@@ -418,6 +445,25 @@ with tab3:
                 st.info(f"💡 **Piste « création ex-nihilo » ({zone_name})** : Aucune station Citiz n'existe actuellement. La carte ci-dessous affiche le plan de déploiement d'un réseau pionnier complet !")
 
             layers = []
+            # Couche optionnelle : densité d'emplois (Sirene agrégé au carreau 200m)
+            if show_jobs and "cells_wgs" in d and "emplois" in d["cells_wgs"].columns:
+                emp_data = d["cells_wgs"][d["cells_wgs"].emplois >= 25].copy()
+                if not emp_data.empty:
+                    emp_data["lon"] = emp_data.geometry.centroid.x
+                    emp_data["lat"] = emp_data.geometry.centroid.y
+                    emp_data["r_emp"] = np.clip(np.sqrt(emp_data.emplois) * 12.0, 35, 280)
+                    layers.append(
+                        pdk.Layer(
+                            "ScatterplotLayer",
+                            emp_data,
+                            get_position=["lon", "lat"],
+                            get_fill_color=[128, 0, 180, 80],
+                            get_radius="r_emp",
+                            stroked=False,
+                            pickable=True
+                        )
+                    )
+
             if not tram_pts.empty:
                 layers.append(
                     pdk.Layer(
@@ -498,11 +544,14 @@ with tab3:
             )
             st.pydeck_chart(deck(layers, d["candidates_wgs"], tooltip_html, zoom=map_zoom, center=center_coords))
 
-            st.caption(
+            leg_text = (
                 "🔵 **Points bleus numérotés (#1, #2...)** : emplacements exacts des nouvelles stations recommandées · "
                 "🔴 **Points roses** : stations Citiz déjà en service · "
                 "🟠 **Petits repères orange** : arrêts du réseau Tramway Naolib."
             )
+            if show_jobs:
+                leg_text += " · 🟣 **Disques violets** : carreaux concentrant les emplois (Sirene géolocalisée)."
+            st.caption(leg_text)
 
             # Si une station est sélectionnée, afficher sa fiche de micro-implantation
             if selected_station_row is not None:
@@ -518,6 +567,8 @@ with tab3:
                         st.info(f"💡 **Pourquoi ici :** {selected_station_row['justification']}")
                 with f_c2:
                     st.metric("Nouveaux habitants à 5 min", fmt(selected_station_row.pop_nouvellement_desservie))
+                    if "emplois_nouvellement_desservis" in selected_station_row:
+                        st.metric("Nouveaux emplois à 5 min", fmt(selected_station_row.emplois_nouvellement_desservis))
                     st.metric("Coût d'installation", fmt(selected_station_row.cout, "€"))
                     gmaps_link = f"https://www.google.com/maps/search/?api=1&query={selected_station_row.lat:.6f},{selected_station_row.lon:.6f}"
                     st.link_button("🌐 Voir la rue sur Google Street View / Maps", gmaps_link, use_container_width=True)
@@ -526,7 +577,14 @@ with tab3:
     display_cols = ["rang", "type", "nom"]
     if "adresse_precise" in s.columns:
         display_cols.append("adresse_precise")
-    display_cols += ["cout", "pop_nouvellement_desservie", "usage_predit", "cout_par_habitant", "budget_cumule"]
+    display_cols += ["cout", "pop_nouvellement_desservie"]
+    if "emplois_nouvellement_desservis" in s.columns:
+        display_cols.append("emplois_nouvellement_desservis")
+    display_cols += ["usage_predit", "cout_par_habitant"]
+    if "cout_par_personne" in s.columns:
+        display_cols.append("cout_par_personne")
+    display_cols.append("budget_cumule")
+
     table = s.assign(type=s.type.map(lambda t: CAND_LABELS.get(t, t)))[display_cols]
     col_rename = {
         "rang": "Rang",
@@ -535,8 +593,10 @@ with tab3:
         "adresse_precise": "Adresse / Carrefour exact",
         "cout": "Coût (€)",
         "pop_nouvellement_desservie": "Nouveaux habitants",
+        "emplois_nouvellement_desservis": "Nouveaux emplois",
         "usage_predit": "Usage annuel (trajets)",
-        "cout_par_habitant": "Coût / habitant (€)",
+        "cout_par_habitant": "Coût / hab. (€)",
+        "cout_par_personne": "Coût / pers. (€)",
         "budget_cumule": "Budget cumulé (€)"
     }
     st.dataframe(table.rename(columns=col_rename).round(1), width="stretch", hide_index=True)
