@@ -28,18 +28,18 @@ Deux niveaux d'analyse :
 
 ```
 config/          settings.yaml (zone d'étude, CRS, rayon de marche, poids des modes), costs.yaml (coûts sourcés)
-src/ingest/      téléchargement, collecte de l'historique Citiz, contrôles, zone, population, offre (Grenoble)
+src/ingest/      téléchargement, collecte de l'historique Citiz, contrôles, zone, population, offre (par ville)
 src/national/    niveau 1 France entière (carreaux, offre, accessibilité, agrégats, classement, fichiers appli)
 src/features/    accessibilité V1 / V2 (réseau piéton OSM)
 src/optim/       coûts et optimiseur (glouton + ILP HiGHS)
 src/common/      configuration, outils géographiques
 app/             application Streamlit (France entière + zoom agglomération)
-scripts/         export des données partagées, données de démo, comparatif des villes
+scripts/         build_all (commande unique par ville), exports partagés, données de démo, comparatif des villes
 fabric/          notebook Microsoft Fabric (ingestion)
 docs/            méthodologie, éthique, sources, guide de récupération des données
 slides/          présentation
 tests/           pytest
-data/            NON versionné : raw/ (brut), processed/ (nettoyé), share/ (exports)
+data/            NON versionné : raw/ (brut), processed/<ville>/ et processed/national/ (nettoyé), share/ (exports)
 ```
 
 ## Installation
@@ -65,10 +65,9 @@ Le dossier `data/` n'est **jamais** versionné. Guide complet (commandes, taille
 python src/ingest/download_all.py --osm region --osm-region rhone-alpes
 python src/ingest/check_data.py --deep        # rapport : data/raw/check_report.md
 
-# 2. Reconstruire Grenoble (≈ 2 min)
-python -m src.ingest.zone
-python -m src.ingest.population
-python -m src.ingest.offer
+# 2. Reconstruire une ville zoomée (Grenoble ≈ 30 s ; villes dans config/settings.yaml, section cities)
+python -m scripts.build_all --ville grenoble
+python -m scripts.build_all --ville nantes
 
 # 3. Reconstruire la France entière (≈ 5 min, pic mémoire ≈ 1,6 Go)
 python -m src.national.build_all

@@ -23,7 +23,7 @@ import pandas as pd
 import pyogrio
 import shapely
 
-from src.common.config import load_settings, processed, raw
+from src.common.config import city_from_args, city_processed, load_settings, raw, study_area
 from src.ingest.zone import buffer_area, load_zone
 
 EDGES = "cache/walk_edges.parquet"
@@ -79,15 +79,15 @@ def largest_component(edges: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
 
 def load_walk_edges(force: bool = False, rebuild: bool = False) -> gpd.GeoDataFrame:
     """force : relit le PBF ; rebuild : recalcule les arêtes depuis le cache des voies (après un changement de filtre)."""
-    path = processed(EDGES)
+    path = city_processed(EDGES)
     if path.exists() and not (force or rebuild):
         return gpd.read_parquet(path)
     s = load_settings()
-    pbf = raw("osm", f"{s['study_area']['osm_region']}-latest.osm.pbf")
+    pbf = raw("osm", f"{study_area()['osm_region']}-latest.osm.pbf")
     area = buffer_area(load_zone()).buffer(MARGIN_M)
     bbox = tuple(gpd.GeoSeries([area], crs=s["crs"]["metric"]).to_crs(4326).total_bounds)
     t0 = time.time()
-    lines_cache = processed("cache", "walk_lines.parquet")   # lecture du PBF (lente) mise en cache
+    lines_cache = city_processed("cache", "walk_lines.parquet")   # lecture du PBF (lente) mise en cache
     if lines_cache.exists() and not force:
         lines = gpd.read_parquet(lines_cache)
     else:
@@ -104,7 +104,7 @@ def load_walk_edges(force: bool = False, rebuild: bool = False) -> gpd.GeoDataFr
             "voies_lues": n_lines, "voies_pietonnes": len(lines), "aretes": len(edges),
             "aretes_hors_composante_principale": n_before - len(edges),
             "longueur_km": round(edges["length"].sum() / 1000), "duree_s": round(time.time() - t0)}
-    processed("cache", "walk_edges_meta.json").write_text(json.dumps(meta, indent=1), encoding="utf-8")
+    city_processed("cache", "walk_edges_meta.json").write_text(json.dumps(meta, indent=1), encoding="utf-8")
     print(meta)
     return edges
 
@@ -119,4 +119,5 @@ def to_graph(edges: pd.DataFrame) -> nx.Graph:
 
 if __name__ == "__main__":
     import sys
+    city_from_args()
     load_walk_edges(force="--force" in sys.argv, rebuild="--rebuild" in sys.argv)

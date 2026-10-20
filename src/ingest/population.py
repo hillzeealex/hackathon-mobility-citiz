@@ -22,7 +22,7 @@ import geopandas as gpd
 import numpy as np
 import pandas as pd
 
-from src.common.config import load_settings, processed, raw
+from src.common.config import city_from_args, city_processed, load_settings, processed, raw
 from src.ingest.archives import filosofi_gpkg, ign_gpkg
 from src.ingest.zone import load_zone
 
@@ -130,14 +130,14 @@ def build_population() -> gpd.GeoDataFrame:
     cells["part_menages_pauvres"] = (cells["men_pauv"] / cells["men"]).where(cells["men"] > 0).clip(0, 1)
     cells["densite_hab_km2"] = cells["pop_calee"] / CELL_AREA_KM2
     cells = cells.to_crs(s["crs"]["metric"])
-    cells.to_parquet(processed("population.parquet"))
-    ratio.to_csv(processed("population_calage_communes.csv"), index=False)
+    cells.to_parquet(city_processed("population.parquet"))
+    ratio.to_csv(city_processed("population_calage_communes.csv"), index=False)
 
     rep.update({"ind_filosofi": round(float(cells["ind"].sum())), "pop_calee": round(float(cells["pop_calee"].sum())),
                 "population_recensement": int(zone["population"].sum()),
                 "carreaux_men_lt_11": int((cells["men"] < s["privacy"]["min_households"]).sum()),
                 "carreaux_estimes_i_est_200": int((cells["i_est_200"] == 1).sum())})
-    processed("population_rapport.json").write_text(json.dumps(rep, indent=1, ensure_ascii=False), encoding="utf-8")
+    city_processed("population_rapport.json").write_text(json.dumps(rep, indent=1, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(rep, indent=1, ensure_ascii=False))
     print("\nCalage par commune (recensement 2023 / Filosofi 2021), 10 ratios les plus élevés :")
     print(ratio.head(10).to_string(index=False, formatters={"ratio": "{:.2f}".format, "ind_filosofi": "{:,.0f}".format}))
@@ -147,4 +147,5 @@ def build_population() -> gpd.GeoDataFrame:
 if __name__ == "__main__":
     import sys
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    city_from_args()
     build_population()
