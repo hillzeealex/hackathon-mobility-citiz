@@ -39,7 +39,7 @@ VIEWS = {"France entière": None, "Nantes Métropole (recommandations)": "nantes
 MIN_MENAGES = 11
 TO_WGS84 = Transformer.from_crs(2154, 4326, always_xy=True)
 FIG = ROOT / "docs" / "figures"
-DEMO = {"budget": 500_000, "equity": 0.5, "method": "glouton"}       # bouton « Scénario démo »
+DEMO = {"budget": 500_000, "equity": 0.5, "method": "ilp"}           # bouton « Scénario démo » (= slides)
 PRECALC = (250_000, 500_000, 1_000_000)                               # budgets lus directement (build_reco)
 
 
@@ -124,8 +124,8 @@ folder = city_folder(ville)
 if not available(folder):
     missing = [f for f in FILES if not (folder / f).exists()]
     st.error(f"Données de {ville} absentes ({', '.join(missing)} dans `data/processed/{ville}/`). "
-             f"Les reconstruire : `python -m scripts.build_all --ville {ville}` (≈ 5 min), ou télécharger la Release "
-             "« donnees-v2 » du dépôt (voir docs/RECUPERER_LES_DONNEES.md).")
+             f"Les reconstruire : `python -m scripts.build_all --ville {ville}` (≈ 5 min, données brutes requises : "
+             "docs/RECUPERER_LES_DONNEES.md). En attendant : captures de slides/img/demo/.")
     st.stop()
 d = data(str(folder))
 meta = d["meta"]
@@ -133,7 +133,7 @@ version = meta.get("version_acces", "v1")
 reco = has_reco(folder)
 if reco:
     st.sidebar.button("▶ Scénario démo (500 000 €)", on_click=demo_scenario, width="stretch",
-                      help="Remet l'onglet « Où investir ? » sur le scénario de référence : 500 000 €, équité 0,5, glouton.")
+                      help="Remet l'onglet « Où investir ? » sur le scénario des slides : 500 000 €, équité 0,5, ILP optimal.")
 st.sidebar.caption(f"{meta.get('zone', '')} · accessibilité {'V2 marche réelle' if version == 'v2' else 'V1 vol d’oiseau'}"
                    f" · GTFS du {meta.get('jour_type_gtfs', '?')}")
 
@@ -252,7 +252,7 @@ with tab3:
                                help="0 : maximise habitants nouvellement desservis × probabilité du modèle. Plus haut : "
                                     "bonus aux quartiers où les ménages sont plus modestes ou sans voiture.")
             method = st.radio("Méthode", ["glouton", "ilp"], key="method",
-                              format_func={"glouton": "Glouton (instantané)", "ilp": "ILP optimal (≤ 20 s)"}.get)
+                              format_func={"glouton": "Glouton (rapide)", "ilp": "ILP optimal"}.get)
             st.button("▶ Scénario démo (500 000 €)", on_click=demo_scenario, key="demo_tab")
 
         pre = precomputed(str(folder), version, budget, round(equity, 2), method) if budget in PRECALC else None

@@ -1,41 +1,77 @@
 # Démo en 3 minutes
 
-Scénario clic par clic de l'application Streamlit pour la soutenance. Chiffres tirés de
-[`chiffres_cles.md`](chiffres_cles.md) (version de démo : tag `demo-v1` puis branche `data-pipeline`).
+Scénario clic par clic de l'application pour la soutenance, avec les phrases à dire. Tous les chiffres viennent
+de l'encadré « Chiffres officiels pour les slides » de [`chiffres_cles.md`](chiffres_cles.md) (V2, marche réelle).
+Version de secours : tag `demo-v1`.
 
-## Avant de passer (5 min avant)
+## Avant de passer (10 min avant)
 
-```bash
-cd hackathon-mobility-citiz
-.venv\Scripts\activate                      # Linux / Mac : source .venv/bin/activate
-streamlit run app/app.py                    # ouvre http://localhost:8501
-```
+1. **Lancer** : double-clic sur `lancer_demo.bat` à la racine du dépôt. Le navigateur s'ouvre sur
+   <http://localhost:8501> en 10 s environ. En ligne de commande, ça donne :
 
-- Laisser l'appli **ouverte sur la vue France** (premier chargement ≈ 5 s, ensuite instantané).
-- Ouvrir une fois la vue Nantes puis revenir sur France : les données sont alors en cache.
-- Navigateur en plein écran, zoom 90 %. Couper les notifications.
+   ```bat
+   .venv\Scripts\python -m streamlit run app\app.py
+   ```
+
+2. **Préchauffer** : ouvrir une fois la vue Nantes (onglets 1 à 5), puis revenir sur « France entière ».
+   Ensuite, tout s'affiche en moins d'une seconde.
+3. Navigateur en plein écran (F11), zoom 90 %, notifications coupées. Ouvrir aussi le dossier `slides\img\demo\`
+   dans l'explorateur (plan B).
+4. **Internet** : seul le fond de carte (CARTO / OpenStreetMap) en a besoin. Sans connexion, tout fonctionne et
+   les cartes s'affichent sur fond blanc.
 
 ## Le scénario (≈ 3 min)
 
 | Temps | Clic | Ce qu'on dit |
 |---|---|---|
-| 0:00 | Barre latérale **Vue** = « France entière ». Carte par **Départements**, indicateur « Part de la population sans aucune option à 5 min ». | « Un Français sur quatre (25,9 %) n'a aucune option de mobilité à 5 minutes à pied, même à vol d'oiseau. Bleu = peu d'habitants sans option, rouge = beaucoup. » |
-| 0:25 | **Échelle** = « EPCI », puis descendre au tableau « Classement des EPCI… potentiel Citiz ». | « On a classé 276 intercommunalités selon la densité, la part de ménages sans voiture et l'autopartage existant. Nice est 1ʳᵉ mais c'est notre contre-exemple : l'autopartage y est invisible en open data. » |
-| 0:50 | **Vue** = « Nantes Métropole (recommandations) ». Onglet **1 · Carte d'accès**, échelle IRIS. | « Nantes, notre ville : 689 000 habitants. En marche réelle, 80,6 % ont une option à 5 min, et seulement 19 % un autopartage (23 Citiz, 61 Marguerite). » |
-| 1:10 | Onglet **2 · Offre et population desservie** : survoler un arrêt, montrer le tableau « Points dont dépendent le plus d'habitants ». | « Pour chaque arrêt et station : combien d'habitants à 5 min, et combien n'ont aucune autre option. » |
-| 1:30 | Onglet **3 · Où investir ?** : budget 500 000 €, équité 0,5, méthode « Glouton ». | « Avec 500 000 €, 12 stations Citiz : +35 000 habitants à 5 min d'un autopartage, 14 € par habitant sur 3 ans, 17 tonnes de CO₂ évitées par an, estimation prudente. » |
-| 1:50 | Faire glisser **Budget** à 1 000 000 €, puis **Méthode** = « ILP optimal » (≈ 5 s). | « Le curseur recalcule en direct : 25 stations, +59 000 habitants. L'ILP prouve l'optimalité ; ici le glouton fait presque aussi bien. » |
-| 2:10 | Descendre à la **Liste priorisée**, montrer la colonne « probabilité modèle », cliquer **Exporter en CSV**. | « Une liste priorisée exportable : quartier, coût, habitants gagnés, probabilité que Citiz s'y installe selon le modèle. » |
-| 2:25 | Onglet **4 · Validation**. | « Le modèle n'a jamais vu le réseau Citiz de Grenoble : il y retrouve 89 % des stations dans les 20 % de carreaux qu'il juge les plus favorables (82 % avec la densité seule). Et la marche réelle compte : à vol d'oiseau, on surestime l'offre de 80 %. » |
-| 2:50 | Conclusion (rester sur Validation). | « Données ouvertes, méthode reproductible en une commande, limites assumées : le modèle apprend où Citiz s'est installé, pas la demande pure ; le surcoût de risque est une hypothèse à valider avec Citiz. » |
+| 0:00 | **Vue** = « France entière » (écran d'accueil). | « Voici la France entière, carreau de 200 m par carreau de 200 m. **Un habitant sur quatre (25,9 %) n'a aucune option de mobilité à 5 minutes à pied** : ni bus, ni tram, ni vélo, ni voiture partagée. Et c'est une estimation optimiste, à vol d'oiseau. » |
+| 0:25 | **Vue** = « Nantes Métropole ». Onglet **1 · Carte d'accès**. | « Nantes, notre ville : 689 000 habitants. On mesure ici la vraie marche, sur les rues et les chemins. **80,6 %** des habitants ont une option à 5 minutes, mais **seulement 19 % ont une voiture partagée** à 5 minutes. Les zones bleues ne sont pas des quartiers à problème : ce sont des **potentiels d'amélioration**. » |
+| 0:55 | Barre latérale : **▶ Scénario démo (500 000 €)**, puis onglet **3 · Où investir ?**. | « Question de Citiz : avec 500 000 €, où ouvrir des stations ? L'optimiseur choisit **12 stations**. **35 000 habitants** de plus se retrouvent à 5 minutes à pied d'une voiture partagée : la couverture passe de **19,0 % à 24,1 %**, pour **13,6 € par habitant** sur 3 ans. » |
+| 1:25 | Survoler une station (ex. n° 2, Vaucanson). | « Pour chaque station : le quartier, le coût, les habitants gagnés, et la distance à pied jusqu'à l'autopartage le plus proche. Ici 7 minutes : sur la carte, elle paraît proche d'une station existante, mais à pied, il faut faire le tour. » |
+| 1:40 | Faire glisser **Budget** jusqu'à **1 000 000 €**. | « Si le budget double : 25 stations, 59 000 habitants gagnés, 27,6 % de couverture. Chaque euro supplémentaire rapporte un peu moins : on voit où s'arrêter. » |
+| 2:00 | Descendre à la **Liste priorisée**. | « Ce que Citiz emporte : une liste priorisée, exportable en CSV, avec pour chaque emplacement le coût et la probabilité, selon notre modèle, qu'une station y fonctionne. » |
+| 2:15 | Onglet **4 · Validation**. | « Peut-on faire confiance au modèle ? On lui a caché tout le réseau Citiz de Grenoble. Il retrouve **89 % des stations** dans les 20 % de carreaux qu'il juge les plus favorables, contre 82 % avec la densité seule. Et la marche réelle compte : à vol d'oiseau, on surestime l'offre de 80 %. » |
+| 2:45 | Conclusion (rester sur Validation). | « Données 100 % ouvertes, recalculables en une commande, limites assumées : le modèle apprend où Citiz s'est déjà installé, et le surcoût lié au risque de vol est une hypothèse à valider avec Citiz. » |
+
+Retour au point de départ à tout moment : bouton **▶ Scénario démo** (500 000 €, équité 0,5, ILP, comme dans
+les slides).
+
+## Si le jury demande…
+
+| Question | Réponse courte | Où le montrer |
+|---|---|---|
+| « Pourquoi cette station si près d'une station existante ? » | La règle est 5 min **à pied réelles**. Vaucanson : 358 m à vol d'oiseau, mais 508 m à pied (≈ 7 min). | Infobulle (onglet 3) ; onglet 5, « Pourquoi une station… » |
+| « Glouton ou ILP ? » | L'ILP trouve l'optimum exact du score ; le glouton fait aussi bien à 500 000 € (34 979 habitants dans les deux cas). | Onglet 3, choix « Méthode » |
+| « Et l'équité ? » | Curseur « Poids de l'équité » : à Nantes, la sélection ne change pas (vérifié de 0 à 2), car les zones denses non couvertes sont aussi celles des ménages modestes ou sans voiture. | Onglet 3 ; `chiffres_cles.md`, section 6 |
+| « Le modèle, c'est quoi ? » | LightGBM sur 313 000 carreaux, 106 intercommunalités ; AUC 0,922 sur les 15 réseaux, chaque réseau étant prédit sans l'avoir vu. | Onglet 4 (tableau par réseau, SHAP) |
+| « Les formules ? » | Options accessibles, 2SFCA, score et contraintes de l'optimiseur, surcoût de risque. | Onglet 5 |
+
+## Plan B : les captures
+
+Si l'appli ne démarre pas, montrer dans l'ordre les images de `slides\img\demo\` (visionneuse Windows, flèche droite) :
+
+| Étape du scénario | Capture |
+|---|---|
+| France entière | `01_france.png` |
+| Nantes, carte d'accès | `02_nantes_carte_acces.png` |
+| (offre et population desservie, si on a le temps) | `03_nantes_offre_desservie.png` |
+| Scénario démo 500 000 € | `04_nantes_ou_investir_500k.png` |
+| Budget 1 000 000 € | `05_nantes_ou_investir_1M.png` |
+| Liste priorisée | `06_nantes_liste_priorisee.png` |
+| Validation | `07_validation.png`, `08_validation_reseaux_shap.png` |
+| Méthode et limites (questions) | `09_methode.png`, `10_methode_limites.png` |
+| Grenoble, ville exemple | `11_grenoble_carte_acces.png` |
+
+Pour régénérer les captures (appli fermée), lancer `python -m scripts.captures_demo`, en ajoutant `--hors-ligne`
+pour vérifier le fonctionnement sans Internet.
 
 ## Si l'appli ne démarre pas
 
 | Symptôme | Action |
 |---|---|
-| `streamlit` introuvable | Activer le venv : `.venv\Scripts\activate`, puis `python -m streamlit run app/app.py`. |
-| Port occupé | `streamlit run app/app.py --server.port 8502`. |
-| Message « Données de nantes absentes » ou « Fichiers nationaux absents » | Données non construites sur ce PC : `python -m src.national.build_all`, `python -m src.model.features`, `python -m src.model.train`, puis `python -m scripts.build_all --ville nantes` et `--ville grenoble` (≈ 12 min au total ; voir `README.md`). |
-| Erreur Python après une modification de dernière minute | Revenir à la version de secours : `git stash` puis `git checkout demo-v1` (les données de `data/processed/` restent compatibles). |
-| Rien ne marche (PC de secours sans données) | Montrer les images de `slides/img/` (cartes France, Grenoble V1/V2, Nantes recommandations, SHAP) et la carte interactive `data/share/france/carte_france_departements.html` (double-clic, fonctionne sans Python). |
-| ILP trop lent en direct | Rester en méthode « Glouton » : même résultat à 0,8 % près sur 1 M€. |
+| `lancer_demo.bat` affiche « Environnement Python absent » | Plan B (captures). Pour réinstaller : `python -m venv .venv` puis `.venv\Scripts\python -m pip install -r requirements.txt`. |
+| Message rouge « Données … absentes » dans l'appli | Plan B. L'appli lit `data/processed/` (jamais versionné) : copier ce dossier depuis le PC qui a servi aux répétitions, ou tout reconstruire depuis les données brutes (`docs/RECUPERER_LES_DONNEES.md`, ≈ 30 min). La Release `donnees-v2` contient les exports partagés (CSV, GPKG, cartes HTML), pas les fichiers de l'appli. |
+| Port 8501 occupé | Streamlit prend automatiquement le port suivant (8502) : lire l'adresse affichée dans la fenêtre noire. |
+| Erreur Python après une modification de dernière minute | `git stash`, puis `git checkout demo-v1`. Les données de `data/processed/` restent compatibles. |
+| Pas d'Internet | Rien à faire : seul le fond de carte disparaît. |
+| Calcul lent sur un budget inhabituel | Rester sur 250 000, 500 000 ou 1 000 000 € (instantanés), ou choisir « Glouton (rapide) ». |
