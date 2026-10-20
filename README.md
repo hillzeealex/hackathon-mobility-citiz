@@ -84,8 +84,8 @@ Pour collecter l'historique d'usage des stations Citiz (à laisser tourner) :
 
 ### Données partagées (sans rien installer)
 
-- **Zips de données nettoyées** : Release GitHub `donnees-v1` (Grenoble ≈ 2 Mo, France entière ≈ 20 Mo,
-  agrégats seulement), ou `data/share/` après l'export.
+- **Zips de données nettoyées** : Release GitHub `donnees-v2` (Grenoble ≈ 3,3 Mo, Nantes ≈ 2,6 Mo, France entière
+  ≈ 20 Mo, agrégats seulement ; `donnees-v1` reste disponible), ou `data/share/` après l'export.
 - **Dictionnaire des données** : [`data/share/DICTIONNAIRE_DONNEES.md`](data/share/DICTIONNAIRE_DONNEES.md).
 - **Cartes HTML** (double-clic) : `data/share/carte_apercu.html` (Grenoble),
   `data/share/france/carte_france_departements.html` (France).

@@ -12,9 +12,9 @@ if not exist ".venv\Scripts\python.exe" (
     pause
     exit /b 1
 )
-if not exist "data\processed\national\app\epci.parquet" echo [ATTENTION] Données France absentes : python -m src.national.build_all (ou Release donnees-v2).
-if not exist "data\processed\nantes\candidates.parquet" echo [ATTENTION] Données Nantes absentes : python -m scripts.build_all --ville nantes (ou Release donnees-v2).
-if not exist "data\processed\grenoble\cells.parquet" echo [ATTENTION] Données Grenoble absentes : python -m scripts.build_all --ville grenoble (ou Release donnees-v2).
+if not exist "data\processed\national\app\epci.parquet" echo [ATTENTION] Données France absentes : python -m src.national.build_all (sinon plan B).
+if not exist "data\processed\nantes\candidates.parquet" echo [ATTENTION] Données Nantes absentes : python -m scripts.build_all --ville nantes (sinon plan B).
+if not exist "data\processed\grenoble\cells.parquet" echo [ATTENTION] Données Grenoble absentes : python -m scripts.build_all --ville grenoble (sinon plan B).
 
 echo.
 echo Démarrage de l'application (environ 10 s), le navigateur va s'ouvrir.

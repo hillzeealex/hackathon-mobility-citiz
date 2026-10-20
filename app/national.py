@@ -62,8 +62,8 @@ def render() -> None:
     missing = [f.name for f in files if not f.exists()]
     if missing:
         st.error(f"Fichiers nationaux absents ({', '.join(missing)} dans `data/processed/national/app/`). "
-                 "Les reconstruire : `python -m src.national.build_all` (≈ 5 min), ou télécharger la Release "
-                 "« donnees-v2 » du dépôt (voir docs/RECUPERER_LES_DONNEES.md).")
+                 "Les reconstruire : `python -m src.national.build_all` (≈ 5 min, données brutes requises : "
+                 "docs/RECUPERER_LES_DONNEES.md). En attendant : captures de slides/img/demo/.")
         return
     st.title("France entière · accès à la mobilité à 5 min à pied")
     st.markdown("**Cette carte montre**, pour chaque département ou intercommunalité, la part des habitants qui ont "
