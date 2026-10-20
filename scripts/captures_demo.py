@@ -78,7 +78,7 @@ def main() -> None:
             if a.hors_ligne:
                 page.route("**/*", lambda r: r.continue_() if r.request.url.startswith(URL) else r.abort())
             page.goto(URL)
-            page.get_by_text("France entière · accès").wait_for(timeout=120_000)
+            page.get_by_text("France entière · mobilité").wait_for(timeout=120_000)
             idle(page, 1)
             print(f"démarrage (serveur + première page) : {time.perf_counter() - t0:.1f} s", flush=True)
             page.wait_for_timeout(6000)                       # carte nationale : GeoJSON des départements

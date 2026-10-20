@@ -20,7 +20,9 @@ echo.
 echo Démarrage de l'application (environ 10 s), le navigateur va s'ouvrir.
 echo Pour arrêter : fermer cette fenêtre (ou Ctrl+C).
 echo.
-".venv\Scripts\python.exe" -m streamlit run app\app.py
+rem Sans fenêtre de première configuration (Streamlit demanderait un e-mail) ; le navigateur s'ouvre dès que l'appli répond.
+start "" /b powershell -NoProfile -WindowStyle Hidden -Command "for ($i = 0; $i -lt 120; $i++) { try { if ((Invoke-WebRequest -UseBasicParsing http://localhost:8501/_stcore/health -TimeoutSec 1).StatusCode -eq 200) { Start-Process 'http://localhost:8501'; break } } catch {}; Start-Sleep -Milliseconds 500 }"
+".venv\Scripts\python.exe" -m streamlit run app\app.py --server.headless true --server.port 8501
 if errorlevel 1 (
     echo.
     echo [ERREUR] L'application s'est arrêtée. Plan B : captures de slides\img\demo\

@@ -43,7 +43,8 @@ def dep_layer(dep: str, kind: str) -> gpd.GeoDataFrame:
     return light(gpd.read_parquet(APP / "dep" / f"{dep}_{kind}.parquet"), 0.0003)
 
 
-def choropleth(g: gpd.GeoDataFrame, metric: str, label_col: str, metrics: dict, zoom: float, frame=None):
+def choropleth(g: gpd.GeoDataFrame, metric: str, label_col: str, metrics: dict, zoom: float, frame=None,
+               height: int | None = None):
     """frame : géométries sur lesquelles centrer la carte (par défaut toutes)."""
     label, fmt_, hot = metrics[metric]
     g = g[[label_col, metric, "population", "geometry"]].copy()
@@ -54,7 +55,8 @@ def choropleth(g: gpd.GeoDataFrame, metric: str, label_col: str, metrics: dict, 
                       get_fill_color="properties.color", get_line_color=[255, 255, 255, 80], line_width_min_pixels=0.3,
                       opacity=0.75, pickable=True)
     st.pydeck_chart(deck([layer], g if frame is None else frame,
-                         f"<b>{{{label_col}}}</b><br/>{label} : {{val}}<br/>Habitants : {{pop}}", zoom))
+                         f"<b>{{{label_col}}}</b><br/>{label} : {{val}}<br/>Habitants : {{pop}}", zoom),
+                    **({"height": height} if height else {}))
 
 
 def render() -> None:
@@ -65,23 +67,24 @@ def render() -> None:
                  "Les reconstruire : `python -m src.national.build_all` (≈ 5 min, données brutes requises : "
                  "docs/RECUPERER_LES_DONNEES.md). En attendant : captures de slides/img/demo/.")
         return
-    st.title("France entière · accès à la mobilité à 5 min à pied")
+    st.title("France entière · mobilité à 5 min à pied")
     st.markdown("**Cette carte montre**, pour chaque département ou intercommunalité, la part des habitants qui ont "
                 "un bus, un tram, un vélo en libre-service ou une voiture partagée à moins de 5 minutes à pied de chez eux.")
     layers = national_layers()
     dep_tot = layers["Départements"]
     pop = dep_tot.population.sum()
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Habitants couverts (carreaux Filosofi)", fmt(pop))
+    m1.metric("Habitants couverts", fmt(pop), help="Habitants des carreaux de 200 m de l'INSEE (Filosofi).")
     m2.metric("Sans aucune option à 5 min", pct((dep_tot.part_pop_sans_option * dep_tot.population).sum() / pop))
-    m3.metric("À 5 min d'un arrêt de transport en commun", pct((dep_tot.part_pop_avec_tc * dep_tot.population).sum() / pop))
+    m3.metric("À 5 min d'un arrêt de TC", pct((dep_tot.part_pop_avec_tc * dep_tot.population).sum() / pop))
     m4.metric("À 5 min d'une station Citiz", pct((dep_tot.part_pop_citiz_5min * dep_tot.population).sum() / pop))
     c1, c2 = st.columns([1, 2])
     level = c1.radio("Échelle", ["Départements", "EPCI"], horizontal=True)
     metrics = {**METRICS, **(EPCI_ONLY if level == "EPCI" else {})}
-    metric = c2.selectbox("Indicateur", list(metrics), format_func=lambda m: metrics[m][0])
+    metric = c2.selectbox("Indicateur", list(metrics), index=list(metrics).index("part_pop_sans_option"),
+                          format_func=lambda m: metrics[m][0])
     g = layers[level].rename(columns={"nom": "nom_aff"})
-    choropleth(g, metric, "nom_aff", metrics, zoom=4.8, frame=g.cx[-5.5:10, 41:51.5])   # centrée sur la métropole
+    choropleth(g, metric, "nom_aff", metrics, zoom=4.75, frame=g.cx[-5.5:10, 41:51.5], height=560)   # métropole entière
     st.caption("Couleur : du plus froid au plus chaud. Les zones froides signalent un **potentiel d'amélioration**. "
                "Accessibilité calculée à 400 m à vol d'oiseau : c'est une borne haute (la marche réelle, mesurée à "
                "Grenoble et Nantes, donne moins d'accès).")

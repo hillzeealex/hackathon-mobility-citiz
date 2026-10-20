@@ -73,7 +73,7 @@ pour vérifier le fonctionnement sans Internet.
 |---|---|
 | `lancer_demo.bat` affiche « Environnement Python absent » | Plan B (captures). Pour réinstaller : `python -m venv .venv` puis `.venv\Scripts\python -m pip install -r requirements.txt`. |
 | Message rouge « Données … absentes » dans l'appli | Plan B. L'appli lit `data/processed/` (jamais versionné) : copier ce dossier depuis le PC qui a servi aux répétitions, ou tout reconstruire depuis les données brutes (`docs/RECUPERER_LES_DONNEES.md`, ≈ 30 min). La Release `donnees-v2` contient les exports partagés (CSV, GPKG, cartes HTML), pas les fichiers de l'appli. |
-| Port 8501 occupé | Streamlit prend automatiquement le port suivant (8502) : lire l'adresse affichée dans la fenêtre noire. |
+| Port 8501 occupé (« Port 8501 is already in use ») | L'appli tourne déjà dans une autre fenêtre : l'utiliser, ou la fermer puis relancer `lancer_demo.bat`. |
 | Erreur Python après une modification de dernière minute | `git stash`, puis `git checkout demo-v1`. Les données de `data/processed/` restent compatibles. |
 | Pas d'Internet | Rien à faire : seul le fond de carte disparaît. |
 | Calcul lent sur un budget inhabituel | Rester sur 250 000, 500 000 ou 1 000 000 € (instantanés), ou choisir « Glouton (rapide) ». |

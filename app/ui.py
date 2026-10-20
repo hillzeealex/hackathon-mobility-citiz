@@ -37,6 +37,16 @@ def fr(x, digits: int = 0, unit: str = "") -> str:
     return s + (f" {unit}" if unit else "")
 
 
+def fit_zoom(gdf, width_px: int = 600, height_px: int = 440, pad: float = 1.4, lo: float = 9.5,
+             hi: float = 13.0) -> float:
+    """Zoom qui fait tenir l'emprise de `gdf` (WGS84) dans une carte d'au moins width_px × height_px."""
+    minx, miny, maxx, maxy = gdf.total_bounds
+    span_x = max(maxx - minx, 1e-3) * pad
+    span_y = max(maxy - miny, 1e-3) * pad / np.cos(np.radians((miny + maxy) / 2))
+    z = min(np.log2(width_px * 360 / (512 * span_x)), np.log2(height_px * 360 / (512 * span_y)))   # tuiles deck.gl : 512 px
+    return float(np.clip(z, lo, hi))
+
+
 def fmt(x: float, unit: str = "") -> str:
     return fr(x, 0, unit)
 

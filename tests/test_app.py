@@ -72,6 +72,6 @@ def test_nantes_demo_button_and_precomputed_matches_live():
     at.select_slider(key="equity").set_value(0.5).run()
     at.select_slider(key="budget").set_value(750_000).run()
     next(b for b in at.sidebar.button if "Scénario démo" in b.label).click().run()
-    assert at.select_slider(key="budget").value == 500_000 and metric(at, "Stations Citiz recommandées") == "12"
+    assert at.select_slider(key="budget").value == 500_000 and metric(at, "Stations Citiz") == "12"
     assert metric(at, "Habitants gagnés") == pre
     assert not at.exception, at.exception

@@ -9,6 +9,7 @@ Rien de lourd n'est calculé au démarrage.
 """
 from __future__ import annotations
 
+import datetime as dt
 import json
 import sys
 from pathlib import Path
@@ -20,16 +21,19 @@ from pyproj import Transformer
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.data import FILES, REAL, ROOT, available, city_folder, has_reco, load_all  # noqa: E402
-from app.ui import colorize, deck, fmt, fr, pct, table, walk_minutes  # noqa: E402
+from app.ui import colorize, deck, fit_zoom, fmt, fr, pct, table, walk_minutes  # noqa: E402
 from src.common.config import load_settings  # noqa: E402
 
 st.set_page_config(page_title="Accès mobilité · Citiz", layout="wide")
+# marge du haut réduite et titre plus petit : tout tient mieux en 1280 × 720 (vidéoprojecteur)
+st.markdown("<style>[data-testid='stMainBlockContainer'], .block-container {padding-top: 3rem;} "
+            "h1 {font-size: 2.1rem !important;}</style>", unsafe_allow_html=True)
 
 TYPE_COLORS = {"bus": [0, 114, 178], "tram": [213, 94, 0], "metro": [204, 121, 167], "train": [86, 86, 86],
                "telepherique": [0, 158, 115], "velo": [0, 158, 115], "trottinette": [240, 228, 66],
                "citiz": [230, 0, 126], "autopartage": [150, 0, 90]}
 TYPE_LABELS = {"bus": "Bus", "tram": "Tram", "metro": "Métro", "train": "Train", "telepherique": "Téléphérique",
-               "velo": "Vélo", "trottinette": "Trottinette", "citiz": "Citiz", "autopartage": "Autre autopartage (Marguerite…)"}
+               "velo": "Vélo", "trottinette": "Trottinette", "citiz": "Citiz", "autopartage": "Marguerite"}
 # opérateur lisible à partir de la source (gtfs:<jeu>, gbfs:<flux>, local:<nom>)
 OPERATORS = (("naolib", "Naolib"), ("aleop", "Aléop (Région)"), ("sncf", "SNCF"), ("bacs-de-loire", "Bacs de Loire"),
              ("marguerite", "Marguerite"), ("citiz", "Citiz"), ("telepherique", "Téléphérique de la Bastille"),
@@ -40,7 +44,8 @@ MIN_MENAGES = 11
 TO_WGS84 = Transformer.from_crs(2154, 4326, always_xy=True)
 FIG = ROOT / "docs" / "figures"
 DEMO = {"budget": 500_000, "equity": 0.5, "method": "ilp"}           # bouton « Scénario démo » (= slides)
-PRECALC = (250_000, 500_000, 1_000_000)                               # budgets lus directement (build_reco)
+PRECALC = (250_000, 500_000, 1_000_000)
+JOURS = ("lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche")                               # budgets lus directement (build_reco)
 
 
 def operator(source: str) -> str:
@@ -108,14 +113,18 @@ def demo_scenario() -> None:
 view = st.sidebar.radio("Vue", list(VIEWS),
                         help="France : accessibilité à vol d'oiseau de tous les carreaux habités. "
                              "Nantes : diagnostic et recommandations. Grenoble : ville exemple (marche réelle, validation).")
-st.sidebar.caption("Hors connexion, tout fonctionne : seul le fond de carte (CARTO / OpenStreetMap) disparaît.")
+side = st.sidebar.container()        # bouton « Scénario démo » (vues ville)
+note = st.sidebar.container()        # mentions discrètes, en bas
+OFFLINE = "Sans Internet, seul le fond de carte disparaît."
 if VIEWS[view] is None:
+    note.caption(OFFLINE)
     from app.national import render
     render()
     st.stop()
 
 # imports utiles seulement aux vues ville (la vue France démarre ainsi plus vite)
 import altair as alt  # noqa: E402
+import geopandas as gpd  # noqa: E402
 from src.optim.costs import co2_avoided_t_per_year, load_costs  # noqa: E402
 from src.optim.optimize import Problem, optimize  # noqa: E402
 
@@ -132,12 +141,15 @@ meta = d["meta"]
 version = meta.get("version_acces", "v1")
 reco = has_reco(folder)
 if reco:
-    st.sidebar.button("▶ Scénario démo (500 000 €)", on_click=demo_scenario, width="stretch",
-                      help="Remet l'onglet « Où investir ? » sur le scénario des slides : 500 000 €, équité 0,5, ILP optimal.")
-st.sidebar.caption(f"{meta.get('zone', '')} · accessibilité {'V2 marche réelle' if version == 'v2' else 'V1 vol d’oiseau'}"
-                   f" · GTFS du {meta.get('jour_type_gtfs', '?')}")
+    side.button("▶ Scénario démo (500 000 €)", on_click=demo_scenario, width="stretch")
+try:
+    jour = dt.date.fromisoformat(meta["jour_type_gtfs"])
+    jour_txt = f"{JOURS[jour.weekday()]} {jour:%d/%m/%Y}"
+except (KeyError, ValueError):
+    jour_txt = "jour type"
+note.caption(f"{'Marche réelle' if version == 'v2' else 'Vol d’oiseau'} · horaires du {jour_txt}. {OFFLINE}")
 
-st.title(f"{meta.get('zone', ville)} · accès à la mobilité à 5 min à pied")
+st.title(f"{meta.get('zone', ville)} · mobilité à 5 min à pied")
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["1 · Carte d'accès", "2 · Offre et population desservie", "3 · Où investir ?",
                                         "4 · Validation", "5 · Méthode et limites"])
 cells = d["cells"]
@@ -150,10 +162,12 @@ with tab1:
                 "chaque habitant trouve à moins de 5 minutes à pied de chez lui, en marche réelle sur les rues et chemins.")
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Habitants", fmt(pop))
-    c2.metric("Avec au moins une option à 5 min", pct(cells.loc[cells.n_options > 0, "population"].sum() / pop))
-    c3.metric("Options par habitant (pondérées)", fr((cells.n_options * cells.population).sum() / pop, 1),
-              help="Chaque option compte selon son mode et sa fréquence : un tram toutes les 5 min pèse plus qu'un car rare.")
-    c4.metric("Déjà à 5 min d'un autopartage", pct(covered_pop / pop))
+    c2.metric("Avec une option à 5 min", pct(cells.loc[cells.n_options > 0, "population"].sum() / pop))
+    c3.metric("Options par habitant", fr((cells.n_options * cells.population).sum() / pop, 1),
+              help="Options pondérées : chaque option compte selon son mode et sa fréquence (un tram toutes les "
+                   "5 min pèse plus qu'un car rare).")
+    c4.metric("Près d'un autopartage", pct(covered_pop / pop),
+              help="Habitants déjà à 5 min à pied d'une station Citiz ou Marguerite.")
     c0, c00 = st.columns(2)
     scale = c0.radio("Échelle", ["IRIS (recommandé)", "Carreaux 200 m"], horizontal=True)
     indic = c00.radio("Indicateur", ["Options pondérées par habitant", "Options pour 1 000 habitants (2SFCA)"],
@@ -193,11 +207,11 @@ with tab2:
     tc = o_all["type"].isin(["bus", "tram", "metro", "train", "telepherique"])
     cs = o_all["type"].isin(["citiz", "autopartage"])
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Arrêts de transport en commun", fmt(tc.sum()))
+    m1.metric("Arrêts de TC", fmt(tc.sum()), help="Arrêts de bus, tram, train (transports en commun).")
     m2.metric("Stations d'autopartage", fmt(cs.sum()), help=" · ".join(
         f"{TYPE_LABELS[t]} : {n}" for t, n in o_all.loc[cs, "type"].value_counts().items()))
-    m3.metric("Vélos et trottinettes (stations ou zones)", fmt((~tc & ~cs).sum()))
-    m4.metric("Habitants avec une seule option à 5 min", fmt(o_all["pop_seule_option"].sum()),
+    m3.metric("Vélos et trottinettes", fmt((~tc & ~cs).sum()), help="Stations ou zones de vélos et trottinettes partagés.")
+    m4.metric("Une seule option à 5 min", fmt(o_all["pop_seule_option"].sum()),
               help="Habitants pour qui ce point est la seule option de mobilité à 5 minutes à pied.")
     types = st.multiselect("Types", sorted(o_all["type"].unique()), default=sorted(o_all["type"].unique()),
                            format_func=lambda t: TYPE_LABELS.get(t, t))
@@ -265,13 +279,14 @@ with tab3:
         co2 = co2_avoided_t_per_year(len(sel))
         with right:
             m1, m2, m3, m4 = st.columns(4)
-            m1.metric("Stations Citiz recommandées", len(sel))
+            m1.metric("Stations Citiz", len(sel), help="Stations Citiz recommandées pour ce budget.")
             m2.metric("Habitants gagnés", fmt(new_pop),
-                      delta=f"couverture {pct(covered_pop / pop)} → {pct((covered_pop + new_pop) / pop)}",
-                      help=f"Habitants nouvellement à 5 min à pied d'un autopartage. Aujourd'hui : {fmt(covered_pop)} ; après : "
+                      delta=f"{pct(covered_pop / pop)} → {pct((covered_pop + new_pop) / pop)}",
+                      help=f"Habitants nouvellement à 5 min à pied d'un autopartage. Sous le chiffre : part des habitants "
+                           f"couverts, avant → après. Aujourd'hui : {fmt(covered_pop)} ; après : "
                            f"{fmt(covered_pop + new_pop)}.")
-            m3.metric("Coût par habitant gagné", fr(summary["cout_total"] / max(1, new_pop), 1, "€"),
-                      help=f"Sur {load_costs()['horizon_ans']} ans (installation, véhicule, assurance, entretien).")
+            m3.metric("Coût par habitant", fr(summary["cout_total"] / max(1, new_pop), 1, "€"),
+                      help=f"Coût par habitant gagné, sur {load_costs()['horizon_ans']} ans (installation, véhicule, assurance, entretien).")
             m4.metric("CO₂ évité (prudent)", fr(co2, 1, "t/an"),
                       help="1 véhicule par station : 10 000 km de voiture évités/an × 0,142 kgCO₂e/km (ADEME, bornes basses).")
             if not sel.empty:
@@ -280,6 +295,7 @@ with tab3:
                 s["cout_txt"] = s.cout.map(lambda v: fmt(v, "€"))
                 s["pop_txt"] = s.pop_nouvellement_desservie.map(fmt)
                 s["proba_txt"] = s.usage_predit.map(lambda v: pct(v, 0))
+                s["rang_txt"] = s["rang"].astype(int).astype(str)          # le calque texte n'affiche que du texte
                 walk = s["dist_autopartage_m"] if "dist_autopartage_m" in s else pd.Series(float("nan"), index=s.index)
                 speed = load_settings()["walk"]["speed_kmh"]
                 s["marche_txt"] = walk.map(lambda m: walk_minutes(m, speed))
@@ -293,13 +309,15 @@ with tab3:
                           pdk.Layer("ScatterplotLayer", s, get_position=["lon", "lat"], get_fill_color=[230, 0, 126],
                                     get_line_color=[0, 0, 0], line_width_min_pixels=1, stroked=True, get_radius=70,
                                     radius_min_pixels=5, pickable=True),
-                          pdk.Layer("TextLayer", s, get_position=["lon", "lat"], get_text="rang", get_size=12,
+                          pdk.Layer("TextLayer", s, get_position=["lon", "lat"], get_text="rang_txt", get_size=14,
                                     get_color=[0, 0, 0], get_pixel_offset=[0, -14])]
-                st.pydeck_chart(deck(layers, d["candidates_wgs"], "<b>n° {rang} · {nom}</b>"
-                                                                  "<br/>À {marche_txt} à pied de l'autopartage le plus proche"
-                                                                  "<br/>Habitants nouvellement à 5 min : {pop_txt}"
-                                                                  "<br/>Coût sur 3 ans : {cout_txt}"
-                                                                  "<br/>Probabilité selon le modèle : {proba_txt}"))
+                frame = gpd.GeoDataFrame(geometry=gpd.points_from_xy(s.lon, s.lat), crs=4326)   # centrée sur les stations
+                st.pydeck_chart(deck(layers, frame, "<b>n° {rang} · {nom}</b>"
+                                                    "<br/>À {marche_txt} à pied de l'autopartage le plus proche"
+                                                    "<br/>Habitants nouvellement à 5 min : {pop_txt}"
+                                                    "<br/>Coût sur 3 ans : {cout_txt}"
+                                                    "<br/>Probabilité selon le modèle : {proba_txt}", fit_zoom(frame)),
+                                height=440)
                 st.caption("Points numérotés : stations recommandées (halo clair ≈ 400 m). Petits points : autopartage "
                            "existant (rose : Citiz, violet : Marguerite). Un point peut sembler proche d'une station "
                            "existante à vol d'oiseau tout en étant à plus de 5 min à pied (voir l'infobulle).")
@@ -307,15 +325,14 @@ with tab3:
         tbl = sel.assign(origine=sel["origine"].map({"carreau": "quartier", "arret_tc": "arrêt de TC"}).fillna(sel["origine"]),
                          marche=sel.get("dist_autopartage_m", pd.Series(float("nan"), index=sel.index))
                          .map(lambda m: walk_minutes(m, load_settings()["walk"]["speed_kmh"])))
-        tbl = tbl[["rang", "nom", "origine", "marche", "cout", "pop_nouvellement_desservie", "usage_predit",
-                   "cout_par_habitant", "budget_cumule"]].rename(columns={
-                       "rang": "Rang", "nom": "Lieu", "origine": "Emplacement", "marche": "Autopartage le plus proche (à pied)",
+        tbl = tbl[["rang", "nom", "marche", "cout", "pop_nouvellement_desservie", "usage_predit",
+                   "cout_par_habitant"]].rename(columns={                  # emplacement, budget cumulé : dans l'export CSV
+                       "rang": "Rang", "nom": "Lieu", "marche": "Autopartage le plus proche (à pied)",
                        "cout": "Coût sur 3 ans (€)", "pop_nouvellement_desservie": "Habitants nouveaux",
-                       "usage_predit": "Probabilité modèle", "cout_par_habitant": "€ par habitant",
-                       "budget_cumule": "Budget cumulé (€)"})
-        st.dataframe(table(tbl, digits={"Coût sur 3 ans (€)": 0, "Habitants nouveaux": 0, "€ par habitant": 1,
-                                        "Budget cumulé (€)": 0}, percent={"Probabilité modèle": 0}),
-                     width="stretch", hide_index=True)
+                       "usage_predit": "Probabilité modèle", "cout_par_habitant": "€ par habitant"})
+        st.dataframe(table(tbl, digits={"Coût sur 3 ans (€)": 0, "Habitants nouveaux": 0, "€ par habitant": 1},
+                           percent={"Probabilité modèle": 0}),
+                     width="stretch", hide_index=True, height=35 * (min(len(tbl), 12) + 1) + 3)   # 12 lignes visibles
         st.download_button("Exporter en CSV", sel.to_csv(index=False, sep=";", decimal=",").encode("utf-8-sig"),
                            file_name=f"recommandation_{ville}_{method}_{budget}.csv", mime="text/csv")
         source = ("scénario précalculé, lecture instantanée" if pre is not None
@@ -337,21 +354,21 @@ with tab4:
         t = val["test_aveugle_grenoble"]
         mod, base = t["modele"], t["baseline_densite"]
         m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Stations de Grenoble retrouvées (top 20 %)", pct(mod["stations"]["top_20pct"]),
+        m1.metric("Stations retrouvées", pct(mod["stations"]["top_20pct"]),
                   delta=f"densité seule : {pct(base['stations']['top_20pct'])}", delta_color="off", delta_arrow="off",
-                  help="Part des stations Citiz de Grenoble situées dans les 20 % de carreaux que le modèle juge les plus "
+                  help="Test à l'aveugle, Grenoble : part des stations Citiz situées dans les 20 % de carreaux que le modèle juge les plus "
                        "favorables, alors qu'il n'a jamais vu ce réseau.")
-        m2.metric("AUC du test à l'aveugle (Grenoble)", fr(mod["carreaux"]["auc"], 3),
+        m2.metric("AUC Grenoble", fr(mod["carreaux"]["auc"], 3),
                   delta=f"densité seule : {fr(base['carreaux']['auc'], 3)}", delta_color="off", delta_arrow="off",
-                  help="Probabilité qu'un carreau proche d'une station soit mieux classé qu'un carreau sans station (0,5 = hasard).")
-        m3.metric(f"AUC sur les {val['perimetre']['reseaux']} réseaux Citiz", fr(val["modele_oof"]["auc"], 3),
+                  help="Test à l'aveugle, Grenoble. Probabilité qu'un carreau proche d'une station soit mieux classé qu'un carreau sans station (0,5 = hasard).")
+        m3.metric(f"AUC {val['perimetre']['reseaux']} réseaux", fr(val["modele_oof"]["auc"], 3),
                   delta=f"densité seule : {fr(val['baseline_densite']['auc'], 3)}", delta_color="off", delta_arrow="off",
                   help="Validation croisée : chaque réseau est prédit par un modèle entraîné sans lui.")
         if comps["grenoble"]:
-            m4.metric("Surestimation à vol d'oiseau (Grenoble)", f"+{fr(comps['grenoble']['surestimation_options_moyennes_pct'], 0)} %",
-                      help="Options par habitant à vol d'oiseau (V1) rapportées à la marche réelle (V2).")
+            m4.metric("Biais du vol d'oiseau", f"+{fr(comps['grenoble']['surestimation_options_moyennes_pct'], 0)} %",
+                      help="Grenoble : options par habitant à vol d'oiseau (V1) rapportées à la marche réelle (V2), moins 1.")
 
-        st.subheader("Test à l'aveugle : le modèle retrouve-t-il les stations Citiz de Grenoble ?")
+        st.subheader("Test à l'aveugle : le modèle retrouve-t-il les stations Citiz de Grenoble\u00a0?")
         rows = [{"Carreaux retenus": f"Top {k} %", "ordre": k, "Approche": name, "part": r["stations"][f"top_{k}pct"]}
                 for k in (5, 10, 20) for name, r in (("Modèle", mod), ("Densité seule", base))]
         chart_df = pd.DataFrame(rows).assign(texte=lambda x: x["part"].map(pct))
@@ -387,6 +404,12 @@ with tab4:
                             (c2, FIG / "modele" / "shap_beeswarm.png", "Sens des effets (SHAP)")):
             if img.exists():
                 c.image(str(img), caption=cap)
+        st.caption("Lecture des variables (de haut en bas) : equipements_400m = commerces, services et équipements à "
+                   "400 m ; vols_vehicules_1000 = vols liés aux véhicules, indicateur communal ; part_sans_voiture = part "
+                   "des ménages sans voiture ; densite_800m = densité de population à 800 m ; options_hors_citiz_400m = "
+                   "autres options de mobilité à 400 m. Chaque point est un carreau : à droite, la variable augmente la "
+                   "probabilité d'une station Citiz ; rouge = valeur élevée, bleu = valeur faible (légendes d'origine "
+                   "en anglais : « SHAP value », « High », « Low »).")
     else:
         st.info("Modèle non entraîné (data/processed/model/validation.json absent) : "
                 "`python -m src.model.features && python -m src.model.train`.")
@@ -410,12 +433,6 @@ with tab4:
                             "sont pas à pied." for c, comp in comps.items() if comp and "v2" in comp)
                    + " Causes : rivières, voies ferrées, rocades, îlots fermés. Les chiffres de la vue France (V1) sont "
                      "donc des bornes hautes.")
-        cols = st.columns(3)
-        for c, name, cap in zip(cols, ("acces_v1_buffer", "acces_v2_reseau", "acces_v1_moins_v2"),
-                                ("Grenoble V1 : vol d'oiseau", "Grenoble V2 : marche réelle", "Surestimation V1 − V2")):
-            img = FIG / "grenoble" / f"{name}.png"
-            if img.exists():
-                c.image(str(img), caption=cap)
     else:
         st.info("Comparaison V1 / V2 absente : `python -m scripts.build_all --ville grenoble --v2`.")
 
