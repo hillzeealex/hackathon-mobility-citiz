@@ -55,6 +55,37 @@ def problem(folder: str) -> Problem:
     return Problem(d["coverage"], d["cells"].drop(columns="geometry"), d["candidates"].drop(columns="geometry"))
 
 
+@st.cache_data(ttl=90, show_spinner=False)
+def fetch_citiz_live_status():
+    """Récupère l'état en direct de la flotte Citiz depuis le backend GBFS officiel."""
+    url_info = "https://backend.citiz.fr/public/provider/15/gbfs/v3.0/station_information.json"
+    url_status = "https://backend.citiz.fr/public/provider/15/gbfs/v3.0/station_status.json"
+    stations = []
+    try:
+        import requests
+        r_info = requests.get(url_info, timeout=5)
+        r_status = requests.get(url_status, timeout=5)
+        if r_info.status_code == 200 and r_status.status_code == 200:
+            status_map = {s["station_id"]: s for s in r_status.json().get("data", {}).get("stations", [])}
+            for s in r_info.json().get("data", {}).get("stations", []):
+                sid = s["station_id"]
+                st_info = status_map.get(sid, {})
+                nom = s.get("name", [{"text": f"Station {sid}"}])[0].get("text") if isinstance(s.get("name"), list) else s.get("name")
+                stations.append({
+                    "station_id": sid,
+                    "nom": nom,
+                    "lat": float(s["lat"]),
+                    "lon": float(s["lon"]),
+                    "capacite": int(s.get("capacity", 2)),
+                    "dispos": st_info.get("num_vehicles_available", 0),
+                    "is_renting": st_info.get("is_renting", True),
+                    "adresse": s.get("address", "")
+                })
+    except Exception:
+        pass
+    return stations
+
+
 # ---------------------------------------------------------------------------------------------
 level = st.sidebar.radio("Niveau d'analyse", ["France entière", "Zoom agglomération"],
                          help="France : accessibilité V1 (vol d'oiseau) de tous les carreaux habités. "
