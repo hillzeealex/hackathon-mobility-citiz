@@ -21,7 +21,7 @@ cities:
     epci_siren: "244400404"
     insee_communes: []
     osm_region: pays-de-la-loire
-    v2: false                 # V2 à la fin, s'il reste du temps (decisions.md)
+    v2: true                  # marche réelle (extrait OSM pays-de-la-loire) ; V1 gardée en option (--acces v1)
     recommandations: true     # candidats + optimisation (src/optim/build_reco.py)
     # Naolib (bus, tram, Navibus), cars Aléop, SNCF, bacs de Loire. Exclus : agrégat Destineo (doublon de Naolib),
     # BreizhGo TER (doublon SNCF), navettes estivales, transport à la demande, autocars longue distance.

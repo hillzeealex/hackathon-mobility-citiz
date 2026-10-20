@@ -42,6 +42,8 @@ def main(argv: list[str] | None = None) -> None:
              ("population desservie par arrêt / station", build_served)]
     if study_area().get("recommandations"):
         from src.optim.build_reco import build_reco
+        if with_v2:   # V1 gardée en option : recommandations à vol d'oiseau, pour comparaison
+            steps.append(("recommandations V1 (vol d'oiseau, comparaison)", lambda: build_reco(acces="v1")))
         steps.append(("recommandations (modèle requis : python -m src.model.train)", build_reco))
     else:
         from src.optim.build_reco import build_app_files

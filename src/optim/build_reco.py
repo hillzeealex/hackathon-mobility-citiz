@@ -11,8 +11,10 @@ Pour chaque candidat j :
 Objectif (src/optim/optimize.py) : Σ population nouvellement couverte × (1 + équité × priorité) × usage relatif.
 Priorité d'équité d'un carreau = moyenne des rangs-percentiles (dans la ville) de la part de ménages pauvres et de
 la part de ménages sans voiture.
+Couverture : V2 marche réelle si le réseau piéton de la ville existe (sinon V1) ; --acces v1 garde le vol d'oiseau.
 Sorties : candidates.parquet, coverage.npz (carreaux × candidats), cells.parquet, iris.parquet, meta.json (contrat
-de l'appli, app/data.py), recommandations_<méthode>_<budget>.csv, reco_resume.json, docs/figures/<ville>/reco_*.png.
+de l'appli, version par défaut), recommandations_<méthode>_<budget>_<v>.csv, reco_resume_<v>.json,
+docs/figures/<ville>/reco_stations_<v>.png.
 """
 from __future__ import annotations
 
@@ -29,7 +31,8 @@ import scipy.sparse as sp
 from scipy.spatial import cKDTree
 
 from src.common.config import ROOT, city_from_args, city_processed, current_city, load_settings, study_area
-from src.features.accessibility import coverage_buffer
+from src.features.accessibility import coverage_buffer, coverage_network
+from src.features.network import load_walk_edges, to_graph
 from src.model.features import model_path
 from src.optim.costs import co2_avoided_t_per_year, equipment_cost, risk_surcharge
 from src.optim.optimize import Problem, optimize
@@ -52,7 +55,28 @@ def nearest(source_xy: np.ndarray, target_xy: np.ndarray) -> np.ndarray:
     return cKDTree(source_xy).query(target_xy)[1]
 
 
-def build_candidates(cells: gpd.GeoDataFrame, offer: gpd.GeoDataFrame, covered: np.ndarray, radius: float) -> gpd.GeoDataFrame:
+class Coverer:
+    """Couverture « à 5 min » : V1 vol d'oiseau (coverage_buffer) ou V2 marche réelle (réseau piéton OSM)."""
+
+    def __init__(self, version: str, radius: float):
+        self.version, self.radius = version, radius
+        if version == "v2":
+            self.edges = load_walk_edges()
+            self.graph = to_graph(self.edges)
+
+    def __call__(self, rows_xy: np.ndarray, cols_xy: np.ndarray) -> sp.csr_matrix:
+        if len(cols_xy) == 0:
+            return sp.csr_matrix((len(rows_xy), 0), dtype=bool)
+        if self.version == "v1":
+            return coverage_buffer(rows_xy, cols_xy, self.radius)
+        return coverage_network(self.graph, self.edges, rows_xy, cols_xy, self.radius)[0]
+
+
+def default_version() -> str:
+    return "v2" if city_processed("coverage_v2.npz").exists() else "v1"
+
+
+def build_candidates(cells: gpd.GeoDataFrame, offer: gpd.GeoDataFrame, covered: np.ndarray, cover: Coverer) -> gpd.GeoDataFrame:
     cxy = np.column_stack([cells.centroid.x, cells.centroid.y])
     cs = offer[offer["type"].isin(CARSHARING) & (offer["sous_type"] == "station")]
     cs_xy = np.column_stack([cs.geometry.x, cs.geometry.y])
@@ -62,7 +86,7 @@ def build_candidates(cells: gpd.GeoDataFrame, offer: gpd.GeoDataFrame, covered: 
     c["nom"] = "Carreau " + c["idcar_200m"].str[-14:]
     stops = offer[offer["type"].isin(TC_TYPES) & offer["dans_zone"]].copy()
     sxy = np.column_stack([stops.geometry.x, stops.geometry.y])
-    far = coverage_buffer(sxy, cs_xy, radius).sum(axis=1).A1 == 0 if len(cs_xy) else np.ones(len(stops), bool)
+    far = cover(sxy, cs_xy).sum(axis=1).A1 == 0
     stops = stops[far]
     a = pd.DataFrame({"id": "arret:" + stops["id"].astype(str), "nom": stops["nom"].fillna("Arrêt") + " (" + stops["type"] + ")",
                       "x": stops.geometry.x.to_numpy(), "y": stops.geometry.y.to_numpy(), "origine": "arret_tc"})
@@ -82,16 +106,23 @@ def build_candidates(cells: gpd.GeoDataFrame, offer: gpd.GeoDataFrame, covered: 
     return gpd.GeoDataFrame(cand, geometry=gpd.points_from_xy(cand["x"], cand["y"]), crs=cells.crs)
 
 
-def build_reco(budgets=(250_000, 500_000, 1_000_000), equity: float = 0.5, ilp_time: float = 120) -> dict:
+def build_reco(budgets=(250_000, 500_000, 1_000_000), equity: float = 0.5, ilp_time: float = 120,
+               acces: str | None = None) -> dict:
+    """acces : 'v1' (vol d'oiseau) ou 'v2' (marche réelle) ; par défaut la version la plus précise disponible.
+    Seule la version par défaut alimente l'appli (candidates, coverage, cells, meta) ; chaque version écrit
+    reco_resume_<v>.json et recommandations_<méthode>_<budget>_<v>.csv."""
     s = load_settings()
     r = s["walk"]["radius_m"]
     sa = study_area()
+    acces = acces or default_version()
+    contract = acces == default_version()
+    cover = Coverer(acces, r)
     cells = gpd.read_parquet(city_processed("access_cells.parquet")).reset_index(drop=True)
     offer = gpd.read_parquet(city_processed("offer.parquet")).reset_index(drop=True)
     cxy = np.column_stack([cells.centroid.x, cells.centroid.y])
-    covered, cs = existing_coverage(cells, offer, r)
+    covered, cs = existing_coverage(cells, offer, cover)
 
-    cand = build_candidates(cells, offer, covered, r)
+    cand = build_candidates(cells, offer, covered, cover)
     cand_xy = cand[["x", "y"]].to_numpy()
 
     # probabilité du modèle (hors réseau de la ville) et risque de vol au carreau le plus proche
@@ -110,13 +141,13 @@ def build_reco(budgets=(250_000, 500_000, 1_000_000), equity: float = 0.5, ilp_t
     cand["surcout_risque"] = risk_surcharge(cand["vols_vehicules_1000"] / ref_risk)
     cand["cout"] = base_cost + cand["surcout_risque"]
 
-    cov = coverage_buffer(cxy, cand_xy, r)
+    cov = cover(cxy, cand_xy)
     cells_p = pd.DataFrame({"population": cells["pop_calee"].to_numpy(float), "priorite_equite": equity_priority(cells),
                             f"couvert_{KIND}": covered})
     problem = Problem(cov, cells_p, cand[["id", "type", "nom", "cout", "usage_predit", "x", "y"]])
 
     pop_total = cells_p["population"].sum()
-    resume = {"ville": current_city(), "date": dt.date.today().isoformat(), "rayon_m": r, "equite": equity,
+    resume = {"ville": current_city(), "date": dt.date.today().isoformat(), "acces": acces, "rayon_m": r, "equite": equity,
               "carreaux": len(cells), "population": round(pop_total),
               "population_deja_couverte_autopartage": round(float(cells_p.loc[covered, "population"].sum())),
               "part_deja_couverte": round(float(cells_p.loc[covered, "population"].sum() / pop_total), 4),
@@ -148,33 +179,35 @@ def build_reco(budgets=(250_000, 500_000, 1_000_000), equity: float = 0.5, ilp_t
             resume["scenarios"].append(sc)
             out = sel.merge(cand[["id", "origine", "commune", "code_iris", "surcout_risque", "vols_vehicules_1000"]],
                             on="id", how="left")
-            out.to_csv(city_processed(f"recommandations_{method}_{budget}.csv"), sep=";", decimal=",", index=False,
+            out.to_csv(city_processed(f"recommandations_{method}_{budget}_{acces}.csv"), sep=";", decimal=",", index=False,
                        encoding="utf-8-sig")
             selections[(method, budget)] = out
     resume["priorite_equite_moyenne_population"] = round(float(np.average(cells_p["priorite_equite"],
                                                                            weights=cells_p["population"])), 3)
 
     # contrat de l'application (app/data.py)
-    cand.to_parquet(city_processed("candidates.parquet"))
-    sp.save_npz(city_processed("coverage.npz"), cov)
-    write_app_contract(cells, cells_p, covered, resume)
-    city_processed("reco_resume.json").write_text(json.dumps(resume, indent=1, ensure_ascii=False), encoding="utf-8")
-    plot_reco(cells, cs, covered, selections, budgets[len(budgets) // 2])
+    if contract:
+        cand.to_parquet(city_processed("candidates.parquet"))
+        sp.save_npz(city_processed("coverage.npz"), cov)
+        write_app_contract(cells, cells_p, covered, resume)
+        city_processed("reco_resume.json").write_text(json.dumps(resume, indent=1, ensure_ascii=False), encoding="utf-8")
+    city_processed(f"reco_resume_{acces}.json").write_text(json.dumps(resume, indent=1, ensure_ascii=False), encoding="utf-8")
+    plot_reco(cells, cs, covered, selections, budgets[len(budgets) // 2], acces)
     print(json.dumps(resume, indent=1, ensure_ascii=False))
     return resume
 
 
-def existing_coverage(cells: gpd.GeoDataFrame, offer: gpd.GeoDataFrame, radius: float) -> tuple[np.ndarray, gpd.GeoDataFrame]:
+def existing_coverage(cells: gpd.GeoDataFrame, offer: gpd.GeoDataFrame, cover: Coverer) -> tuple[np.ndarray, gpd.GeoDataFrame]:
     cs = offer[offer["type"].isin(CARSHARING) & (offer["sous_type"] == "station")]
     cxy = np.column_stack([cells.centroid.x, cells.centroid.y])
-    return coverage_buffer(cxy, np.column_stack([cs.geometry.x, cs.geometry.y]), radius).sum(axis=1).A1 > 0, cs
+    return cover(cxy, np.column_stack([cs.geometry.x, cs.geometry.y])).sum(axis=1).A1 > 0, cs
 
 
 def build_app_files(equity: float = 0.5) -> None:
     """Fichiers de l'appli (cells, iris, meta) pour une ville sans recommandations (ex. Grenoble)."""
     cells = gpd.read_parquet(city_processed("access_cells.parquet")).reset_index(drop=True)
     offer = gpd.read_parquet(city_processed("offer.parquet"))
-    covered, _ = existing_coverage(cells, offer, load_settings()["walk"]["radius_m"])
+    covered, _ = existing_coverage(cells, offer, Coverer(default_version(), load_settings()["walk"]["radius_m"]))
     cells_p = pd.DataFrame({"population": cells["pop_calee"].to_numpy(float), "priorite_equite": equity_priority(cells)})
     write_app_contract(cells, cells_p, covered, {"date": dt.date.today().isoformat(), "equite": equity})
 
@@ -197,7 +230,7 @@ def write_app_contract(cells: gpd.GeoDataFrame, cells_p: pd.DataFrame, covered: 
     city_processed("meta.json").write_text(json.dumps(meta, indent=1, ensure_ascii=False), encoding="utf-8")
 
 
-def plot_reco(cells, cs, covered, selections, budget) -> None:
+def plot_reco(cells, cs, covered, selections, budget, acces: str = "v1") -> None:
     fig_dir = ROOT / "docs" / "figures" / current_city()
     fig_dir.mkdir(parents=True, exist_ok=True)
     sel = selections[("ilp", budget)]
@@ -210,14 +243,14 @@ def plot_reco(cells, cs, covered, selections, budget) -> None:
     ax.set_xlim(minx - 300, maxx + 300)
     ax.set_ylim(miny - 300, maxy + 300)
     ax.scatter(cs.geometry.x, cs.geometry.y, s=10, c="#333", marker="s", label="Autopartage existant (Citiz, Marguerite)")
-    ax.scatter(sel["x"], sel["y"], s=110, c="#e6007e", edgecolor="white", label=f"Stations recommandées (ILP, {budget:,.0f} €)".replace(",", " "))
+    ax.scatter(sel["x"], sel["y"], s=110, c="#e6007e", edgecolor="white", label=(f"Stations recommandées (ILP, {budget:,.0f} €, " + ("marche réelle" if acces == "v2" else "vol d'oiseau") + ")").replace(",", " "))
     for rk, x, y in zip(sel["rang"], sel["x"], sel["y"]):
         ax.annotate(str(int(rk)), (x, y), fontsize=7, ha="center", va="center", color="white")
     ax.set_axis_off()
     ax.legend(loc="lower left", fontsize=8)
     ax.set_title(f"{study_area()['name']} : stations Citiz recommandées (gris foncé = déjà à 5 min d'un autopartage)", fontsize=10)
     fig.tight_layout()
-    fig.savefig(fig_dir / "reco_stations.png", dpi=110)
+    fig.savefig(fig_dir / f"reco_stations_{acces}.png", dpi=110)
     plt.close(fig)
 
 
@@ -229,5 +262,7 @@ if __name__ == "__main__":
     ap.add_argument("--equite", type=float, default=0.5)
     ap.add_argument("--budgets", type=float, nargs="+", default=[250_000, 500_000, 1_000_000])
     ap.add_argument("--ilp-temps", type=float, default=120)
+    ap.add_argument("--acces", choices=["v1", "v2"], default=None,
+                    help="v1 vol d'oiseau / v2 marche réelle (défaut : la plus précise disponible)")
     a = ap.parse_args()
-    build_reco(tuple(int(b) for b in a.budgets), a.equite, a.ilp_temps)
+    build_reco(tuple(int(b) for b in a.budgets), a.equite, a.ilp_temps, a.acces)
