@@ -222,7 +222,7 @@ with tab3:
         st.caption(f"Méthode : {summary['methode']} · statut {summary['statut']} · {summary['duree_s']} s · "
                    f"budget utilisé {fmt(summary['cout_total'], '€')} / {fmt(budget, '€')} · coût d'une station : "
                    f"scénario « {load_costs()['scenario']} » sur {load_costs()['horizon_ans']} ans + surcoût de risque de vol "
-                   "(config/costs.yaml). Candidats : carreaux habités et arrêts de TC à plus de 400 m d'un autopartage.")
+                   "(**hypothèse à valider avec Citiz**, config/costs.yaml). Candidats : carreaux habités et arrêts de TC à plus de 5 min à pied d'un autopartage existant.")
 
 # --- Onglet 4 --------------------------------------------------------------------------------
 with tab4:

@@ -47,10 +47,10 @@ Remarques :
   pauvres et de la part de ménages sans voiture (`src/optim/build_reco.py`).
 - **Effet mesuré à Nantes** (500 000 €) : la sélection ne change pas entre un poids de 0, 0,5 et 2. Les poches denses
   non couvertes autour du centre sont aussi celles où vivent le plus de ménages pauvres ou sans voiture ; les habitants
-  nouvellement couverts ont une priorité moyenne de 0,85 (0,5 pour l'ensemble des carreaux). Efficacité et équité vont
+  nouvellement couverts ont une priorité moyenne de 0,84 en marche réelle (0,5 pour l'ensemble des carreaux). Efficacité et équité vont
   ici dans le même sens ; ce ne sera pas vrai partout (`docs/chiffres_cles.md`).
 - **Risque de vol** : il entre dans le **coût** (surcoût d'assurance et d'entretien, `config/costs.yaml`), jamais comme
-  une note attribuée aux habitants ; à Nantes, il ajoute en moyenne 1 046 € par station sur 3 ans.
+  une note attribuée aux habitants ; à Nantes, il ajoute en moyenne 1 051 € par station sur 3 ans. Ce surcoût est une **hypothèse à valider avec Citiz**.
 
 ## 4. Impact environnemental (CO₂ évité)
 

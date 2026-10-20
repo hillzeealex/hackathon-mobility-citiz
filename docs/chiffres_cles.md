@@ -54,41 +54,57 @@ Apprentissage : 313 086 carreaux des 106 EPCI où Citiz est présent (11 719 ave
 Variables les plus importantes (SHAP) : `equipements_400m`, `vols_vehicules_1000`, `part_sans_voiture`, `densite_800m`, `options_hors_citiz_400m`.
 Source : `data/processed/model/validation.json`, `shap_importance.csv` · `python -m src.model.features && python -m src.model.train`. Limite : le modèle apprend où Citiz s'est installé, pas la demande pure (`docs/modele.md`).
 
-## 5. Nantes Métropole, notre ville : diagnostic (V1)
+## 5. Nantes Métropole, notre ville : diagnostic
 
-| Chiffre | Valeur | Source |
-|---|---:|---|
-| Habitants | 689 456 | `data/processed/nantes/population_rapport.json` · `python -m scripts.build_all --ville nantes` |
-| Au moins une option à 5 min | 93,3 % | `nantes/access_comparaison.json` |
-| Options pondérées par habitant | 9,1 (Grenoble V1 : 17,0) | idem |
-| Stations Citiz / Marguerite | 23 / 61 | `nantes/reco_resume.json` |
-| À 5 min d'une station Citiz | 11,8 % | `nantes/access_comparaison.json` |
-| À 5 min d'un autopartage (Citiz ou Marguerite) | **28,5 %** | `nantes/reco_resume.json` |
-| Habitants par station Citiz (médiane) | 4 502 | `nantes/served_by_type.csv` |
-| Habitants dont la seule option est un unique arrêt / station | 32 138 | `nantes/offer_served.parquet` |
+| Chiffre | V1 vol d'oiseau | V2 marche réelle | Écart V2 / V1 |
+|---|---:|---:|---:|
+| Habitants | 689 456 | idem | |
+| Au moins une option à 5 min | 93,3 % | **80,6 %** | −14 % |
+| Au moins un arrêt de TC | 93,3 % | 79,7 % | −15 % |
+| Options pondérées par habitant | 9,1 | 4,7 | −48 % |
+| À 5 min d'une station Citiz | 11,8 % | 7,5 % | −37 % |
+| À 5 min d'un autopartage (Citiz ou Marguerite) | 28,5 % | **19,0 %** | −33 % |
+
+- Stations existantes : 23 Citiz, 61 Marguerite. La V1 surestime les options de 93 % ; 87 591 habitants semblent desservis à vol d'oiseau mais ne le sont pas à pied (coupures du réseau piéton : cours d'eau, voies ferrées, grands axes).
+- Habitants par station Citiz (médiane, V2) : 2 124 ; habitants dont la seule option est un unique arrêt / station (V2) : 92 883.
+- Sources : `data/processed/nantes/access_comparaison.json`, `reco_resume_v1.json`, `reco_resume_v2.json`, `served_by_type.csv`, `offer_served.parquet` · `python -m scripts.build_all --ville nantes`.
 
 ## 6. Nantes : recommandations Citiz (ILP, équité 0,5)
 
-Candidats : 6 163 carreaux et 1 428 arrêts de TC à plus de 400 m d'un autopartage. Coût d'une station : 37 900 € sur 3 ans (scénario moyen) + surcoût de risque de vol (moyenne 1 046 €).
+Candidats (V2) : 6 385 carreaux et 1 486 arrêts de TC hors des 5 min de marche d'un autopartage. Coût d'une station : 37 900 € sur 3 ans (scénario moyen) + surcoût de risque de vol, **hypothèse à valider avec Citiz** (moyenne 1 051 €).
+
+**12 stations (500 000 €)**
+
+| Chiffre | V1 vol d'oiseau | V2 marche réelle | Écart V2 / V1 |
+|---|---:|---:|---:|
+| Couverture autopartage actuelle | 28,5 % | 19,0 % | −33 % |
+| Couverture après les 12 stations | 34,9 % | **24,1 %** | −31 % |
+| Habitants gagnés | 43 759 | **34 979** | −20 % |
+| € par habitant gagné (3 ans) | 10,8 | 13,6 | +26 % |
+| CO2 évité | 17,0 t/an | 17,0 t/an | +0 % |
+
+Sélection : **3 stations sur 12 communes** aux deux versions (Berlioz (bus), Nantes, St-Aignan (bus), Nantes, Quartier Waldeck-Sully (Nantes)). Liste V2 retenue : 1. Quartier Harlière Sud (Saint-Herblain) ; 2. Vaucanson (bus), Nantes ; 3. Quartier Dervallières-Chézine (Nantes) ; 4. Berlioz (bus), Nantes ; 5. St-Aignan (bus), Nantes ; 6. Quartier Coudray (Nantes) ; 7. Boulay Paty (bus), Nantes ; 8. Quartier Canclaux (Nantes) ; 9. Bruneau (bus), Nantes ; 10. Quartier Waldeck-Sully (Nantes) ; 11. Quartier Grillaud-Procé (Nantes) ; 12. Quartier Beauséjour (Saint-Herblain).
+
+**Tous les budgets (V2, ILP)**
 
 | Budget | Stations | Habitants nouvellement à 5 min | Couverture autopartage | € / habitant | CO2 évité |
 |---:|---:|---:|---:|---:|---:|
-| 250 000 € | 6 | **25 942** | 28,5 % → 32,3 % | 9,1 | 8,5 t/an |
-| 500 000 € | 12 | **43 759** | 28,5 % → 34,9 % | 10,8 | 17,0 t/an |
-| 1 000 000 € | 25 | **76 261** | 28,5 % → 39,6 % | 13,0 | 35,5 t/an |
+| 250 000 € | 6 | **19 138** | 19,0 % → 21,8 % | 12,4 | 8,5 t/an |
+| 500 000 € | 12 | **34 979** | 19,0 % → 24,1 % | 13,6 | 17,0 t/an |
+| 1 000 000 € | 25 | **59 039** | 19,0 % → 27,6 % | 16,7 | 35,5 t/an |
 
-Glouton vs ILP (habitants nouvellement couverts) : 250 000 € : 25 942 vs 25 942 ; 500 000 € : 43 759 vs 43 759 ; 1 000 000 € : 76 043 vs 76 261.
-Source : `data/processed/nantes/reco_resume.json`, `recommandations_ilp_<budget>.csv` · `python -m scripts.build_all --ville nantes`. CO2 : estimation prudente ADEME (10 000 km évités/véhicule/an × 0,142 kgCO2e/km), 1 véhicule par station.
+Glouton vs ILP (habitants nouvellement couverts, V2) : 250 000 € : 19 138 vs 19 138 ; 500 000 € : 34 979 vs 34 979 ; 1 000 000 € : 58 595 vs 59 039.
+Sources : `data/processed/nantes/reco_resume_v1.json`, `reco_resume_v2.json`, `recommandations_ilp_<budget>_<v>.csv` · `python -m scripts.build_all --ville nantes`. CO2 : estimation prudente ADEME (10 000 km évités/véhicule/an × 0,142 kgCO2e/km), 1 véhicule par station.
 
-Effet du poids d'équité (500 000 €, glouton) :
+Effet du poids d'équité (500 000 €, glouton, V2) :
 
 | Poids d'équité | Stations | Habitants nouveaux | Part de ménages sans voiture chez les nouveaux | Priorité d'équité moyenne |
 |---:|---:|---:|---:|---:|
-| 0,0 | 12 | 43 759 | 28,3 % | 0,85 |
-| 0,5 | 12 | 43 759 | 28,3 % | 0,85 |
-| 2,0 | 12 | 43 759 | 28,3 % | 0,85 |
+| 0,0 | 12 | 34 979 | 27,4 % | 0,84 |
+| 0,5 | 12 | 34 979 | 27,4 % | 0,84 |
+| 2,0 | 12 | 34 979 | 27,4 % | 0,84 |
 
-Lecture : la sélection ne change pas avec le poids d'équité. À Nantes, les poches denses non couvertes autour du centre sont aussi celles où vivent le plus de ménages pauvres ou sans voiture : efficacité et équité vont dans le même sens (priorité d'équité moyenne des nouveaux couverts 0,85, contre 0,5 pour l'ensemble des carreaux).
+Lecture : la sélection ne change pas avec le poids d'équité. À Nantes, les poches denses non couvertes autour du centre sont aussi celles où vivent le plus de ménages pauvres ou sans voiture : efficacité et équité vont dans le même sens (priorité d'équité moyenne des nouveaux couverts 0,84, contre 0,5 pour l'ensemble des carreaux).
 
 Source : calcul de `python -m scripts.chiffres_cles` sur `data/processed/nantes/` (cells, candidates, coverage).
 
@@ -100,8 +116,11 @@ Source : calcul de `python -m scripts.chiffres_cles` sur `data/processed/nantes/
 | `grenoble_v1_vol_oiseau.png` | Grenoble : options accessibles à vol d'oiseau (V1) | `docs/figures/grenoble/acces_v1_buffer.png` · python -m scripts.build_all --ville grenoble |
 | `grenoble_v2_marche.png` | Grenoble : options accessibles à pied (V2, même échelle) | `docs/figures/grenoble/acces_v2_reseau.png` · python -m scripts.build_all --ville grenoble |
 | `grenoble_surestimation_v1.png` | Grenoble : surestimation de la V1 (V1 − V2) | `docs/figures/grenoble/acces_v1_moins_v2.png` · python -m scripts.build_all --ville grenoble |
-| `nantes_acces_iris.png` | Nantes : options par habitant, par IRIS (V1) | `docs/figures/nantes/acces_iris_v1.png` · python -m scripts.build_all --ville nantes |
-| `nantes_acces_carreaux.png` | Nantes : options accessibles par carreau (V1) | `docs/figures/nantes/acces_v1_buffer.png` · python -m scripts.build_all --ville nantes |
-| `nantes_recommandations.png` | Nantes : 12 stations Citiz recommandées (500 000 €, ILP) | `docs/figures/nantes/reco_stations.png` · python -m scripts.build_all --ville nantes |
+| `nantes_acces_iris.png` | Nantes : options par habitant, par IRIS (V2 marche réelle) | `docs/figures/nantes/acces_iris_v2.png` · python -m scripts.build_all --ville nantes |
+| `nantes_v1_vol_oiseau.png` | Nantes : options accessibles à vol d'oiseau (V1) | `docs/figures/nantes/acces_v1_buffer.png` · python -m scripts.build_all --ville nantes |
+| `nantes_v2_marche.png` | Nantes : options accessibles à pied (V2, même échelle) | `docs/figures/nantes/acces_v2_reseau.png` · python -m scripts.build_all --ville nantes |
+| `nantes_surestimation_v1.png` | Nantes : surestimation de la V1 (V1 − V2) | `docs/figures/nantes/acces_v1_moins_v2.png` · python -m scripts.build_all --ville nantes |
+| `nantes_recommandations.png` | Nantes : 12 stations Citiz recommandées (500 000 €, ILP, marche réelle) | `docs/figures/nantes/reco_stations_v2.png` · python -m scripts.build_all --ville nantes |
+| `nantes_recommandations_v1.png` | Nantes : les 12 stations calculées à vol d'oiseau (comparaison) | `docs/figures/nantes/reco_stations_v1.png` · python -m scripts.build_all --ville nantes |
 | `modele_shap_importance.png` | Modèle : importance des variables (SHAP) | `docs/figures/modele/shap_importance.png` · python -m src.model.features && python -m src.model.train |
 | `modele_shap_effets.png` | Modèle : sens des effets (SHAP) | `docs/figures/modele/shap_beeswarm.png` · python -m src.model.features && python -m src.model.train |

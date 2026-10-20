@@ -62,6 +62,13 @@ mobilité hors Citiz, équipements de santé, part de propriétaires.
 - Les équipements BPE du domaine « transports » (gares, taxis, stations-service…) tirent la probabilité vers le bas
   quand ils sont nombreux : effet d'interaction avec les autres comptages d'équipements, à ne pas sur-interpréter.
 
+## Le risque de vol dans les recommandations
+
+Dans l'optimiseur, le risque de vol n'est pas une note donnée aux quartiers : il entre dans le **coût** d'une station.
+Surcoût = horizon × assurance et entretien × élasticité × excès du taux de vols de la commune sur le taux médian des
+carreaux où Citiz est déjà présent (plafonné). **Hypothèse à valider avec Citiz** (`config/costs.yaml`, bloc `risque_vol`) ;
+à Nantes, il ajoute en moyenne environ 1 050 € par station sur 3 ans.
+
 ## Limites
 
 1. **Le modèle apprend où Citiz s'est installé, pas la demande pure** : il reproduit les choix passés de l'opérateur
