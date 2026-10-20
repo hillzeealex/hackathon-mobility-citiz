@@ -167,7 +167,7 @@ Rabattement médian : 18 m pour les centroïdes de carreaux, 2 m pour les points
   qu'avec un rayon de **560 m** : sinuosité effective ≈ 1,4, rabattements compris, cohérente avec les facteurs
   de détour urbains habituels (1,2 à 1,4). À 600 m, 13 % des paires V1 restent hors d'atteinte : coupures
   (Isère, Drac, voies ferrées, rocade, îlots fermés).
-- La surestimation se concentre dans le centre dense (cartes `docs/figures/acces_v1_buffer.png`,
+- La surestimation se concentre dans le centre dense (cartes `docs/figures/grenoble/acces_v1_buffer.png`,
   `acces_v2_reseau.png`, `acces_v1_moins_v2.png`) : l'écart **en options** est le plus fort là où l'offre est dense ;
   l'écart **en couverture** (au moins une option) touche surtout les franges.
 - **Conséquence pour le niveau 1** : les chiffres France (V1) sont des bornes hautes. À Grenoble, la part de
