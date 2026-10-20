@@ -5,7 +5,8 @@ import pandas as pd
 import pytest
 from shapely.geometry import LineString
 
-from src.features.accessibility import coverage_buffer, coverage_network, indicators, offer_weights
+from src.features.accessibility import (coverage_buffer, coverage_network, indicators, nearest_walk_distance,
+                                        offer_weights)
 from src.features.network import split_at_nodes, to_graph, walkable
 
 SETTINGS = {"mode_weights": {"bus": 1.0, "tram": 2.0, "velo": 1.0, "trottinette": 0.5},
@@ -38,6 +39,21 @@ def test_network_detour_breaks_buffer_coverage():
     # carreau à 30 m de la rue sud, abscisse 200 : 30 + 200 jusqu'au nœud 1 + 50 = 280 m -> couvert
     assert v2[2, 1] and not v2[2, 0]          # vers le nord : 30 + 200 + 300 + 400 = 930 m
     assert info["offre_rabattement_median_m"] == 0 and g.number_of_nodes() == 5   # nœud virtuel retiré
+
+
+def test_nearest_walk_distance_follows_the_bridge():
+    # même rivière : station en (0,300) ; un point en (0,0) est à 300 m à vol d'oiseau mais 1 100 m à pied
+    nodes = {1: (0, 0), 2: (400, 0), 3: (400, 300), 4: (0, 300)}
+    links = [(1, 2), (2, 3), (3, 4)]
+    edges = gpd.GeoDataFrame({"u": [a for a, _ in links], "v": [b for _, b in links]},
+                             geometry=[LineString([nodes[a], nodes[b]]) for a, b in links], crs=2154)
+    edges["length"] = edges.length
+    g = to_graph(edges)
+    stations = np.array([[0.0, 300.0], [400.0, 150.0]])
+    d = nearest_walk_distance(g, edges, np.array([[0.0, 0.0], [200.0, 20.0]]), stations, cutoff=2000)
+    assert d.tolist() == pytest.approx([550.0, 20 + 200 + 150])       # le plus proche : la station sur le pont
+    far = nearest_walk_distance(g, edges, np.array([[0.0, 0.0]]), stations[:1], cutoff=500)
+    assert np.isinf(far[0]) and g.number_of_nodes() == 4              # au-delà du seuil ; nœud virtuel retiré
 
 
 def test_offer_weights_mode_frequency_and_free_floating():

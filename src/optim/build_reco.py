@@ -31,7 +31,7 @@ import scipy.sparse as sp
 from scipy.spatial import cKDTree
 
 from src.common.config import ROOT, city_from_args, city_processed, current_city, load_settings, study_area
-from src.features.accessibility import coverage_buffer, coverage_network
+from src.features.accessibility import coverage_buffer, coverage_network, nearest_walk_distance
 from src.features.network import load_walk_edges, to_graph
 from src.model.features import model_path
 from src.optim.costs import co2_avoided_t_per_year, equipment_cost, risk_surcharge
@@ -63,6 +63,12 @@ class Coverer:
         if version == "v2":
             self.edges = load_walk_edges()
             self.graph = to_graph(self.edges)
+
+    def distance_to_nearest(self, from_xy: np.ndarray, to_xy: np.ndarray) -> np.ndarray:
+        """Distance (m) au point le plus proche : à pied sur le réseau (V2) ou à vol d'oiseau (V1)."""
+        if self.version == "v1":
+            return cKDTree(to_xy).query(from_xy)[0]
+        return nearest_walk_distance(self.graph, self.edges, from_xy, to_xy)
 
     def __call__(self, rows_xy: np.ndarray, cols_xy: np.ndarray) -> sp.csr_matrix:
         if len(cols_xy) == 0:
@@ -124,6 +130,9 @@ def build_reco(budgets=(250_000, 500_000, 1_000_000), equity: float = 0.5, ilp_t
 
     cand = build_candidates(cells, offer, covered, cover)
     cand_xy = cand[["x", "y"]].to_numpy()
+    # distance à l'autopartage le plus proche (infobulles : « à X min à pied »)
+    cand["dist_autopartage_m"] = cover.distance_to_nearest(cand_xy, np.column_stack([cs.geometry.x, cs.geometry.y]))
+    cand["dist_vol_oiseau_m"] = cKDTree(np.column_stack([cs.geometry.x, cs.geometry.y])).query(cand_xy)[0]
 
     # probabilité du modèle (hors réseau de la ville) et risque de vol au carreau le plus proche
     pred = pd.read_parquet(model_path("predictions.parquet"),
@@ -177,7 +186,8 @@ def build_reco(budgets=(250_000, 500_000, 1_000_000), equity: float = 0.5, ilp_t
                   if newly.any() else None,
                   "objectif": round(float(res.summary.get("objectif", sel["gain_objectif"].sum())), 1)}
             resume["scenarios"].append(sc)
-            out = sel.merge(cand[["id", "origine", "commune", "code_iris", "surcout_risque", "vols_vehicules_1000"]],
+            out = sel.merge(cand[["id", "origine", "commune", "code_iris", "surcout_risque", "vols_vehicules_1000",
+                                  "dist_autopartage_m", "dist_vol_oiseau_m"]],
                             on="id", how="left")
             out.to_csv(city_processed(f"recommandations_{method}_{budget}_{acces}.csv"), sep=";", decimal=",", index=False,
                        encoding="utf-8-sig")
