@@ -64,7 +64,28 @@ if level == "France entière":
     render()
     st.stop()
 
-folders = {"Données réelles": REAL, "Données de démonstration (factices)": DEMO}
+# Sélection des 3 villes clés du projet
+city_map = {
+    "Nantes Métropole (Priorité)": NANTES if available(NANTES) else REAL,
+    "Nice Côte d'Azur (Réseau neuf)": NICE if available(NICE) else REAL,
+    "Grenoble-Alpes Métropole (Référence)": GRENOBLE if available(GRENOBLE) else REAL
+}
+
+city_name_choice = st.sidebar.selectbox(
+    "🏙️ Ville d'analyse",
+    list(city_map.keys()),
+    index=0,
+    help="Sélectionnez l'une des 3 villes étudiées : Nantes (densification), Nice (création ex-nihilo), Grenoble (référence)."
+)
+selected_city_dir = city_map[city_name_choice]
+
+folders = {}
+if available(selected_city_dir):
+    folders["Données réelles"] = selected_city_dir
+elif available(REAL):
+    folders["Données réelles"] = REAL
+if available(DEMO):
+    folders["Données de démonstration (factices)"] = DEMO
 choices = [k for k, f in folders.items() if available(f)]
 if not choices:
     st.error("Aucune donnée précalculée. Lancer `python scripts/build_all.py` ou `python scripts/make_demo_data.py`.")
