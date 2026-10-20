@@ -17,18 +17,23 @@ import streamlit as st
 from pyproj import Transformer
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from app.data import DEMO, REAL, ROOT, available, load_all  # noqa: E402
+from app.data import DEMO, REAL, ROOT, NANTES, NICE, GRENOBLE, available, load_all  # noqa: E402
 from app.ui import colorize, deck, fmt  # noqa: E402
 from src.optim.costs import co2_avoided_t_per_year, load_costs  # noqa: E402
 from src.optim.optimize import Problem, optimize  # noqa: E402
 
-st.set_page_config(page_title="Accès mobilité · Citiz", layout="wide")
+st.set_page_config(
+    page_title="Citiz · Diagnostic & Cartographie Mobilité",
+    page_icon="🚗",
+    layout="wide"
+)
 
 TYPE_COLORS = {"bus": [0, 114, 178], "tram": [213, 94, 0], "metro": [204, 121, 167], "train": [86, 86, 86],
-               "telepherique": [0, 158, 115], "velo": [0, 158, 115], "trottinette": [240, 228, 66],
-               "citiz": [230, 0, 126], "autopartage": [150, 0, 90]}
-TYPE_LABELS = {"bus": "Bus", "tram": "Tram", "metro": "Métro", "train": "Train", "telepherique": "Téléphérique",
-               "velo": "Vélo", "trottinette": "Trottinette", "citiz": "Citiz", "autopartage": "Autre autopartage"}
+               "telepherique": [86, 86, 86], "velo": [0, 158, 115], "trottinette": [240, 228, 66],
+               "citiz": [230, 0, 126], "autopartage": [150, 0, 90], "parc_relais": [230, 150, 0]}
+TYPE_LABELS = {"bus": "Bus", "tram": "Tramway", "metro": "Métro", "train": "Train", "telepherique": "Navibus / Câble",
+               "velo": "Vélo", "trottinette": "Trottinette", "citiz": "Station Citiz", "autopartage": "Autre autopartage",
+               "parc_relais": "Parking-Relais P+R"}
 CAND_LABELS = {"citiz_station": "Station Citiz", "bus_stop": "Arrêt de bus", "bike_station": "Station vélo",
                "free_floating_zone": "Zone free-floating"}
 MIN_MENAGES = 11
