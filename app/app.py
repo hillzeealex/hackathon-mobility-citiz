@@ -13,6 +13,7 @@ import json
 import sys
 from pathlib import Path
 
+import altair as alt
 import pandas as pd
 import pydeck as pdk
 import streamlit as st
@@ -313,42 +314,91 @@ with tab3:
 
 # --- Onglet 4 --------------------------------------------------------------------------------
 with tab4:
+    st.markdown("**Cet onglet montre** si l'on peut faire confiance au modèle : on lui cache tout le réseau Citiz de "
+                "Grenoble, puis on regarde s'il retrouve où sont les stations. Il compare aussi le calcul à vol "
+                "d'oiseau (V1) et la marche réelle (V2).")
     val = read_json(REAL / "model" / "validation.json")
-    st.subheader("Le modèle retrouve-t-il les stations Citiz de Grenoble sans les avoir vues ?")
+    comps = {c: read_json(REAL / c / "access_comparaison.json") for c in ("grenoble", "nantes")}
     if val and "test_aveugle_grenoble" in val:
         t = val["test_aveugle_grenoble"]
-        rows = [{"Indicateur": f"Stations dont le carreau est dans le top {k} % des carreaux prédits",
-                 "Modèle": pct(t["modele"]["stations"][f"top_{k}pct"]), "Densité seule": pct(t["baseline_densite"]["stations"][f"top_{k}pct"])}
-                for k in (5, 10, 20)]
-        rows.append({"Indicateur": "AUC (carreaux)", "Modèle": str(t["modele"]["carreaux"]["auc"]).replace(".", ","),
-                     "Densité seule": str(t["baseline_densite"]["carreaux"]["auc"]).replace(".", ",")})
-        st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
-        st.caption(f"Le modèle est entraîné sans le réseau « {t['reseau_exclu']} » ({t['stations']} stations à Grenoble, "
-                   f"{t['carreaux']} carreaux). Validation sur les {val['perimetre']['reseaux']} réseaux Citiz : AUC "
-                   f"{str(val['modele_oof']['auc']).replace('.', ',')} (densité seule {str(val['baseline_densite']['auc']).replace('.', ',')}). "
-                   "Limite : le modèle apprend où Citiz s'est installé, pas la demande pure.")
+        mod, base = t["modele"], t["baseline_densite"]
+        m1, m2, m3, m4 = st.columns(4)
+        m1.metric("Stations de Grenoble retrouvées (top 20 %)", pct(mod["stations"]["top_20pct"]),
+                  delta=f"densité seule : {pct(base['stations']['top_20pct'])}", delta_color="off",
+                  help="Part des stations Citiz de Grenoble situées dans les 20 % de carreaux que le modèle juge les plus "
+                       "favorables, alors qu'il n'a jamais vu ce réseau.")
+        m2.metric("AUC du test à l'aveugle (Grenoble)", fr(mod["carreaux"]["auc"], 3),
+                  delta=f"densité seule : {fr(base['carreaux']['auc'], 3)}", delta_color="off",
+                  help="Probabilité qu'un carreau proche d'une station soit mieux classé qu'un carreau sans station (0,5 = hasard).")
+        m3.metric(f"AUC sur les {val['perimetre']['reseaux']} réseaux Citiz", fr(val["modele_oof"]["auc"], 3),
+                  delta=f"densité seule : {fr(val['baseline_densite']['auc'], 3)}", delta_color="off",
+                  help="Validation croisée : chaque réseau est prédit par un modèle entraîné sans lui.")
+        if comps["grenoble"]:
+            m4.metric("Surestimation à vol d'oiseau (Grenoble)", f"+{fr(comps['grenoble']['surestimation_options_moyennes_pct'], 0)} %",
+                      help="Options par habitant à vol d'oiseau (V1) rapportées à la marche réelle (V2).")
+
+        st.subheader("Test à l'aveugle : le modèle retrouve-t-il les stations Citiz de Grenoble ?")
+        rows = [{"Carreaux retenus": f"Top {k} %", "ordre": k, "Approche": name, "part": r["stations"][f"top_{k}pct"]}
+                for k in (5, 10, 20) for name, r in (("Modèle", mod), ("Densité seule", base))]
+        chart_df = pd.DataFrame(rows).assign(texte=lambda x: x["part"].map(pct))
+        bars = alt.Chart(chart_df).encode(
+            x=alt.X("Carreaux retenus:N", sort=["Top 5 %", "Top 10 %", "Top 20 %"], title="Part des carreaux jugés les plus favorables",
+                    axis=alt.Axis(labelAngle=0)),
+            xOffset=alt.XOffset("Approche:N", sort=["Modèle", "Densité seule"]),
+            y=alt.Y("part:Q", title="Stations Citiz retrouvées", scale=alt.Scale(domain=[0, 1]),
+                    axis=alt.Axis(labelExpr="format(datum.value * 100, '.0f') + ' %'")),
+            color=alt.Color("Approche:N", sort=["Modèle", "Densité seule"], scale=alt.Scale(range=["#e6007e", "#9e9e9e"]),
+                            legend=alt.Legend(orient="top", title=None)),
+            tooltip=[alt.Tooltip("Approche:N"), alt.Tooltip("Carreaux retenus:N"), alt.Tooltip("texte:N", title="Stations retrouvées")])
+        st.altair_chart(bars.mark_bar() + bars.mark_text(dy=-8).encode(text="texte:N", color=alt.value("#333")),
+                        width="stretch")
+        st.caption(f"Lecture : en ne gardant que les 20 % de carreaux que le modèle juge les plus favorables, on retrouve "
+                   f"{pct(mod['stations']['top_20pct'])} des {t['stations']} stations Citiz de Grenoble ; la densité de "
+                   f"population seule en retrouve {pct(base['stations']['top_20pct'])}. Le réseau « {t['reseau_exclu']} » a été "
+                   "entièrement retiré de l'entraînement.")
+
+        st.subheader("Validation par réseau (chaque réseau prédit sans l'avoir vu)")
+        pr = pd.DataFrame([{"Réseau": k.replace("citiz-autopartage-", "").replace("-", " ").capitalize(), "Carreaux": v["carreaux"],
+                            "Carreaux à 5 min d'une station": v["positifs"], "AUC": v["auc"], "Stations dans le top 20 %": v["top_20pct"]}
+                           for k, v in val["par_reseau"].items()]).sort_values("AUC", ascending=False)
+        st.dataframe(table(pr, digits={"Carreaux": 0, "Carreaux à 5 min d'une station": 0, "AUC": 3},
+                           percent={"Stations dans le top 20 %": 0}), width="stretch", hide_index=True)
+        st.caption(f"Sur l'ensemble : AUC {fr(val['modele_oof']['auc'], 3)} contre {fr(val['baseline_densite']['auc'], 3)} "
+                   f"pour la densité seule ({fmt(val['perimetre']['carreaux'])} carreaux, {val['perimetre']['epci']} "
+                   "intercommunalités). Le réseau « développement » (petites villes récentes) est le moins bien prédit : "
+                   "le modèle généralise mal hors des grandes agglomérations. Limite : il apprend où Citiz s'est installé "
+                   "(choix passés), pas la demande pure.")
         c1, c2 = st.columns(2)
         for c, img, cap in ((c1, FIG / "modele" / "shap_importance.png", "Importance des variables (SHAP)"),
                             (c2, FIG / "modele" / "shap_beeswarm.png", "Sens des effets (SHAP)")):
             if img.exists():
                 c.image(str(img), caption=cap)
     else:
-        st.info("Modèle non entraîné : `python -m src.model.features && python -m src.model.train`.")
-    st.subheader("Vol d'oiseau (V1) ou marche réelle (V2) ? Grenoble")
-    comp = read_json(REAL / "grenoble" / "access_comparaison.json")
-    if comp and "v2" in comp:
-        rows = [{"Indicateur": lab, "V1 vol d'oiseau": f(comp["v1"][k]), "V2 marche réelle": f(comp["v2"][k])}
-                for lab, k, f in (("Au moins une option à 5 min", "part_pop_au_moins_1_option", pct),
-                                  ("Au moins un arrêt de TC", "part_pop_au_moins_1_TC", pct),
-                                  ("Une station Citiz à 5 min", "part_pop_citiz", pct),
-                                  ("Options pondérées par habitant", "options_moyennes_par_habitant", lambda v: f"{v:.1f}".replace(".", ",")))]
+        st.info("Modèle non entraîné (data/processed/model/validation.json absent) : "
+                "`python -m src.model.features && python -m src.model.train`.")
+
+    st.subheader("Vol d'oiseau (V1) ou marche réelle (V2) ?")
+    rows = []
+    for lab, k, f in (("Au moins une option à 5 min", "part_pop_au_moins_1_option", pct),
+                      ("Au moins un arrêt de transport en commun", "part_pop_au_moins_1_TC", pct),
+                      ("Une station Citiz à 5 min", "part_pop_citiz", pct),
+                      ("Options pondérées par habitant", "options_moyennes_par_habitant", lambda v: fr(v, 1))):
+        row = {"Indicateur": lab}
+        for c, comp in comps.items():
+            if comp and "v2" in comp:
+                row[f"{c.capitalize()} V1 vol d'oiseau"] = f(comp["v1"][k])
+                row[f"{c.capitalize()} V2 marche réelle"] = f(comp["v2"][k])
+        rows.append(row)
+    if len(rows[0]) > 1:
         st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
-        st.caption(f"La V1 surestime les options de {str(comp['surestimation_options_moyennes_pct']).replace('.', ',')} % ; "
-                   f"{fmt(comp['pop_couverte_v1_pas_v2'])} habitants semblent desservis à vol d'oiseau mais ne le sont pas "
-                   "à pied (rivières, voies ferrées, îlots). Les chiffres France et Nantes (V1) sont donc des bornes hautes.")
+        st.caption(" ".join(f"{c.capitalize()} : la V1 surestime les options de {fr(comp['surestimation_options_moyennes_pct'], 0)} % "
+                            f"et {fmt(comp['pop_couverte_v1_pas_v2'])} habitants semblent desservis à vol d'oiseau mais ne le "
+                            "sont pas à pied." for c, comp in comps.items() if comp and "v2" in comp)
+                   + " Causes : rivières, voies ferrées, rocades, îlots fermés. Les chiffres de la vue France (V1) sont "
+                     "donc des bornes hautes.")
         cols = st.columns(3)
         for c, name, cap in zip(cols, ("acces_v1_buffer", "acces_v2_reseau", "acces_v1_moins_v2"),
-                                ("V1 : vol d'oiseau", "V2 : marche réelle", "Surestimation V1 − V2")):
+                                ("Grenoble V1 : vol d'oiseau", "Grenoble V2 : marche réelle", "Surestimation V1 − V2")):
             img = FIG / "grenoble" / f"{name}.png"
             if img.exists():
                 c.image(str(img), caption=cap)
@@ -356,10 +406,88 @@ with tab4:
         st.info("Comparaison V1 / V2 absente : `python -m scripts.build_all --ville grenoble --v2`.")
 
 # --- Onglet 5 --------------------------------------------------------------------------------
+PIPELINE = """
+digraph {
+  rankdir=LR; node [shape=box, style="rounded,filled", fillcolor="#f5f5f5", fontname="Helvetica", fontsize=11];
+  edge [color="#888888"];
+  subgraph cluster_src { label="Données ouvertes"; style=dashed; color="#bbbbbb";
+    gtfs [label="Horaires des transports\\n(GTFS)"]; gbfs [label="Vélos, trottinettes,\\nautopartage (GBFS)"];
+    insee [label="Population au carreau 200 m\\n(INSEE Filosofi, RP)"]; osm [label="Rues et chemins\\n(OpenStreetMap)"];
+    ign [label="Communes, IRIS\\n(IGN)"]; ssmsi [label="Délinquance communale\\n(SSMSI)"]; }
+  offre [label="Offre dédoublonnée\\n+ fréquence"]; acces [label="Accessibilité 5 min\\nV1 vol d'oiseau / V2 à pied", fillcolor="#e3f2fd"];
+  servie [label="Population desservie\\npar arrêt / station"]; modele [label="Modèle LightGBM\\n« où Citiz s'installe »", fillcolor="#fce4ec"];
+  couts [label="Coût d'une station\\n+ surcoût de risque"]; optim [label="Optimiseur sous budget\\nglouton / ILP", fillcolor="#fce4ec"];
+  appli [label="Application\\nliste priorisée", fillcolor="#e8f5e9"];
+  gtfs -> offre; gbfs -> offre; osm -> acces; insee -> acces; ign -> acces; offre -> acces; acces -> servie;
+  acces -> modele; insee -> modele; acces -> optim; modele -> optim; ssmsi -> couts; couts -> optim;
+  servie -> appli; optim -> appli;
+}
+"""
+SOURCES = pd.DataFrame([
+    ("Citiz, vélos et trottinettes en libre-service", "GBFS via transport.data.gouv.fr", "Licence Ouverte"),
+    ("Autopartage Marguerite (Nantes)", "Nantes Métropole, stations d'autopartage Naolib", "Licence Ouverte"),
+    ("Horaires des transports en commun", "GTFS via transport.data.gouv.fr (jour type : 17/11/2026)", "Licence Ouverte"),
+    ("Population et revenus au carreau de 200 m", "INSEE Filosofi 2021", "Licence Ouverte"),
+    ("Ménages sans voiture par IRIS", "INSEE Recensement 2023", "Licence Ouverte"),
+    ("Communes, intercommunalités, IRIS", "IGN ADMIN EXPRESS et CONTOURS IRIS 2026", "Licence Ouverte"),
+    ("Rues et chemins piétons", "OpenStreetMap (Geofabrik)", "ODbL"),
+    ("Délinquance enregistrée par commune", "SSMSI, ministère de l'Intérieur, 2025", "Licence Ouverte"),
+    ("Coûts et CO₂", "ADEME / 6t 2022, Base Empreinte ADEME ; config/costs.yaml", "Hypothèses sourcées ou à valider"),
+], columns=["Donnée", "Source", "Licence"])
+
 with tab5:
-    for title, doc in (("Méthodologie", "methodologie.md"), ("Modèle", "modele.md"), ("Éthique", "ethique.md"),
+    st.markdown("**Cet onglet résume** comment les chiffres sont calculés, avec quelles données, et ce qu'ils ne disent pas.")
+    st.subheader("Chaîne de traitement")
+    st.graphviz_chart(PIPELINE, width="stretch")
+    st.caption("Tout est recalculé en une commande par ville : `python -m scripts.build_all --ville nantes` (≈ 5 min).")
+
+    st.subheader("Formules")
+    st.markdown("**1. Options accessibles** au carreau $i$ : chaque point d'offre $j$ à 5 min à pied ($C_{ij}=1$, "
+                "400 m de marche réelle à 4,8 km/h) compte avec un poids $w_j$ = poids du mode × facteur de fréquence.")
+    st.latex(r"n_i \;=\; \sum_j C_{ij}\, w_j")
+    st.markdown("**2. Offre partagée (2SFCA)** : l'offre d'un point est divisée par le nombre d'habitants qui y ont accès "
+                "($P_k$ : population du carreau $k$), puis sommée pour chaque carreau.")
+    st.latex(r"A_i \;=\; 1000 \sum_j C_{ij}\, \frac{w_j}{\sum_k C_{kj}\, P_k}")
+    st.markdown("**3. Score de l'optimiseur** : un carreau $i$ pas encore à 5 min d'un autopartage rapporte, s'il est "
+                "couvert par une station retenue $j$, sa population pondérée par l'équité $e_i$ (rang moyen des parts de "
+                "ménages modestes et sans voiture, de 0 à 1, réglé par $\\lambda$) et par la probabilité du modèle $u_j$ "
+                "(rapportée à sa moyenne). Chaque carreau compte une seule fois.")
+    st.latex(r"\max \sum_{i,j} z_{ij}\, P_i\,(1+\lambda e_i)\,\frac{u_j}{\bar u}"
+             r"\quad\text{s.c.}\quad z_{ij}\le x_j,\;\; \sum_j z_{ij}\le 1,\;\; \sum_j \text{coût}_j\, x_j \le \text{budget}")
+    st.markdown("Le **glouton** ajoute à chaque étape la station au meilleur rapport gain / coût ; l'**ILP** (PuLP + HiGHS) "
+                "trouve l'optimum exact de ce score (pas forcément le plus grand nombre d'habitants, puisque l'équité et "
+                "la probabilité pèsent aussi).")
+    st.markdown("**4. Coût d'une station** sur $H$ = 3 ans : installation, véhicule, assurance et entretien, plus un surcoût "
+                "de risque selon le ratio $r$ entre les vols liés aux véhicules de la commune et la médiane des "
+                "carreaux proches d'une station Citiz existante ($A$ : assurance et entretien annuels, $\\varepsilon$ : élasticité, plafond 3) :")
+    st.latex(r"\text{surcoût} \;=\; H \cdot A \cdot \varepsilon \cdot \min\big(\max(r-1,\,0),\; 2\big)")
+    st.caption("Ce surcoût est une **hypothèse à valider avec Citiz** (config/costs.yaml). Le risque n'est jamais affiché "
+               "comme une caractéristique d'un quartier : il n'entre que dans le coût, à l'échelle de la commune.")
+
+    st.subheader("Pourquoi une station recommandée peut sembler proche d'une station existante")
+    st.markdown("La règle est **5 minutes à pied réelles**, pas 400 m à vol d'oiseau. Exemple : l'arrêt **Vaucanson** "
+                "(Nantes) est à 358 m à vol d'oiseau d'une station d'autopartage, mais à 508 m à pied (≈ 7 min), car il "
+                "faut contourner des voies et des îlots. Ses habitants ne sont donc pas desservis aujourd'hui, et la "
+                "recommandation est cohérente. L'infobulle de chaque station indique la distance à pied réelle.")
+
+    st.subheader("Limites")
+    st.markdown("""
+- **Autopartage invisible** : seul l'autopartage publié en open data est compté (Citiz, Marguerite à Nantes). Getaround,
+  Zity, Free2Move et la location entre particuliers n'apparaissent pas.
+- **Le modèle apprend les choix passés** de Citiz, pas la demande pure : il favorise des quartiers qui ressemblent à
+  ceux où Citiz est déjà présent.
+- **Coûts et surcoût de risque** : ordres de grandeur sourcés, à valider avec Citiz.
+- **Population** : carreaux INSEE 2021 calés sur la population communale ; les carreaux de moins de 11 ménages ne
+  sont jamais affichés seuls (secret statistique).
+- **Horaires** : un mardi type (17/11/2026) ; pas de soirées ni de week-ends.
+- **CO₂** : estimation prudente (1 véhicule par station, bornes basses ADEME), pas une mesure.
+""")
+    st.subheader("Sources")
+    st.dataframe(SOURCES, width="stretch", hide_index=True)
+    st.caption("Liste complète avec les liens : docs/sources.md et docs/sources_hypotheses.md.")
+    for title, doc in (("Méthodologie détaillée", "methodologie.md"), ("Modèle", "modele.md"), ("Éthique", "ethique.md"),
                        ("Choix des villes", "choix_ville.md")):
         path = ROOT / "docs" / doc
         if path.exists():
-            with st.expander(title, expanded=title == "Méthodologie"):
+            with st.expander(title):
                 st.markdown(path.read_text(encoding="utf-8"))
