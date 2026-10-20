@@ -1,10 +1,10 @@
 table gold_modele_validation
-	lineageTag: aa7f8503-836e-46cf-a64f-3c9e7be9f470
+	lineageTag: d942abce-3fea-498e-8571-3ba3d501b892
 	sourceLineageTag: [dbo].[gold_modele_validation]
 
 	column evaluation
 		dataType: string
-		lineageTag: 3bf1b680-0a0f-47f3-8ab6-e23056c1ab44
+		lineageTag: 82286f45-d61c-4f64-83f9-2c5e438bbd4d
 		sourceLineageTag: evaluation
 		summarizeBy: none
 		sourceColumn: evaluation
@@ -13,7 +13,7 @@ table gold_modele_validation
 
 	column carreaux
 		dataType: int64
-		lineageTag: 89b453f2-ad53-4749-b458-ef29b450d79d
+		lineageTag: a7d5bfee-8204-4280-9c0e-8ec9364b0653
 		sourceLineageTag: carreaux
 		summarizeBy: none
 		sourceColumn: carreaux
@@ -22,7 +22,7 @@ table gold_modele_validation
 
 	column carreaux_citiz
 		dataType: int64
-		lineageTag: f21cda40-a60c-49c6-b293-21e49f615cb2
+		lineageTag: 0a620e4a-7bd1-4d89-a03a-3eb3cbefafcb
 		sourceLineageTag: carreaux_citiz
 		summarizeBy: none
 		sourceColumn: carreaux_citiz
@@ -32,7 +32,7 @@ table gold_modele_validation
 	column auc_modele
 		dataType: double
 		formatString: 0.000
-		lineageTag: e28f0f7b-8d63-485b-a34c-dacafe715779
+		lineageTag: f9233a5b-1ed2-42d5-8b3a-272da2a58c90
 		sourceLineageTag: auc_modele
 		summarizeBy: none
 		sourceColumn: auc_modele
@@ -42,7 +42,7 @@ table gold_modele_validation
 	column auc_densite_seule
 		dataType: double
 		formatString: 0.000
-		lineageTag: b6d53c2a-1e0e-4952-85a8-4bc65533c253
+		lineageTag: 5d3e277c-433b-4cab-a1cb-8e0e97206607
 		sourceLineageTag: auc_densite_seule
 		summarizeBy: none
 		sourceColumn: auc_densite_seule
@@ -52,7 +52,7 @@ table gold_modele_validation
 	column pr_auc_modele
 		dataType: double
 		formatString: 0.000
-		lineageTag: 817d9bf4-c680-48e8-b910-f6aad2efd5bf
+		lineageTag: 478dce04-1e6c-4d9c-ae4a-b2cc55e077be
 		sourceLineageTag: pr_auc_modele
 		summarizeBy: none
 		sourceColumn: pr_auc_modele
@@ -62,7 +62,7 @@ table gold_modele_validation
 	column pr_auc_densite_seule
 		dataType: double
 		formatString: 0.000
-		lineageTag: 47bf79ba-5a81-4d5e-8387-8390457f9629
+		lineageTag: c63e7bcb-209b-4222-ad68-85f07be49b81
 		sourceLineageTag: pr_auc_densite_seule
 		summarizeBy: none
 		sourceColumn: pr_auc_densite_seule
@@ -72,7 +72,7 @@ table gold_modele_validation
 	column part_top_k_avec_citiz
 		dataType: double
 		formatString: 0%
-		lineageTag: 2ac900c8-0bcd-4021-9e29-7778ce730140
+		lineageTag: 4f1e5978-12f8-4c3e-bac7-7948a2295cad
 		sourceLineageTag: part_top_k_avec_citiz
 		summarizeBy: none
 		sourceColumn: part_top_k_avec_citiz
@@ -82,7 +82,7 @@ table gold_modele_validation
 	column part_top_k_densite_seule
 		dataType: double
 		formatString: 0%
-		lineageTag: 34d62b9f-b0ff-4f74-9822-6c96dbcc4b2c
+		lineageTag: b32d5289-7973-4bdf-bb55-61534f6f52c3
 		sourceLineageTag: part_top_k_densite_seule
 		summarizeBy: none
 		sourceColumn: part_top_k_densite_seule

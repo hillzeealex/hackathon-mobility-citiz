@@ -1,0 +1,80 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "6bdc98bf869c4ecc9bf5",
+  "position": {
+    "x": 790,
+    "y": 90,
+    "z": 2,
+    "width": 470,
+    "height": 200,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_offre_desservie"
+                    }
+                  },
+                  "Property": "famille"
+                }
+              },
+              "queryRef": "gold_offre_desservie.famille",
+              "nativeQueryRef": "Type",
+              "displayName": "Type"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_offre_desservie"
+                    }
+                  },
+                  "Property": "Points"
+                }
+              },
+              "queryRef": "gold_offre_desservie.Points",
+              "nativeQueryRef": "Points",
+              "displayName": "Points"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Nombre de points par type'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "8c54a4af4764479b967f",
+  "position": {
+    "x": 20,
+    "y": 90,
+    "z": 1,
+    "width": 760,
+    "height": 620,
+    "tabOrder": 1
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Accès (objectif 1)",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Carreaux INSEE Filosofi 2021 de 200 m, population calée sur le recensement 2023 de la commune. Une option = un arrêt de transport en commun (fusion à 50 m), une station Citiz ou d’autopartage (poids 1,5), une station de vélos (1), un opérateur de free-floating présent (0,5 par mode). Distance à vol d’oiseau 400 m : borne haute (+80 % à Grenoble).",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Desserte (objectif 2)",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Population à 5 minutes de chaque point ; « seule option » : habitants pour qui le point est l’unique option.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Investissement (objectif 3)",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Couverture maximale sous budget : population nouvellement desservie × potentiel Citiz prédit, un carreau compté une fois par type. Glouton et ILP (PuLP + HiGHS). Arrêts de bus et stations de vélos : potentiel identique (1).",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Modèle (prédiction)",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "LightGBM monotone sur 2,3 M carreaux : population à 400 m et 1 km, offre de TC, vélos, free-floating, distance au TC, ménages sans voiture. Cible : station Citiz à 400 m. Validé région par région et à l’aveugle sur Grenoble.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Secret statistique",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Carreaux imputés (moins de 11 ménages) jamais affichés seuls ; populations desservies arrondies à 5, masquées sous 20.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Limites",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Mode et fréquence des lignes absents de Silver (chaque arrêt vaut 1) ; Getaround sans données ouvertes ; un centre de carreau est une piste à vérifier sur le terrain, pas une place de stationnement.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

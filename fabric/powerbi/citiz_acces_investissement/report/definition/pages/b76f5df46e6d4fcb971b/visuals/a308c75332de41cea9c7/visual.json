@@ -1,0 +1,121 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "a308c75332de41cea9c7",
+  "position": {
+    "x": 730,
+    "y": 90,
+    "z": 2,
+    "width": 530,
+    "height": 250,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_modele_validation"
+                    }
+                  },
+                  "Property": "evaluation"
+                }
+              },
+              "queryRef": "gold_modele_validation.evaluation",
+              "nativeQueryRef": "Validation",
+              "displayName": "Validation"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_modele_validation"
+                    }
+                  },
+                  "Property": "auc_modele"
+                }
+              },
+              "queryRef": "gold_modele_validation.auc_modele",
+              "nativeQueryRef": "AUC modèle",
+              "displayName": "AUC modèle"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_modele_validation"
+                    }
+                  },
+                  "Property": "auc_densite_seule"
+                }
+              },
+              "queryRef": "gold_modele_validation.auc_densite_seule",
+              "nativeQueryRef": "AUC densité seule",
+              "displayName": "AUC densité seule"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_modele_validation"
+                    }
+                  },
+                  "Property": "pr_auc_modele"
+                }
+              },
+              "queryRef": "gold_modele_validation.pr_auc_modele",
+              "nativeQueryRef": "PR-AUC modèle",
+              "displayName": "PR-AUC modèle"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_modele_validation"
+                    }
+                  },
+                  "Property": "pr_auc_densite_seule"
+                }
+              },
+              "queryRef": "gold_modele_validation.pr_auc_densite_seule",
+              "nativeQueryRef": "PR-AUC densité",
+              "displayName": "PR-AUC densité"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Validation : chaque région prédite sans l’avoir vue ; Grenoble à l’aveugle'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

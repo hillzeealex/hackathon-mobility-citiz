@@ -1,10 +1,10 @@
 table gold_horizons
-	lineageTag: a1ee58bd-c7eb-46ac-9e18-ea0d84376291
+	lineageTag: 373d2740-b333-4a81-b083-5208f6df4ac1
 	sourceLineageTag: [dbo].[gold_horizons]
 
 	column horizon_ans
 		dataType: int64
-		lineageTag: fd73e2e8-235c-4afb-a5ee-e52b5857c7d5
+		lineageTag: ae548aed-f21b-4f6a-aa3e-9a77993ec876
 		sourceLineageTag: horizon_ans
 		summarizeBy: none
 		sourceColumn: horizon_ans
@@ -13,7 +13,7 @@ table gold_horizons
 
 	column annee
 		dataType: int64
-		lineageTag: 4e9189bb-959b-4c09-9741-9c53ae5015bb
+		lineageTag: 3af3f64f-3ab7-493e-8bc5-aca86079f7e9
 		sourceLineageTag: annee
 		summarizeBy: none
 		sourceColumn: annee

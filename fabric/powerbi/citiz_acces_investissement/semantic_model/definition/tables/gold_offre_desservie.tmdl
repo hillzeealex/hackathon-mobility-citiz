@@ -1,14 +1,14 @@
 table gold_offre_desservie
-	lineageTag: 94722898-1330-4550-883b-7c10090fa182
+	lineageTag: 23840947-6e1a-4e64-a2fc-a964dd769de8
 	sourceLineageTag: [dbo].[gold_offre_desservie]
 
 	measure Points = COUNTROWS(gold_offre_desservie)
 		formatString: #,0
-		lineageTag: 85eebe9a-2238-4bb9-b902-aab8a9abacf7
+		lineageTag: 729ecd26-c493-4bcf-bdbd-12d84f5205bd
 
 	column point_id
 		dataType: string
-		lineageTag: 1982c3c5-71e2-45c9-bb2a-61293aeb97b4
+		lineageTag: db226634-203d-498d-ae05-5f2eb3ae5ddd
 		sourceLineageTag: point_id
 		summarizeBy: none
 		sourceColumn: point_id
@@ -17,7 +17,7 @@ table gold_offre_desservie
 
 	column famille
 		dataType: string
-		lineageTag: 6e2918ae-452b-45b2-b18f-3b97a93cfd6f
+		lineageTag: d4f54264-d3ab-49ec-9ec8-e97a00d3fe94
 		sourceLineageTag: famille
 		summarizeBy: none
 		sourceColumn: famille
@@ -26,7 +26,7 @@ table gold_offre_desservie
 
 	column operateur
 		dataType: string
-		lineageTag: 61ce0416-bdac-47af-8e76-58f7d4b19fa7
+		lineageTag: 592c1c5e-23fa-45e8-984a-01bdc2d152a5
 		sourceLineageTag: operateur
 		summarizeBy: none
 		sourceColumn: operateur
@@ -35,7 +35,7 @@ table gold_offre_desservie
 
 	column nom
 		dataType: string
-		lineageTag: a573dfb5-61a3-456c-9335-74e1f18a8fdb
+		lineageTag: 15bd0b1a-e9c7-487f-8beb-79684ebec3f0
 		sourceLineageTag: nom
 		summarizeBy: none
 		sourceColumn: nom
@@ -44,7 +44,7 @@ table gold_offre_desservie
 
 	column lat
 		dataType: double
-		lineageTag: 4e8d429e-f0e0-4ff7-9f85-4bf8e1528dfe
+		lineageTag: 87612ab2-f773-4533-867c-5202f615f478
 		sourceLineageTag: lat
 		summarizeBy: none
 		sourceColumn: lat
@@ -53,7 +53,7 @@ table gold_offre_desservie
 
 	column lon
 		dataType: double
-		lineageTag: f8fcda1f-a9ad-41ed-bd68-4c196c57d2ed
+		lineageTag: 84bb309e-d814-4a6d-ab41-d43c939f17b1
 		sourceLineageTag: lon
 		summarizeBy: none
 		sourceColumn: lon
@@ -62,7 +62,7 @@ table gold_offre_desservie
 
 	column commune
 		dataType: string
-		lineageTag: e554fcbb-931c-4c12-a310-3a4e6647e1fa
+		lineageTag: 42a82a8d-0ff9-41bd-bf4b-fa3c8e0b003c
 		sourceLineageTag: commune
 		summarizeBy: none
 		sourceColumn: commune
@@ -71,7 +71,7 @@ table gold_offre_desservie
 
 	column code_dept
 		dataType: string
-		lineageTag: 6374567a-8eea-4438-b056-1fc4ab45bb66
+		lineageTag: 36ccd136-abd6-4c63-a29b-c25ed588ab78
 		sourceLineageTag: code_dept
 		summarizeBy: none
 		sourceColumn: code_dept
@@ -80,7 +80,7 @@ table gold_offre_desservie
 
 	column poids
 		dataType: double
-		lineageTag: 0670f034-c837-45dd-bff0-d2e98c38b38a
+		lineageTag: eda98eb1-d857-463a-851a-c6c37de44062
 		sourceLineageTag: poids
 		summarizeBy: none
 		sourceColumn: poids
@@ -90,7 +90,7 @@ table gold_offre_desservie
 	column pop_desservie
 		dataType: double
 		formatString: #,0
-		lineageTag: 7150accb-f723-4a94-92a1-3602ff8804ab
+		lineageTag: 43efa66d-7cf0-4883-889b-52057e73c102
 		sourceLineageTag: pop_desservie
 		summarizeBy: none
 		sourceColumn: pop_desservie
@@ -100,7 +100,7 @@ table gold_offre_desservie
 	column pop_seule_option
 		dataType: double
 		formatString: #,0
-		lineageTag: 78677262-cba6-4121-b2fd-e976987ba6a2
+		lineageTag: 0ec260ea-374b-43cf-871e-0f9fa3867d9c
 		sourceLineageTag: pop_seule_option
 		summarizeBy: none
 		sourceColumn: pop_seule_option
@@ -109,7 +109,7 @@ table gold_offre_desservie
 
 	column zone_focus
 		dataType: string
-		lineageTag: 2d81581f-cc39-4165-b0dc-5aa893d13246
+		lineageTag: 2a63d884-20c2-4669-a81d-b55d1bfd4d8c
 		sourceLineageTag: zone_focus
 		summarizeBy: none
 		sourceColumn: zone_focus

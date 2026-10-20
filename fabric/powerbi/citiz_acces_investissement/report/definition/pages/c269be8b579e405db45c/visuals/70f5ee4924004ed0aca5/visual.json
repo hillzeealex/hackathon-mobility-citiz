@@ -1,0 +1,138 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "70f5ee4924004ed0aca5",
+  "position": {
+    "x": 790,
+    "y": 300,
+    "z": 3,
+    "width": 470,
+    "height": 410,
+    "tabOrder": 3
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_offre_desservie"
+                    }
+                  },
+                  "Property": "nom"
+                }
+              },
+              "queryRef": "gold_offre_desservie.nom",
+              "nativeQueryRef": "Point",
+              "displayName": "Point"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_offre_desservie"
+                    }
+                  },
+                  "Property": "famille"
+                }
+              },
+              "queryRef": "gold_offre_desservie.famille",
+              "nativeQueryRef": "Type",
+              "displayName": "Type"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_offre_desservie"
+                    }
+                  },
+                  "Property": "commune"
+                }
+              },
+              "queryRef": "gold_offre_desservie.commune",
+              "nativeQueryRef": "Commune",
+              "displayName": "Commune"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_offre_desservie"
+                    }
+                  },
+                  "Property": "pop_desservie"
+                }
+              },
+              "queryRef": "gold_offre_desservie.pop_desservie",
+              "nativeQueryRef": "Desservis",
+              "displayName": "Desservis"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_offre_desservie"
+                    }
+                  },
+                  "Property": "pop_seule_option"
+                }
+              },
+              "queryRef": "gold_offre_desservie.pop_seule_option",
+              "nativeQueryRef": "Seule option",
+              "displayName": "Seule option"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "gold_offre_desservie"
+                  }
+                },
+                "Property": "pop_seule_option"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Points les plus utiles'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

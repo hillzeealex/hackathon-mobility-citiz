@@ -1,0 +1,138 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "fc30877f89bc4b219665",
+  "position": {
+    "x": 790,
+    "y": 270,
+    "z": 7,
+    "width": 470,
+    "height": 440,
+    "tabOrder": 7
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_commune"
+                    }
+                  },
+                  "Property": "nom"
+                }
+              },
+              "queryRef": "gold_acces_commune.nom",
+              "nativeQueryRef": "Commune",
+              "displayName": "Commune"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_commune"
+                    }
+                  },
+                  "Property": "pop_calee"
+                }
+              },
+              "queryRef": "gold_acces_commune.pop_calee",
+              "nativeQueryRef": "Habitants",
+              "displayName": "Habitants"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_commune"
+                    }
+                  },
+                  "Property": "options_par_habitant"
+                }
+              },
+              "queryRef": "gold_acces_commune.options_par_habitant",
+              "nativeQueryRef": "Options / hab.",
+              "displayName": "Options / hab."
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_commune"
+                    }
+                  },
+                  "Property": "part_pop_sans_option"
+                }
+              },
+              "queryRef": "gold_acces_commune.part_pop_sans_option",
+              "nativeQueryRef": "Sans option",
+              "displayName": "Sans option"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_commune"
+                    }
+                  },
+                  "Property": "part_pop_citiz"
+                }
+              },
+              "queryRef": "gold_acces_commune.part_pop_citiz",
+              "nativeQueryRef": "Citiz à 5 min",
+              "displayName": "Citiz à 5 min"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "gold_acces_commune"
+                  }
+                },
+                "Property": "pop_calee"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Communes'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

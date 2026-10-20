@@ -1,49 +1,49 @@
 table gold_axe_reservations
-	lineageTag: d8c14a7a-b715-4cc5-9a0d-d0c3cbbdb3b7
+	lineageTag: 30d7ac66-8d5a-4e9d-b897-663b4344cfcf
 	sourceLineageTag: [dbo].[gold_axe_reservations]
 
 	measure 'Amortissement mensuel' = DIVIDE(SELECTEDVALUE(gold_saisie_investissement[valeur]), SELECTEDVALUE(gold_saisie_duree_amortissement[valeur]) * 12)
 		formatString: #,0 €
-		lineageTag: a6b75318-9e70-4ac7-b6eb-672ccd06f220
+		lineageTag: 3a51320e-4932-4bae-ac10-a36904578e60
 
 	measure 'Charges fixes mensuelles' = IF(ISBLANK(SELECTEDVALUE(gold_saisie_vehicules[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_investissement[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_duree_amortissement[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_charges_station[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_charges_vehicule[valeur])), BLANK(), SELECTEDVALUE(gold_saisie_charges_station[valeur]) + SELECTEDVALUE(gold_saisie_vehicules[valeur]) * SELECTEDVALUE(gold_saisie_charges_vehicule[valeur]) + [Amortissement mensuel])
 		formatString: #,0 €
-		lineageTag: e321ad29-4cee-411d-961e-a2347e0f2b7a
+		lineageTag: 9f7617f9-a112-4e25-b204-c7a741df7d55
 
 	measure 'Marge par réservation' = IF(ISBLANK(SELECTEDVALUE(gold_saisie_recette_reservation[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_cout_variable_reservation[valeur])), BLANK(), SELECTEDVALUE(gold_saisie_recette_reservation[valeur]) - SELECTEDVALUE(gold_saisie_cout_variable_reservation[valeur]))
 		formatString: #,0.00 €
-		lineageTag: cce714b0-ae93-4e52-84a0-a4654843b7c9
+		lineageTag: f177aaad-f3e5-4a11-ba5c-c7b612d36578
 
 	measure 'Seuil réservations par mois' = IF([Marge par réservation] > 0, DIVIDE([Charges fixes mensuelles], [Marge par réservation]))
 		formatString: #,0
-		lineageTag: 59690a69-3a10-4b55-b08d-ffa75954af85
+		lineageTag: ddec7e78-088b-43b8-898d-9e0842715e4e
 
 	measure 'Seuil réservations par véhicule' = DIVIDE([Seuil réservations par mois], SELECTEDVALUE(gold_saisie_vehicules[valeur]))
 		formatString: #,0.0
-		lineageTag: 2abfc1a3-b089-4f3f-980a-00927df6c506
+		lineageTag: ce154345-2c79-45d7-9a30-f69d95678ceb
 
 	measure 'Réservations prévues par mois' = SELECTEDVALUE(gold_saisie_vehicules[valeur]) * SELECTEDVALUE(gold_saisie_reservations_vehicule[valeur])
 		formatString: #,0
-		lineageTag: b1c8e3b3-e2ac-4a55-b60d-e83a48dc7937
+		lineageTag: 47e64ba1-7d68-4948-aed4-126afdd87ebd
 
 	measure 'Résultat mensuel prévu' = IF(ISBLANK(SELECTEDVALUE(gold_saisie_vehicules[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_investissement[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_duree_amortissement[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_charges_station[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_charges_vehicule[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_recette_reservation[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_cout_variable_reservation[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_reservations_vehicule[valeur])), BLANK(), [Réservations prévues par mois] * [Marge par réservation] - [Charges fixes mensuelles])
 		formatString: #,0 €
-		lineageTag: 9d27aeff-5106-4e93-94d0-eed4447180f4
+		lineageTag: 2ad01d87-9f97-4962-bccf-c1e3a5418ecc
 
 	measure 'Couverture du seuil' = DIVIDE([Réservations prévues par mois], [Seuil réservations par mois])
 		formatString: 0%
-		lineageTag: b4e9ed9b-be06-4e8e-80c8-dd6867eb077a
+		lineageTag: 4d54345b-d3f5-4fc4-8879-8f37d4f00469
 
 	measure Verdict = IF(ISBLANK(SELECTEDVALUE(gold_saisie_vehicules[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_investissement[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_duree_amortissement[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_charges_station[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_charges_vehicule[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_recette_reservation[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_cout_variable_reservation[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_reservations_vehicule[valeur])), "À renseigner", IF([Résultat mensuel prévu] >= 0, "Rentable", "Sous le seuil de rentabilité"))
-		lineageTag: b09efc09-6d0b-4724-b669-6e7e0047b176
+		lineageTag: 674131c8-8110-4241-be5c-6556e543c57c
 
 	measure 'Résultat selon réservations' = VAR x = MAX(gold_axe_reservations[reservations_vehicule]) RETURN IF(ISBLANK([Charges fixes mensuelles]) || ISBLANK([Marge par réservation]), BLANK(), SELECTEDVALUE(gold_saisie_vehicules[valeur]) * x * [Marge par réservation] - [Charges fixes mensuelles])
 		formatString: #,0 €
-		lineageTag: fd7f3106-4b9c-408c-857d-2ec2d06b594d
+		lineageTag: db8afdaf-5d1a-4987-8003-593ae1972e09
 
 	column reservations_vehicule
 		dataType: int64
-		lineageTag: 5ff2b6d2-3794-4772-86f3-e85d447d1025
+		lineageTag: 046e425b-ee6e-4ab5-aa14-559ac342e1d9
 		sourceLineageTag: reservations_vehicule
 		summarizeBy: none
 		sourceColumn: reservations_vehicule
