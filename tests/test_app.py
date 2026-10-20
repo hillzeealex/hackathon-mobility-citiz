@@ -1,51 +1,45 @@
-"""L'application s'exécute sans erreur sur les données de démonstration (tous les onglets, glouton et ILP)."""
-import subprocess
-import sys
-
+"""L'application s'exécute sans erreur sur les données RÉELLES (France, Nantes avec recommandations, Grenoble)."""
 import pytest
 from streamlit.testing.v1 import AppTest
 
-from app.data import DEMO, ROOT, available
+from app.data import ROOT, available, city_folder, has_reco
 
 APP = str(ROOT / "app" / "app.py")
+NANTES = "Nantes Métropole (recommandations)"
+GRENOBLE = "Grenoble (ville exemple)"
 
 
-@pytest.fixture(scope="module", autouse=True)
-def demo_data():
-    if not available(DEMO):
-        subprocess.run([sys.executable, str(ROOT / "scripts" / "make_demo_data.py")], check=True)
-
-
-def start() -> AppTest:
-    at = AppTest.from_file(APP, default_timeout=120)
+def start(view: str) -> AppTest:
+    at = AppTest.from_file(APP, default_timeout=180)
     at.run()
-    next(r for r in at.sidebar.radio if r.label == "Niveau d'analyse").set_value("Zoom agglomération").run()
-    src = next(r for r in at.sidebar.radio if r.label == "Jeu de données")
-    if "démonstration" not in src.value:
-        src.set_value("Données de démonstration (factices)").run()
+    next(r for r in at.sidebar.radio if r.label == "Vue").set_value(view).run()
     return at
 
 
-def test_all_tabs_render_with_greedy():
-    at = start()
+@pytest.mark.skipif(not (available(city_folder("nantes")) and has_reco(city_folder("nantes"))),
+                    reason="données de Nantes absentes (python -m scripts.build_all --ville nantes)")
+def test_nantes_all_tabs_greedy_then_ilp():
+    at = start(NANTES)
     assert not at.exception, at.exception
-    assert len(at.tabs) == 4
+    assert len(at.tabs) == 5
+    assert not any("FACTICES" in w.value for w in at.warning)
     labels = [m.label for m in at.metric]
-    assert "Habitants nouvellement desservis" in labels and "CO₂ évité (estimation prudente)" in labels
+    assert "Habitants nouvellement à 5 min d'un autopartage" in labels and "CO₂ évité (estimation prudente)" in labels
     assert at.dataframe, "liste priorisée absente"
-
-
-def test_ilp_and_controls():
-    at = start()
-    method = next(r for r in at.radio if r.label == "Méthode")
-    method.set_value("ilp").run()
-    assert not at.exception, at.exception
+    next(r for r in at.radio if r.label == "Méthode").set_value("ilp").run()
     at.slider[0].set_value(1_000_000).run()                 # budget
     at.slider[1].set_value(2.0).run()                       # équité
+    next(r for r in at.radio if r.label == "Échelle").set_value("Carreaux 200 m").run()
+    next(r for r in at.radio if r.label == "Indicateur").set_value("Options pour 1 000 habitants (2SFCA)").run()
     assert not at.exception, at.exception
-    scale = next(r for r in at.radio if r.label == "Échelle")
-    scale.set_value("Carreaux 200 m").run()
+
+
+@pytest.mark.skipif(not available(city_folder("grenoble")), reason="données de Grenoble absentes")
+def test_grenoble_map_and_validation():
+    at = start(GRENOBLE)
     assert not at.exception, at.exception
+    assert any("Nantes" in i.value for i in at.info)       # pas de recommandations à Grenoble
+    assert at.dataframe                                    # tableaux de validation / population desservie
 
 
 @pytest.mark.skipif(not (ROOT / "data" / "processed" / "national" / "app" / "epci.parquet").exists(),
