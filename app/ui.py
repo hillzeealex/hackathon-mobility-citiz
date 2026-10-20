@@ -19,14 +19,22 @@ def colorize(values: pd.Series, reverse: bool = False) -> list[list[int]]:
     return RAMP[idx].tolist()
 
 
-def view(gdf, zoom: float = 11.3) -> pdk.ViewState:
+def view(gdf, zoom: float = 11.3, center: tuple[float, float] | None = None) -> pdk.ViewState:
+    if center is not None:
+        lon, lat = center
+        return pdk.ViewState(longitude=lon, latitude=lat, zoom=zoom, pitch=0)
     minx, miny, maxx, maxy = gdf.total_bounds
     return pdk.ViewState(longitude=(minx + maxx) / 2, latitude=(miny + maxy) / 2, zoom=zoom, pitch=0)
 
 
-def deck(layers, gdf, tooltip, zoom: float = 11.3) -> pdk.Deck:
-    return pdk.Deck(layers=layers, initial_view_state=view(gdf, zoom), map_provider="carto", map_style="light",
-                    tooltip={"html": tooltip, "style": {"fontSize": "12px"}})
+def deck(layers, gdf, tooltip, zoom: float = 11.3, center: tuple[float, float] | None = None, map_style: str = "road") -> pdk.Deck:
+    return pdk.Deck(
+        layers=layers,
+        initial_view_state=view(gdf, zoom, center),
+        map_provider="carto",
+        map_style=map_style,
+        tooltip={"html": tooltip, "style": {"fontSize": "12px", "color": "#111", "backgroundColor": "#fff", "borderRadius": "6px", "padding": "8px", "boxShadow": "0 2px 8px rgba(0,0,0,0.2)"}}
+    )
 
 
 def fmt(x: float, unit: str = "") -> str:
