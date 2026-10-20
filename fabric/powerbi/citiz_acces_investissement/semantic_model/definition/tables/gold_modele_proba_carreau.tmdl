@@ -1,0 +1,102 @@
+table gold_modele_proba_carreau
+	lineageTag: b0de32be-dddb-4152-9213-fb4500e64886
+	sourceLineageTag: [dbo].[gold_modele_proba_carreau]
+
+	column carreau_id
+		dataType: string
+		lineageTag: 64ccfe7c-ac0b-4cc4-ad29-48491b0b3474
+		sourceLineageTag: carreau_id
+		summarizeBy: none
+		sourceColumn: carreau_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column commune_code
+		dataType: string
+		lineageTag: 77e9e3dd-b5d3-4170-9959-493ba2470507
+		sourceLineageTag: commune_code
+		summarizeBy: none
+		sourceColumn: commune_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column lat
+		dataType: double
+		lineageTag: 78bd857f-d6ff-4ac5-b7e0-7933f4e88bee
+		sourceLineageTag: lat
+		summarizeBy: none
+		sourceColumn: lat
+
+		annotation SummarizationSetBy = Automatic
+
+	column lon
+		dataType: double
+		lineageTag: 4c0eaf14-748e-47cc-91de-7b571f34881c
+		sourceLineageTag: lon
+		summarizeBy: none
+		sourceColumn: lon
+
+		annotation SummarizationSetBy = Automatic
+
+	column pop_calee
+		dataType: double
+		formatString: #,0
+		lineageTag: 19fbf2a1-49d4-421a-87e8-268fa3f89b5e
+		sourceLineageTag: pop_calee
+		summarizeBy: none
+		sourceColumn: pop_calee
+
+		annotation SummarizationSetBy = Automatic
+
+	column affichable
+		dataType: boolean
+		lineageTag: 223a7a9c-04d0-417c-9e3f-97624fdef03a
+		sourceLineageTag: affichable
+		summarizeBy: none
+		sourceColumn: affichable
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_focus
+		dataType: string
+		lineageTag: 0a933f2d-9fa2-4522-93d5-a0be4f749bbb
+		sourceLineageTag: zone_focus
+		summarizeBy: none
+		sourceColumn: zone_focus
+
+		annotation SummarizationSetBy = Automatic
+
+	column couvert_citiz
+		dataType: boolean
+		lineageTag: a02c5ea4-1125-4e98-b16d-8764f9c0ed3c
+		sourceLineageTag: couvert_citiz
+		summarizeBy: none
+		sourceColumn: couvert_citiz
+
+		annotation SummarizationSetBy = Automatic
+
+	column proba_citiz
+		dataType: double
+		formatString: 0.0%
+		lineageTag: b5001594-1c5d-47d4-a074-315ceb4b3602
+		sourceLineageTag: proba_citiz
+		summarizeBy: none
+		sourceColumn: proba_citiz
+
+		annotation SummarizationSetBy = Automatic
+
+	column classe_potentiel
+		dataType: string
+		lineageTag: dcc2215b-ad31-4c4e-8984-0406389ecbcc
+		sourceLineageTag: classe_potentiel
+		summarizeBy: none
+		sourceColumn: classe_potentiel
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_modele_proba_carreau = entity
+		mode: directLake
+		source
+			entityName: gold_modele_proba_carreau
+			schemaName: dbo
+			expressionSource: 'DirectLake - Gold'

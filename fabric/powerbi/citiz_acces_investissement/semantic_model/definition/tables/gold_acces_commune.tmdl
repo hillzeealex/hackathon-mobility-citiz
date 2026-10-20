@@ -1,0 +1,152 @@
+table gold_acces_commune
+	lineageTag: 9fc03670-d3db-4089-b39e-16bcf69ee35d
+	sourceLineageTag: [dbo].[gold_acces_commune]
+
+	column commune_code
+		dataType: string
+		lineageTag: 73cc7790-5100-4631-87df-5836ffdc0885
+		sourceLineageTag: commune_code
+		summarizeBy: none
+		sourceColumn: commune_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column nom
+		dataType: string
+		lineageTag: ac45d6cc-afcd-4d43-bb4b-7dcc3abf1916
+		sourceLineageTag: nom
+		summarizeBy: none
+		sourceColumn: nom
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_dept
+		dataType: string
+		lineageTag: c68e3236-ba08-49bd-9fc6-fad26c731ada
+		sourceLineageTag: code_dept
+		summarizeBy: none
+		sourceColumn: code_dept
+
+		annotation SummarizationSetBy = Automatic
+
+	column lat
+		dataType: double
+		lineageTag: 534d1965-eeb9-4fe7-9404-16a2d525e302
+		sourceLineageTag: lat
+		summarizeBy: none
+		sourceColumn: lat
+
+		annotation SummarizationSetBy = Automatic
+
+	column lon
+		dataType: double
+		lineageTag: c96d83a5-862f-4095-b44c-c5409b69ac72
+		sourceLineageTag: lon
+		summarizeBy: none
+		sourceColumn: lon
+
+		annotation SummarizationSetBy = Automatic
+
+	column pop_calee
+		dataType: double
+		formatString: #,0
+		lineageTag: ebc9a160-8669-441d-8a12-1cc0cd3b20ac
+		sourceLineageTag: pop_calee
+		summarizeBy: none
+		sourceColumn: pop_calee
+
+		annotation SummarizationSetBy = Automatic
+
+	column nb_carreaux
+		dataType: int64
+		lineageTag: b0fcc30f-c8ce-4cd9-995a-9267170e7f94
+		sourceLineageTag: nb_carreaux
+		summarizeBy: none
+		sourceColumn: nb_carreaux
+
+		annotation SummarizationSetBy = Automatic
+
+	column options_par_habitant
+		dataType: double
+		formatString: 0.0
+		lineageTag: 0ab7938e-dbd1-47ac-88a1-680c81b4a88f
+		sourceLineageTag: options_par_habitant
+		summarizeBy: none
+		sourceColumn: options_par_habitant
+
+		annotation SummarizationSetBy = Automatic
+
+	column classe_acces
+		dataType: string
+		lineageTag: 972e5219-d58b-4112-84ce-ee5e900f27c4
+		sourceLineageTag: classe_acces
+		summarizeBy: none
+		sourceColumn: classe_acces
+
+		annotation SummarizationSetBy = Automatic
+
+	column part_pop_sans_option
+		dataType: double
+		formatString: 0.0%
+		lineageTag: 4f2972d2-5cd2-4141-90dd-740cfab436c4
+		sourceLineageTag: part_pop_sans_option
+		summarizeBy: none
+		sourceColumn: part_pop_sans_option
+
+		annotation SummarizationSetBy = Automatic
+
+	column part_pop_tc
+		dataType: double
+		formatString: 0.0%
+		lineageTag: 707ab1ac-976e-40a1-87e7-61190107bfe5
+		sourceLineageTag: part_pop_tc
+		summarizeBy: none
+		sourceColumn: part_pop_tc
+
+		annotation SummarizationSetBy = Automatic
+
+	column part_pop_citiz
+		dataType: double
+		formatString: 0.0%
+		lineageTag: 27916f8b-8424-4931-ae0b-7d0bbbe35e2d
+		sourceLineageTag: part_pop_citiz
+		summarizeBy: none
+		sourceColumn: part_pop_citiz
+
+		annotation SummarizationSetBy = Automatic
+
+	column part_pop_autopartage
+		dataType: double
+		formatString: 0.0%
+		lineageTag: fbb6355e-6b43-4f48-8a99-f8b2d35e75b2
+		sourceLineageTag: part_pop_autopartage
+		summarizeBy: none
+		sourceColumn: part_pop_autopartage
+
+		annotation SummarizationSetBy = Automatic
+
+	column part_pop_velo
+		dataType: double
+		formatString: 0.0%
+		lineageTag: dcb236ee-216f-4f1e-8826-fff540a54148
+		sourceLineageTag: part_pop_velo
+		summarizeBy: none
+		sourceColumn: part_pop_velo
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_focus
+		dataType: string
+		lineageTag: 523859b6-4b0e-4609-92e3-ad663352a7b6
+		sourceLineageTag: zone_focus
+		summarizeBy: none
+		sourceColumn: zone_focus
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_acces_commune = entity
+		mode: directLake
+		source
+			entityName: gold_acces_commune
+			schemaName: dbo
+			expressionSource: 'DirectLake - Gold'

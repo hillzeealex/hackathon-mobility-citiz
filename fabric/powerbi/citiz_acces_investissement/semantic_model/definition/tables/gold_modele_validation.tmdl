@@ -1,0 +1,97 @@
+table gold_modele_validation
+	lineageTag: aa7f8503-836e-46cf-a64f-3c9e7be9f470
+	sourceLineageTag: [dbo].[gold_modele_validation]
+
+	column evaluation
+		dataType: string
+		lineageTag: 3bf1b680-0a0f-47f3-8ab6-e23056c1ab44
+		sourceLineageTag: evaluation
+		summarizeBy: none
+		sourceColumn: evaluation
+
+		annotation SummarizationSetBy = Automatic
+
+	column carreaux
+		dataType: int64
+		lineageTag: 89b453f2-ad53-4749-b458-ef29b450d79d
+		sourceLineageTag: carreaux
+		summarizeBy: none
+		sourceColumn: carreaux
+
+		annotation SummarizationSetBy = Automatic
+
+	column carreaux_citiz
+		dataType: int64
+		lineageTag: f21cda40-a60c-49c6-b293-21e49f615cb2
+		sourceLineageTag: carreaux_citiz
+		summarizeBy: none
+		sourceColumn: carreaux_citiz
+
+		annotation SummarizationSetBy = Automatic
+
+	column auc_modele
+		dataType: double
+		formatString: 0.000
+		lineageTag: e28f0f7b-8d63-485b-a34c-dacafe715779
+		sourceLineageTag: auc_modele
+		summarizeBy: none
+		sourceColumn: auc_modele
+
+		annotation SummarizationSetBy = Automatic
+
+	column auc_densite_seule
+		dataType: double
+		formatString: 0.000
+		lineageTag: b6d53c2a-1e0e-4952-85a8-4bc65533c253
+		sourceLineageTag: auc_densite_seule
+		summarizeBy: none
+		sourceColumn: auc_densite_seule
+
+		annotation SummarizationSetBy = Automatic
+
+	column pr_auc_modele
+		dataType: double
+		formatString: 0.000
+		lineageTag: 817d9bf4-c680-48e8-b910-f6aad2efd5bf
+		sourceLineageTag: pr_auc_modele
+		summarizeBy: none
+		sourceColumn: pr_auc_modele
+
+		annotation SummarizationSetBy = Automatic
+
+	column pr_auc_densite_seule
+		dataType: double
+		formatString: 0.000
+		lineageTag: 47bf79ba-5a81-4d5e-8387-8390457f9629
+		sourceLineageTag: pr_auc_densite_seule
+		summarizeBy: none
+		sourceColumn: pr_auc_densite_seule
+
+		annotation SummarizationSetBy = Automatic
+
+	column part_top_k_avec_citiz
+		dataType: double
+		formatString: 0%
+		lineageTag: 2ac900c8-0bcd-4021-9e29-7778ce730140
+		sourceLineageTag: part_top_k_avec_citiz
+		summarizeBy: none
+		sourceColumn: part_top_k_avec_citiz
+
+		annotation SummarizationSetBy = Automatic
+
+	column part_top_k_densite_seule
+		dataType: double
+		formatString: 0%
+		lineageTag: 34d62b9f-b0ff-4f74-9822-6c96dbcc4b2c
+		sourceLineageTag: part_top_k_densite_seule
+		summarizeBy: none
+		sourceColumn: part_top_k_densite_seule
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_modele_validation = entity
+		mode: directLake
+		source
+			entityName: gold_modele_validation
+			schemaName: dbo
+			expressionSource: 'DirectLake - Gold'

@@ -1,0 +1,166 @@
+table gold_acces_carreau
+	lineageTag: 55f17c53-f27d-4006-9766-0f3a723b6ec7
+	sourceLineageTag: [dbo].[gold_acces_carreau]
+
+	measure Habitants = SUM(gold_acces_carreau[pop_calee])
+		formatString: #,0
+		lineageTag: f704e820-90ba-4ea7-afd1-60b0c3af7fa9
+
+	measure 'Options par habitant' = DIVIDE(SUMX(gold_acces_carreau, gold_acces_carreau[pop_calee] * gold_acces_carreau[options_ponderees]), SUM(gold_acces_carreau[pop_calee]))
+		formatString: 0.0
+		lineageTag: 8cdf7da4-5f8d-458d-8008-e1aed3f794ac
+
+	measure 'Part sans option' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[sans_option] = TRUE()), SUM(gold_acces_carreau[pop_calee]))
+		formatString: 0.0%
+		lineageTag: 374c1778-bb71-4edf-9949-4e0d09b58722
+
+	measure 'Part à 5 min TC' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[couvert_tc] = TRUE()), SUM(gold_acces_carreau[pop_calee]))
+		formatString: 0.0%
+		lineageTag: fc9620ee-d9ce-4347-a7db-894b21a8cb6a
+
+	measure 'Part à 5 min Citiz' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[couvert_citiz] = TRUE()), SUM(gold_acces_carreau[pop_calee]))
+		formatString: 0.0%
+		lineageTag: ddbc4cea-c92c-4487-a426-fe00faecc3b3
+
+	measure 'Part à 5 min autopartage' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[couvert_autopartage] = TRUE()), SUM(gold_acces_carreau[pop_calee]))
+		formatString: 0.0%
+		lineageTag: febc2aa2-81c1-4708-9620-1eb141c70677
+
+	measure 'Part à 5 min vélo' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[couvert_velo] = TRUE()), SUM(gold_acces_carreau[pop_calee]))
+		formatString: 0.0%
+		lineageTag: 818f110a-e3a6-464f-821d-2308a32dfe79
+
+	column carreau_id
+		dataType: string
+		lineageTag: bd1e5188-24e8-4c48-a206-043cb2b71f6d
+		sourceLineageTag: carreau_id
+		summarizeBy: none
+		sourceColumn: carreau_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column commune_code
+		dataType: string
+		lineageTag: 20fd201f-769f-416c-ad33-a61bdb3560c5
+		sourceLineageTag: commune_code
+		summarizeBy: none
+		sourceColumn: commune_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column lat
+		dataType: double
+		lineageTag: 0ccded9f-e321-49f0-a921-7b0a19909b7e
+		sourceLineageTag: lat
+		summarizeBy: none
+		sourceColumn: lat
+
+		annotation SummarizationSetBy = Automatic
+
+	column lon
+		dataType: double
+		lineageTag: 2769aa0c-cae9-4d0e-be52-3b9fe9262e64
+		sourceLineageTag: lon
+		summarizeBy: none
+		sourceColumn: lon
+
+		annotation SummarizationSetBy = Automatic
+
+	column pop_calee
+		dataType: double
+		formatString: #,0
+		lineageTag: 44c58ea5-186b-4e6a-93a5-dfe6aad9f79a
+		sourceLineageTag: pop_calee
+		summarizeBy: none
+		sourceColumn: pop_calee
+
+		annotation SummarizationSetBy = Automatic
+
+	column options_ponderees
+		dataType: double
+		formatString: 0.0
+		lineageTag: aaef7d26-76a9-4474-a6c6-a8097b39ca22
+		sourceLineageTag: options_ponderees
+		summarizeBy: none
+		sourceColumn: options_ponderees
+
+		annotation SummarizationSetBy = Automatic
+
+	column classe_acces
+		dataType: string
+		lineageTag: 959f99d5-689f-4ad4-8792-ae1f12bf4b0a
+		sourceLineageTag: classe_acces
+		summarizeBy: none
+		sourceColumn: classe_acces
+
+		annotation SummarizationSetBy = Automatic
+
+	column sans_option
+		dataType: boolean
+		lineageTag: fdadc2c9-ee79-4091-8cdd-35525d0399f0
+		sourceLineageTag: sans_option
+		summarizeBy: none
+		sourceColumn: sans_option
+
+		annotation SummarizationSetBy = Automatic
+
+	column couvert_tc
+		dataType: boolean
+		lineageTag: a5e78ed7-3c93-45bb-aa18-c25e58a62a37
+		sourceLineageTag: couvert_tc
+		summarizeBy: none
+		sourceColumn: couvert_tc
+
+		annotation SummarizationSetBy = Automatic
+
+	column couvert_citiz
+		dataType: boolean
+		lineageTag: 73d22c7e-5106-4282-97ea-e0a6dc4e9814
+		sourceLineageTag: couvert_citiz
+		summarizeBy: none
+		sourceColumn: couvert_citiz
+
+		annotation SummarizationSetBy = Automatic
+
+	column couvert_autopartage
+		dataType: boolean
+		lineageTag: c8cde6fc-09f9-4f53-9f5e-5cd9efbe57e3
+		sourceLineageTag: couvert_autopartage
+		summarizeBy: none
+		sourceColumn: couvert_autopartage
+
+		annotation SummarizationSetBy = Automatic
+
+	column couvert_velo
+		dataType: boolean
+		lineageTag: b14be4c7-c6f4-4f5b-9991-fe9ee0da2bc6
+		sourceLineageTag: couvert_velo
+		summarizeBy: none
+		sourceColumn: couvert_velo
+
+		annotation SummarizationSetBy = Automatic
+
+	column affichable
+		dataType: boolean
+		lineageTag: 730eec08-76a3-407e-8d68-ad7187e79b61
+		sourceLineageTag: affichable
+		summarizeBy: none
+		sourceColumn: affichable
+
+		annotation SummarizationSetBy = Automatic
+
+	column zone_focus
+		dataType: string
+		lineageTag: 07a806de-a708-4a49-b285-ee29f5200829
+		sourceLineageTag: zone_focus
+		summarizeBy: none
+		sourceColumn: zone_focus
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_acces_carreau = entity
+		mode: directLake
+		source
+			entityName: gold_acces_carreau
+			schemaName: dbo
+			expressionSource: 'DirectLake - Gold'

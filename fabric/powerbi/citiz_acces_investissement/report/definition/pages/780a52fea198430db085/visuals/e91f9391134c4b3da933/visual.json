@@ -1,0 +1,54 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "e91f9391134c4b3da933",
+  "position": {
+    "x": 640,
+    "y": 90,
+    "z": 10,
+    "width": 200,
+    "height": 90,
+    "tabOrder": 10
+  },
+  "visual": {
+    "visualType": "card",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_axe_reservations"
+                    }
+                  },
+                  "Property": "Verdict"
+                }
+              },
+              "queryRef": "gold_axe_reservations.Verdict",
+              "nativeQueryRef": "Verdict",
+              "displayName": "Verdict"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
