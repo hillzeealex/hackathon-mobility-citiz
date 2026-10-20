@@ -5,7 +5,8 @@ Commande unique : reconstruit tout le zoom d'une ville, des données brutes aux 
     python -m scripts.build_all --ville grenoble --sans-v2      # V1 seulement
     python -m scripts.build_all --ville nantes --v2             # force la V2 (extrait OSM de la région requis)
 
-Étapes : zone -> population calée -> offre (GTFS de la ville, GBFS) -> accessibilité V1 [+ V2].
+Étapes : zone -> population calée -> offre (GTFS de la ville, GBFS, autopartage local) -> accessibilité V1 [+ V2]
+-> population desservie par arrêt / station.
 Sorties : data/processed/<ville>/ ; cartes : docs/figures/<ville>/.
 Prérequis : données brutes (docs/RECUPERER_LES_DONNEES.md). Le niveau France entière se reconstruit à part :
 python -m src.national.build_all.
@@ -30,12 +31,14 @@ def main(argv: list[str] | None = None) -> None:
     with_v2 = study_area().get("v2", False) if a.v2 is None else a.v2
 
     from src.features.build_access import build_access
+    from src.features.served import build_served
     from src.ingest.offer import build_offer
     from src.ingest.population import build_population
     from src.ingest.zone import build_zone
 
     steps = [("zone", build_zone), ("population", build_population), ("offre", build_offer),
-             (f"accessibilité V1{' + V2' if with_v2 else ''}", lambda: build_access(with_v2=with_v2))]
+             (f"accessibilité V1{' + V2' if with_v2 else ''}", lambda: build_access(with_v2=with_v2)),
+             ("population desservie par arrêt / station", build_served)]
     t_all = time.perf_counter()
     print(f"=== {study_area()['name']} ({a.ville}) · jour type GTFS {load_settings()['offer']['typical_weekday']} ===",
           flush=True)
