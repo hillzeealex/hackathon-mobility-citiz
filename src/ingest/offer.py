@@ -282,6 +282,24 @@ def gbfs_offer(area_wgs84, exclude: set[str], name_patterns: tuple[str, ...] = (
     return df[pts.within(area_wgs84).to_numpy()].copy()
 
 
+def local_carsharing_offer(area_wgs84, cfg: dict | None) -> pd.DataFrame:
+    """Stations d'autopartage publiées par la collectivité (cities.<ville>.autopartage_local), hors opérateurs exclus."""
+    if not cfg:
+        return pd.DataFrame()
+    path = raw(cfg["file"])
+    if not path.exists():                                   # petit fichier : téléchargé à la demande
+        import urllib.request
+        path.parent.mkdir(parents=True, exist_ok=True)
+        urllib.request.urlretrieve(cfg["url"], path)
+    g = gpd.read_file(path)
+    g = g[~g["exploitant"].isin(cfg.get("exclude_operators") or [])]
+    g = g[g.geometry.within(area_wgs84)]
+    return pd.DataFrame({"id": "local:" + g["gid"].astype(str) + ":autopartage", "type": "autopartage",
+                         "sous_type": "station", "nom": g["nom"], "source": "local:" + g["exploitant"].str.lower(),
+                         "capacite": pd.to_numeric(g["capacite"], errors="coerce"),
+                         "lon": g.geometry.x, "lat": g.geometry.y})
+
+
 # ---------------------------------------------------------------------------------------------
 def build_offer(parts: tuple[str, ...] = ("gtfs", "gbfs")) -> gpd.GeoDataFrame:
     s = load_settings()
@@ -298,6 +316,7 @@ def build_offer(parts: tuple[str, ...] = ("gtfs", "gbfs")) -> gpd.GeoDataFrame:
     if "gbfs" in parts:
         frames.append(gbfs_offer(area_wgs84, set(s.get("gbfs_exclude_datasets") or []),
                                  tuple(s["offer"].get("exclude_name_patterns") or ())))
+        frames.append(local_carsharing_offer(area_wgs84, study_area().get("autopartage_local")))
     df = pd.concat([f for f in frames if not f.empty], ignore_index=True)
     for c in ("passages_jour", "capacite"):
         df[c] = pd.to_numeric(df[c], errors="coerce") if c in df else np.nan
