@@ -1,9 +1,32 @@
 # Chiffres clés (générés le 20/10/2026)
 
 Généré par `python -m scripts.chiffres_cles` à partir des fichiers du pipeline : **ne pas modifier à la main**.
-Accessibilité « 5 min à pied » = 400 m (4.8 km/h). Jour type des horaires de TC : mardi 2026-11-17. Population : Filosofi 2021 recalée sur le recensement 2023. V1 = vol d'oiseau (borne haute), V2 = marche réelle sur le réseau OpenStreetMap.
+Accessibilité « 5 min à pied » = 400 m (4.8 km/h). Jour type des horaires de TC : mardi 2026-11-17. Population : Filosofi 2021 recalée sur le recensement 2023. V2 = marche réelle sur le réseau OpenStreetMap (méthode de référence) ; V1 = 400 m à vol d'oiseau, **méthode simplifiée, pour comparaison uniquement** (borne haute).
 
-## 1. France entière (V1)
+> ### CHIFFRES OFFICIELS POUR LES SLIDES (V2, marche réelle)
+>
+> Seuls ces chiffres vont dans les slides et à l'oral. Tous sont calculés en **V2** (5 minutes de marche réelle), sauf la France entière, qui n'existe qu'en V1. Les chiffres V1 plus bas servent uniquement à la comparaison.
+>
+> | Message | Chiffre officiel |
+> |---|---:|
+> | Nantes : habitants | 689 456 |
+> | Nantes : au moins une option de mobilité à 5 min à pied | **80,6 %** |
+> | Nantes : options pondérées accessibles par habitant | 4,7 |
+> | Nantes : à 5 min à pied d'un autopartage (23 Citiz, 61 Marguerite) | **19,0 %** |
+> | Nantes : habitants dont la seule option à 5 min est un unique arrêt ou station | 92 883 |
+> | 500 000 € : stations Citiz recommandées | **12** |
+> | 500 000 € : habitants gagnés (nouvellement à 5 min à pied d'un autopartage) | **+34 979** |
+> | 500 000 € : couverture autopartage avant → après | **19,0 % → 24,1 %** |
+> | 500 000 € : coût par habitant gagné (sur 3 ans) | **13,6 €** |
+> | 500 000 € : CO2 évité (estimation prudente) | 17,0 t/an |
+> | 1 000 000 € : stations · habitants gagnés · couverture après | 25 · +59 039 · 27,6 % |
+> | Test à l'aveugle Grenoble : stations Citiz (168) retrouvées dans le top 20 % des carreaux | **89,3 %** (densité seule 82,1 %) |
+> | AUC : test à l'aveugle Grenoble · validation sur les 15 réseaux | 0,953 · 0,922 (densité seule 0,931 · 0,914) |
+> | Grenoble : au moins une option à 5 min à pied · à 5 min d'une station Citiz | 89,2 % · 39,7 % |
+> | Grenoble : surestimation des options si l'on calcule à vol d'oiseau | +80 % |
+> | France entière : sans aucune option à 5 min (V1 seule disponible : le dire, c'est une borne haute) | 25,9 % |
+
+## 1. France entière (V1 : méthode simplifiée, seule disponible à cette échelle ; borne haute)
 
 | Chiffre | Valeur | Source (fichier · commande) |
 |---|---:|---|
@@ -17,22 +40,25 @@ Accessibilité « 5 min à pied » = 400 m (4.8 km/h). Jour type des horaires de
 
 ## 2. Choix des villes (classement de 276 EPCI ≥ 50 000 hab.)
 
-| | Rang potentiel Citiz | Habitants | Stations Citiz | Pop. à 5 min de Citiz (V1) | Vols liés aux véhicules / 1 000 hab. |
+| | Rang potentiel Citiz | Habitants | Stations Citiz | Pop. à 5 min de Citiz (V1 ¹) | Vols liés aux véhicules / 1 000 hab. |
 |---|---:|---:|---:|---:|---:|
 | Métropole Nice Côte d'Azur | 1 | 574 287 | 0 | 0,0 % | 6,6 |
 | Nantes Métropole | 58 | 689 456 | 23 | 11,8 % | 13,6 |
 | Grenoble-Alpes-Métropole | 61 | 450 608 | 168 | 53,0 % | 19,1 |
 
+¹ V1 = méthode simplifiée (400 m à vol d'oiseau), **pour comparaison uniquement** : ne pas citer dans les slides.
 Source : `data/processed/national/classement_epci.parquet` · `python -m src.national.build_all` ; argumentaire : `docs/choix_ville.md`.
 
 ## 3. Grenoble, ville exemple : vol d'oiseau ou marche réelle ?
 
-| Part de la population | V1 vol d'oiseau | V2 marche réelle |
+| Part de la population | V1 vol d'oiseau ¹ | V2 marche réelle |
 |---|---:|---:|
 | Au moins une option à 5 min | 96,4 % | **89,2 %** |
 | Au moins un arrêt de TC | 95,5 % | 83,5 % |
 | Une station Citiz à 5 min | 53,0 % | **39,7 %** |
 | Options pondérées par habitant | 17,0 | 9,4 |
+
+¹ V1 = méthode simplifiée (400 m à vol d'oiseau), **pour comparaison uniquement** : ne pas citer dans les slides.
 
 - La V1 surestime les options de **80 %** ; 32 137 habitants semblent desservis à vol d'oiseau mais ne le sont pas à pied.
 - 450 608 habitants, 4 285 carreaux habités, 2 718 points d'offre.
@@ -56,7 +82,7 @@ Source : `data/processed/model/validation.json`, `shap_importance.csv` · `pytho
 
 ## 5. Nantes Métropole, notre ville : diagnostic
 
-| Chiffre | V1 vol d'oiseau | V2 marche réelle | Écart V2 / V1 |
+| Chiffre | V1 vol d'oiseau ¹ | V2 marche réelle | Écart V2 / V1 |
 |---|---:|---:|---:|
 | Habitants | 689 456 | idem | |
 | Au moins une option à 5 min | 93,3 % | **80,6 %** | −14 % |
@@ -64,6 +90,8 @@ Source : `data/processed/model/validation.json`, `shap_importance.csv` · `pytho
 | Options pondérées par habitant | 9,1 | 4,7 | −48 % |
 | À 5 min d'une station Citiz | 11,8 % | 7,5 % | −37 % |
 | À 5 min d'un autopartage (Citiz ou Marguerite) | 28,5 % | **19,0 %** | −33 % |
+
+¹ V1 = méthode simplifiée (400 m à vol d'oiseau), **pour comparaison uniquement** : ne pas citer dans les slides.
 
 - Stations existantes : 23 Citiz, 61 Marguerite. La V1 surestime les options de 93 % ; 87 591 habitants semblent desservis à vol d'oiseau mais ne le sont pas à pied (coupures du réseau piéton : cours d'eau, voies ferrées, grands axes).
 - Habitants par station Citiz (médiane, V2) : 2 124 ; habitants dont la seule option est un unique arrêt / station (V2) : 92 883.
@@ -75,7 +103,7 @@ Candidats (V2) : 6 385 carreaux et 1 486 arrêts de TC hors des 5 min de marche 
 
 **12 stations (500 000 €)**
 
-| Chiffre | V1 vol d'oiseau | V2 marche réelle | Écart V2 / V1 |
+| Chiffre | V1 vol d'oiseau ¹ | V2 marche réelle | Écart V2 / V1 |
 |---|---:|---:|---:|
 | Couverture autopartage actuelle | 28,5 % | 19,0 % | −33 % |
 | Couverture après les 12 stations | 34,9 % | **24,1 %** | −31 % |
@@ -83,7 +111,9 @@ Candidats (V2) : 6 385 carreaux et 1 486 arrêts de TC hors des 5 min de marche 
 | € par habitant gagné (3 ans) | 10,8 | 13,6 | +26 % |
 | CO2 évité | 17,0 t/an | 17,0 t/an | +0 % |
 
-Sélection : **3 stations sur 12 communes** aux deux versions (Berlioz (bus), Nantes, St-Aignan (bus), Nantes, Quartier Waldeck-Sully (Nantes)). Liste V2 retenue : 1. Quartier Harlière Sud (Saint-Herblain) ; 2. Vaucanson (bus), Nantes ; 3. Quartier Dervallières-Chézine (Nantes) ; 4. Berlioz (bus), Nantes ; 5. St-Aignan (bus), Nantes ; 6. Quartier Coudray (Nantes) ; 7. Boulay Paty (bus), Nantes ; 8. Quartier Canclaux (Nantes) ; 9. Bruneau (bus), Nantes ; 10. Quartier Waldeck-Sully (Nantes) ; 11. Quartier Grillaud-Procé (Nantes) ; 12. Quartier Beauséjour (Saint-Herblain).
+¹ V1 = méthode simplifiée (400 m à vol d'oiseau), **pour comparaison uniquement** : ne pas citer dans les slides.
+
+Sélection : **3 stations sur 12 en commun** aux deux versions (Berlioz (bus), Nantes, St-Aignan (bus), Nantes, Quartier Waldeck-Sully (Nantes)). Liste V2 retenue : 1. Quartier Harlière Sud (Saint-Herblain) ; 2. Vaucanson (bus), Nantes ; 3. Quartier Dervallières-Chézine (Nantes) ; 4. Berlioz (bus), Nantes ; 5. St-Aignan (bus), Nantes ; 6. Quartier Coudray (Nantes) ; 7. Boulay Paty (bus), Nantes ; 8. Quartier Canclaux (Nantes) ; 9. Bruneau (bus), Nantes ; 10. Quartier Waldeck-Sully (Nantes) ; 11. Quartier Grillaud-Procé (Nantes) ; 12. Quartier Beauséjour (Saint-Herblain).
 
 **Tous les budgets (V2, ILP)**
 
@@ -104,7 +134,7 @@ Effet du poids d'équité (500 000 €, glouton, V2) :
 | 0,5 | 12 | 34 979 | 27,4 % | 0,84 |
 | 2,0 | 12 | 34 979 | 27,4 % | 0,84 |
 
-Lecture : la sélection ne change pas avec le poids d'équité. À Nantes, les poches denses non couvertes autour du centre sont aussi celles où vivent le plus de ménages pauvres ou sans voiture : efficacité et équité vont dans le même sens (priorité d'équité moyenne des nouveaux couverts 0,84, contre 0,5 pour l'ensemble des carreaux).
+Lecture : la sélection ne change pas avec le poids d'équité. À Nantes, les poches denses non couvertes autour du centre sont aussi celles où vivent le plus de ménages modestes ou sans voiture : efficacité et équité vont dans le même sens (priorité d'équité moyenne des nouveaux couverts 0,84, contre 0,5 pour l'ensemble des carreaux).
 
 Source : calcul de `python -m scripts.chiffres_cles` sur `data/processed/nantes/` (cells, candidates, coverage).
 
