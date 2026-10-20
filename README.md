@@ -94,8 +94,13 @@ Pour collecter l'historique d'usage des stations Citiz (à laisser tourner) :
 streamlit run app/app.py
 ```
 
-Barre latérale : « France entière » (carte par département / EPCI, classement, zoom département) ou
-« Zoom agglomération ». Sans données, l'appli tourne sur des données factices :
+Barre latérale : « France entière » (carte par département / EPCI, classement) ou
+« Zoom agglomération » avec sélection parmi 3 villes clés :
+- **Nantes Métropole** (priorité : densifier le réseau Citiz, 23 stations actuelles -> 85 candidates identifiées).
+- **Nice Côte d'Azur** (piste réseau neuf : 0 station Citiz existante -> 16 candidates prioritaires).
+- **Grenoble-Alpes Métropole** (réseau de référence : 168 stations existantes).
+
+Cartographie décisionnelle avec points nets numérotés, zoom interactif au niveau de la rue et fiches d'adresses. Sans données, l'appli tourne sur des données factices :
 `python scripts/make_demo_data.py`.
 
 ## Notebook Fabric
