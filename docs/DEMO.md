@@ -1,5 +1,7 @@
 # Démo en 3 minutes
 
+> **Avant la démo**, relancer `python -m scripts.build_all --ville grenoble` et `python -m scripts.build_all --ville nantes` si les données ont été construites avant le 20/10.
+
 Scénario clic par clic de l'application pour la soutenance, avec les phrases à dire. Tous les chiffres viennent
 de l'encadré « Chiffres officiels pour les slides » de [`chiffres_cles.md`](chiffres_cles.md) (V2, marche réelle).
 Version de secours : tag `demo-v1`.

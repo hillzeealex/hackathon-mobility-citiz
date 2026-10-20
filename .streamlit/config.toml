@@ -7,3 +7,6 @@ base = "light"               # thème clair quel que soit le réglage du PC (lis
 
 [server]
 runOnSave = false
+
+[client]
+toolbarMode = "viewer"     # masque le bouton « Deploy » et les menus de développement
