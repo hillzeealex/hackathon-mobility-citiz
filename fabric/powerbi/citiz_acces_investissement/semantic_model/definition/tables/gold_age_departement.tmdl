@@ -1,0 +1,67 @@
+table gold_age_departement
+	lineageTag: 96bc6835-b72d-459c-a1dc-199c77415e1c
+	sourceLineageTag: [dbo].[gold_age_departement]
+
+	column code_dept
+		dataType: string
+		lineageTag: e77013f5-97bd-4f5c-b3b6-10888eb796c2
+		sourceLineageTag: code_dept
+		summarizeBy: none
+		sourceColumn: code_dept
+
+		annotation SummarizationSetBy = Automatic
+
+	column horizon_ans
+		dataType: int64
+		lineageTag: 2290526b-d005-415b-b248-1407f07f802c
+		sourceLineageTag: horizon_ans
+		summarizeBy: none
+		sourceColumn: horizon_ans
+
+		annotation SummarizationSetBy = Automatic
+
+	column annee
+		dataType: int64
+		lineageTag: 73a23b19-a778-4579-a0f8-a147c115757a
+		sourceLineageTag: annee
+		summarizeBy: none
+		sourceColumn: annee
+
+		annotation SummarizationSetBy = Automatic
+
+	column part_65_plus
+		dataType: double
+		formatString: 0.0%
+		lineageTag: c703892c-257e-4a84-9d4f-da0e75c27205
+		sourceLineageTag: part_65_plus
+		summarizeBy: none
+		sourceColumn: part_65_plus
+
+		annotation SummarizationSetBy = Automatic
+
+	column part_20_39
+		dataType: double
+		formatString: 0.0%
+		lineageTag: d70d15ad-aeea-45e6-bdde-2be8beb6953c
+		sourceLineageTag: part_20_39
+		summarizeBy: none
+		sourceColumn: part_20_39
+
+		annotation SummarizationSetBy = Automatic
+
+	column age_moyen
+		dataType: double
+		formatString: 0.0
+		lineageTag: 6e85b45b-1241-4dd3-9e85-9ef5dcda8a51
+		sourceLineageTag: age_moyen
+		summarizeBy: none
+		sourceColumn: age_moyen
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_age_departement = entity
+		mode: directLake
+		source
+			entityName: gold_age_departement
+			schemaName: dbo
+			expressionSource: 'DirectLake - Gold'

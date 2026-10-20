@@ -1,13 +1,18 @@
 table gold_saisie_recette_reservation
-	lineageTag: 93357cbe-9fd6-4ece-975a-bc5fe2876a75
+	lineageTag: af3c776b-dc5f-42ba-8d16-3f44d60ed19c
 	sourceLineageTag: [dbo].[gold_saisie_recette_reservation]
 
 	column valeur
 		dataType: double
-		lineageTag: 4181759f-bdf1-4e81-8ce6-7ce2a3f6e989
+		lineageTag: 767edd35-27f4-4651-87cf-4e5b33f8c564
 		sourceLineageTag: valeur
 		summarizeBy: none
 		sourceColumn: valeur
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
 
 		annotation SummarizationSetBy = Automatic
 

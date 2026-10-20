@@ -1,10 +1,10 @@
 table gold_acces_commune
-	lineageTag: 10502526-d6c1-48e0-97c6-8a1aea28e901
+	lineageTag: 6502b2cd-c098-47d1-a644-ac0fabffd699
 	sourceLineageTag: [dbo].[gold_acces_commune]
 
 	column commune_code
 		dataType: string
-		lineageTag: 2052b128-ca2b-43e1-979b-24569ccb6bd5
+		lineageTag: 816c35a6-b0e5-48cc-9164-f42425bbef53
 		sourceLineageTag: commune_code
 		summarizeBy: none
 		sourceColumn: commune_code
@@ -13,7 +13,7 @@ table gold_acces_commune
 
 	column nom
 		dataType: string
-		lineageTag: d3bf2b2a-fc69-4a9f-a155-1b320d98d81e
+		lineageTag: 663480ca-a5ea-440e-9840-7de4a0575e02
 		sourceLineageTag: nom
 		summarizeBy: none
 		sourceColumn: nom
@@ -22,7 +22,7 @@ table gold_acces_commune
 
 	column code_dept
 		dataType: string
-		lineageTag: d516e0ec-7bd5-4693-b1b4-a49ec827a55c
+		lineageTag: c2c1cecc-482a-4408-b792-e738421652d7
 		sourceLineageTag: code_dept
 		summarizeBy: none
 		sourceColumn: code_dept
@@ -31,7 +31,7 @@ table gold_acces_commune
 
 	column lat
 		dataType: double
-		lineageTag: f29a8513-deeb-4036-b6ba-87deeb81857f
+		lineageTag: 6887b8b8-256c-45fa-b572-b4a5afdd4859
 		sourceLineageTag: lat
 		summarizeBy: none
 		sourceColumn: lat
@@ -40,7 +40,7 @@ table gold_acces_commune
 
 	column lon
 		dataType: double
-		lineageTag: 71d85d01-d1c3-48cc-b146-6ac389618b11
+		lineageTag: 644e00e0-8026-4eea-9293-43e0de0964ed
 		sourceLineageTag: lon
 		summarizeBy: none
 		sourceColumn: lon
@@ -50,7 +50,7 @@ table gold_acces_commune
 	column pop_calee
 		dataType: double
 		formatString: #,0
-		lineageTag: a9564af1-2cba-42a9-b393-94516cb46406
+		lineageTag: 5d16a160-bbbf-4466-868c-b6a012f523cd
 		sourceLineageTag: pop_calee
 		summarizeBy: none
 		sourceColumn: pop_calee
@@ -59,7 +59,7 @@ table gold_acces_commune
 
 	column nb_carreaux
 		dataType: int64
-		lineageTag: 8f4646e5-5485-4440-b313-645359a2beca
+		lineageTag: 60a39074-9ba9-409c-b6db-19781586fe4f
 		sourceLineageTag: nb_carreaux
 		summarizeBy: none
 		sourceColumn: nb_carreaux
@@ -69,7 +69,7 @@ table gold_acces_commune
 	column options_par_habitant
 		dataType: double
 		formatString: 0.0
-		lineageTag: 16d6b5bb-f279-4f18-9b94-44bac8b9aedf
+		lineageTag: d259ed25-f8b4-4d22-b0c7-08e2edcab370
 		sourceLineageTag: options_par_habitant
 		summarizeBy: none
 		sourceColumn: options_par_habitant
@@ -78,7 +78,7 @@ table gold_acces_commune
 
 	column classe_acces
 		dataType: string
-		lineageTag: 9e6b0703-a8be-4d2e-88eb-531423d74208
+		lineageTag: 3fcbe614-d8b9-48e0-803c-3caa5bb96ae5
 		sourceLineageTag: classe_acces
 		summarizeBy: none
 		sourceColumn: classe_acces
@@ -88,7 +88,7 @@ table gold_acces_commune
 	column part_pop_sans_option
 		dataType: double
 		formatString: 0.0%
-		lineageTag: 094d5d0b-bb01-4a10-8124-7aa7c7f4ff0f
+		lineageTag: 8ebe69fd-8bc8-4907-ae35-b77a60cf1718
 		sourceLineageTag: part_pop_sans_option
 		summarizeBy: none
 		sourceColumn: part_pop_sans_option
@@ -98,7 +98,7 @@ table gold_acces_commune
 	column part_pop_tc
 		dataType: double
 		formatString: 0.0%
-		lineageTag: c4f1837e-3f6b-4392-bb0b-71be2cd353bc
+		lineageTag: 34cc002e-9537-4154-ba8a-b22b279e706a
 		sourceLineageTag: part_pop_tc
 		summarizeBy: none
 		sourceColumn: part_pop_tc
@@ -108,7 +108,7 @@ table gold_acces_commune
 	column part_pop_citiz
 		dataType: double
 		formatString: 0.0%
-		lineageTag: 1c1c5344-20de-4436-9c65-209f876e7f9b
+		lineageTag: 09f1a678-487d-4dad-b4b7-274cd69b6b3e
 		sourceLineageTag: part_pop_citiz
 		summarizeBy: none
 		sourceColumn: part_pop_citiz
@@ -118,7 +118,7 @@ table gold_acces_commune
 	column part_pop_autopartage
 		dataType: double
 		formatString: 0.0%
-		lineageTag: 7e0a840c-7586-45d9-9a95-b57e9799fc5a
+		lineageTag: d0f01d25-118d-446a-a658-48aeb849ef23
 		sourceLineageTag: part_pop_autopartage
 		summarizeBy: none
 		sourceColumn: part_pop_autopartage
@@ -128,7 +128,7 @@ table gold_acces_commune
 	column part_pop_velo
 		dataType: double
 		formatString: 0.0%
-		lineageTag: ab14d938-aff9-49a1-9a2d-2d92c90ded8b
+		lineageTag: 81571011-294a-4169-9ccb-27b5768e1065
 		sourceLineageTag: part_pop_velo
 		summarizeBy: none
 		sourceColumn: part_pop_velo
@@ -137,10 +137,50 @@ table gold_acces_commune
 
 	column zone_focus
 		dataType: string
-		lineageTag: 9cddee84-b8f4-4342-b7b5-25996c7f771e
+		lineageTag: c8bb96b8-6486-4360-a734-f28206f16dfd
 		sourceLineageTag: zone_focus
 		summarizeBy: none
 		sourceColumn: zone_focus
+
+		annotation SummarizationSetBy = Automatic
+
+	column niveau_vie_moyen
+		dataType: double
+		formatString: #,0 €
+		lineageTag: 7e2abc67-39a0-42b7-92f5-86b4422f98e2
+		sourceLineageTag: niveau_vie_moyen
+		summarizeBy: none
+		sourceColumn: niveau_vie_moyen
+
+		annotation SummarizationSetBy = Automatic
+
+	column part_menages_pauvres
+		dataType: double
+		formatString: 0.0%
+		lineageTag: 4c47396b-605f-48e4-88ab-eb33ee7a7291
+		sourceLineageTag: part_menages_pauvres
+		summarizeBy: none
+		sourceColumn: part_menages_pauvres
+
+		annotation SummarizationSetBy = Automatic
+
+	column part_18_24
+		dataType: double
+		formatString: 0.0%
+		lineageTag: 04db4392-0255-450d-81d1-0392d020c626
+		sourceLineageTag: part_18_24
+		summarizeBy: none
+		sourceColumn: part_18_24
+
+		annotation SummarizationSetBy = Automatic
+
+	column part_65_plus
+		dataType: double
+		formatString: 0.0%
+		lineageTag: cc62148a-bde2-4c8b-8b4d-02388c42668b
+		sourceLineageTag: part_65_plus
+		summarizeBy: none
+		sourceColumn: part_65_plus
 
 		annotation SummarizationSetBy = Automatic
 

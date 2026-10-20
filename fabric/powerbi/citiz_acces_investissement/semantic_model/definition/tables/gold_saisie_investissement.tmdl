@@ -1,13 +1,18 @@
 table gold_saisie_investissement
-	lineageTag: 35185d0f-fdc6-44f5-84db-fb299c91056b
+	lineageTag: 3c74c274-1fbc-4d82-8e57-8501464b411e
 	sourceLineageTag: [dbo].[gold_saisie_investissement]
 
 	column valeur
 		dataType: double
-		lineageTag: ef71ba42-a46d-4415-b1ed-f46938b7476f
+		lineageTag: e7840d47-27e8-4b55-9dcc-d3c359f3aff5
 		sourceLineageTag: valeur
 		summarizeBy: none
 		sourceColumn: valeur
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
 
 		annotation SummarizationSetBy = Automatic
 

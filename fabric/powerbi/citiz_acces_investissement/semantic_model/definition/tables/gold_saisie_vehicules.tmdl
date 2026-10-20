@@ -1,13 +1,18 @@
 table gold_saisie_vehicules
-	lineageTag: a3997efa-0638-471a-a22e-0b251b1d62c6
+	lineageTag: bc11be60-64a7-4514-a5e3-0b507d9eaed9
 	sourceLineageTag: [dbo].[gold_saisie_vehicules]
 
 	column valeur
 		dataType: double
-		lineageTag: c4b68157-5c69-4a03-9635-faac7cb0fb25
+		lineageTag: 0bdb4df8-efc5-4b58-b311-19bf1bb335c0
 		sourceLineageTag: valeur
 		summarizeBy: none
 		sourceColumn: valeur
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
 
 		annotation SummarizationSetBy = Automatic
 

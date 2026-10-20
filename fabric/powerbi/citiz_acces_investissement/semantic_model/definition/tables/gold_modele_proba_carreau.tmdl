@@ -1,10 +1,10 @@
 table gold_modele_proba_carreau
-	lineageTag: 6bf6e08d-c35a-4a7c-bcb4-0c3b01944aa2
+	lineageTag: 92a70d71-661a-4065-aeae-f099907690e5
 	sourceLineageTag: [dbo].[gold_modele_proba_carreau]
 
 	column carreau_id
 		dataType: string
-		lineageTag: f12f13db-1a71-4c37-94eb-bb47c26b4a10
+		lineageTag: 8513c0d2-d80f-4836-982b-9235db64eea5
 		sourceLineageTag: carreau_id
 		summarizeBy: none
 		sourceColumn: carreau_id
@@ -13,7 +13,7 @@ table gold_modele_proba_carreau
 
 	column commune_code
 		dataType: string
-		lineageTag: 253810c0-5aa9-40a4-8344-e227355c278f
+		lineageTag: 2237cf6e-fa8a-44fd-be4b-b0d0b8a57ba3
 		sourceLineageTag: commune_code
 		summarizeBy: none
 		sourceColumn: commune_code
@@ -22,7 +22,7 @@ table gold_modele_proba_carreau
 
 	column lat
 		dataType: double
-		lineageTag: 68f26c78-0614-45a1-a2b2-76c3f79b2b77
+		lineageTag: 571ec839-682b-41f0-b587-8ca6e7c5c870
 		sourceLineageTag: lat
 		summarizeBy: none
 		sourceColumn: lat
@@ -31,7 +31,7 @@ table gold_modele_proba_carreau
 
 	column lon
 		dataType: double
-		lineageTag: d37e6dfd-260f-4f6d-9c24-4966ad60df5f
+		lineageTag: 8cb4ed96-f39b-4e48-87b0-840e1695e77e
 		sourceLineageTag: lon
 		summarizeBy: none
 		sourceColumn: lon
@@ -41,7 +41,7 @@ table gold_modele_proba_carreau
 	column pop_calee
 		dataType: double
 		formatString: #,0
-		lineageTag: fe695ed7-1d64-42a9-8d0b-858b349a5148
+		lineageTag: 4f927d78-b606-4cef-9204-dc0469ebee7a
 		sourceLineageTag: pop_calee
 		summarizeBy: none
 		sourceColumn: pop_calee
@@ -50,7 +50,7 @@ table gold_modele_proba_carreau
 
 	column affichable
 		dataType: boolean
-		lineageTag: c22f378e-8a12-4172-82fb-776a000b39a3
+		lineageTag: 52b1b1e1-6379-4c29-b3f9-3aea66d5b086
 		sourceLineageTag: affichable
 		summarizeBy: none
 		sourceColumn: affichable
@@ -59,7 +59,7 @@ table gold_modele_proba_carreau
 
 	column zone_focus
 		dataType: string
-		lineageTag: d8943af5-118f-40d7-8e2d-b55c33a277ca
+		lineageTag: f867849f-b71f-4725-ab0e-b14f4f767888
 		sourceLineageTag: zone_focus
 		summarizeBy: none
 		sourceColumn: zone_focus
@@ -68,7 +68,7 @@ table gold_modele_proba_carreau
 
 	column couvert_citiz
 		dataType: boolean
-		lineageTag: b8394380-b402-4673-a50e-141600f08c9e
+		lineageTag: 252ed004-ee5e-467b-b131-cfee75cd3a69
 		sourceLineageTag: couvert_citiz
 		summarizeBy: none
 		sourceColumn: couvert_citiz
@@ -78,7 +78,7 @@ table gold_modele_proba_carreau
 	column proba_citiz
 		dataType: double
 		formatString: 0.0%
-		lineageTag: c9a479d3-65c1-45de-a78f-b39400abd4ba
+		lineageTag: 5ebaa9b9-b541-40be-ac31-f0ede50260ad
 		sourceLineageTag: proba_citiz
 		summarizeBy: none
 		sourceColumn: proba_citiz
@@ -87,7 +87,7 @@ table gold_modele_proba_carreau
 
 	column classe_potentiel
 		dataType: string
-		lineageTag: 45c9589f-f829-45c7-8904-c4a065be5689
+		lineageTag: eed1f02f-0d52-4f7b-98c0-b34e60f13699
 		sourceLineageTag: classe_potentiel
 		summarizeBy: none
 		sourceColumn: classe_potentiel

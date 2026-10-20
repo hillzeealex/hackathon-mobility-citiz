@@ -1,42 +1,46 @@
 table gold_selection
-	lineageTag: 32ba1ce9-7609-49db-8937-0b85d75d403a
+	lineageTag: baf12801-02e7-4aab-85ec-021a013e3971
 	sourceLineageTag: [dbo].[gold_selection]
 
 	measure Horizon = SELECTEDVALUE(gold_horizons[horizon_ans], 0)
 		formatString: 0" ans"
-		lineageTag: 17bc3e27-0eee-4e66-aed8-ec8bfdcbf3f5
+		lineageTag: d9351eb6-d7d4-4fbc-8436-adcfde4d669e
 
 	measure 'Habitants gagnés horizon' = VAR h = [Horizon] RETURN SUMX(gold_selection, gold_selection[pop_nouvellement_desservie] * COALESCE(LOOKUPVALUE(gold_projection_commune[facteur], gold_projection_commune[commune_code], gold_selection[commune_code], gold_projection_commune[horizon_ans], h), 1))
 		formatString: #,0
-		lineageTag: 0ba56a68-b482-48d3-98a9-5571013049ad
+		lineageTag: bf26f5f0-2d04-452c-83d7-8a603fbf1f7d
 
 	measure 'Coût par habitant horizon' = DIVIDE([Coût total], [Habitants gagnés horizon])
 		formatString: #,0.0 €
-		lineageTag: 2731bf95-72f2-42b2-9f2c-6cec9eb3d373
+		lineageTag: ec99ecfc-cc93-46c3-a3b7-7ba38d37af4d
+
+	measure 'Part 65 ans et plus Loire-Atlantique' = LOOKUPVALUE(gold_age_departement[part_65_plus], gold_age_departement[code_dept], "44", gold_age_departement[horizon_ans], [Horizon])
+		formatString: 0.0%
+		lineageTag: 30805eae-b50c-451d-b654-073cfa073677
 
 	measure Emplacements = COUNTROWS(gold_selection)
 		formatString: #,0
-		lineageTag: 09e0fa26-2497-4637-876d-88a14892121f
+		lineageTag: 8b085295-44d6-401f-a80c-7137d605fe4a
 
 	measure 'Coût total' = SUM(gold_selection[cout])
 		formatString: #,0 €
-		lineageTag: 16c42a52-e46d-4b5f-9dbb-f54db900ec30
+		lineageTag: f7bd4fd5-2dc7-4c6a-ab01-5ce155b77b0d
 
 	measure 'Habitants nouvellement desservis' = SUM(gold_selection[pop_nouvellement_desservie])
 		formatString: #,0
-		lineageTag: 2854b1cc-dcbf-48b3-a6c9-2c5f04b0bba6
+		lineageTag: d4351168-f05a-4677-9910-53e70abdfebf
 
 	measure 'Coût par habitant' = DIVIDE([Coût total], [Habitants nouvellement desservis])
 		formatString: #,0.0 €
-		lineageTag: a3f11ddd-2501-4d2d-8372-17acf604b434
+		lineageTag: 3bfb6665-c868-495b-ad68-750a003582c4
 
 	measure 'CO2 évité (t par an)' = SUM(gold_selection[co2_evite_t_an])
 		formatString: #,0.0
-		lineageTag: 3e9eed25-e9d3-4f69-8abd-e8fd9deae571
+		lineageTag: 061762d4-4702-4003-82d9-926d00624171
 
 	column rang
 		dataType: int64
-		lineageTag: 12b01f7e-d292-44c8-a7e5-5353333910bf
+		lineageTag: 1cf9f12a-e0df-4a70-834e-f6fed22658d7
 		sourceLineageTag: rang
 		summarizeBy: none
 		sourceColumn: rang
@@ -45,7 +49,7 @@ table gold_selection
 
 	column id
 		dataType: string
-		lineageTag: 9a2294bb-d424-4430-bb81-449c5c047c0f
+		lineageTag: b7888251-6699-4663-9576-d27805d70b64
 		sourceLineageTag: id
 		summarizeBy: none
 		sourceColumn: id
@@ -54,7 +58,7 @@ table gold_selection
 
 	column type
 		dataType: string
-		lineageTag: 5d533a84-3ae5-4151-91e9-cd6599c1097b
+		lineageTag: 1a150a3a-42a4-472b-b553-d2c42745f5cd
 		sourceLineageTag: type
 		summarizeBy: none
 		sourceColumn: type
@@ -63,7 +67,7 @@ table gold_selection
 
 	column nom
 		dataType: string
-		lineageTag: ac93f847-ee05-4470-9952-bdc00ad91ef7
+		lineageTag: a5fcb2c7-53da-412a-b433-9df3f9e63c6d
 		sourceLineageTag: nom
 		summarizeBy: none
 		sourceColumn: nom
@@ -72,7 +76,7 @@ table gold_selection
 
 	column commune
 		dataType: string
-		lineageTag: 2e451b99-cdf8-422c-bafa-9211a34f7edf
+		lineageTag: 91d6a440-8821-4216-9af4-58ac00f9d30f
 		sourceLineageTag: commune
 		summarizeBy: none
 		sourceColumn: commune
@@ -81,7 +85,7 @@ table gold_selection
 
 	column lon
 		dataType: double
-		lineageTag: 5602a3a6-3691-41da-b55a-206672ffc317
+		lineageTag: d1322a3b-e59a-488e-81d4-6c88e6cdaf91
 		sourceLineageTag: lon
 		summarizeBy: none
 		sourceColumn: lon
@@ -90,7 +94,7 @@ table gold_selection
 
 	column lat
 		dataType: double
-		lineageTag: 2eb491f4-b5df-466b-9089-90cd1cfd1718
+		lineageTag: cc47878c-fcf6-4741-9ecb-999b8128eb41
 		sourceLineageTag: lat
 		summarizeBy: none
 		sourceColumn: lat
@@ -100,7 +104,7 @@ table gold_selection
 	column cout
 		dataType: double
 		formatString: #,0 €
-		lineageTag: 68c1734a-aa4c-4f78-ae14-f66aec522974
+		lineageTag: 9246af22-a144-4f5b-a212-a0b5cbb12272
 		sourceLineageTag: cout
 		summarizeBy: none
 		sourceColumn: cout
@@ -110,7 +114,7 @@ table gold_selection
 	column pop_nouvellement_desservie
 		dataType: double
 		formatString: #,0
-		lineageTag: 77d56263-a603-4578-8a8d-3a4ff9e41a07
+		lineageTag: 68c674f5-25db-4b41-a8d2-66b7537bec5e
 		sourceLineageTag: pop_nouvellement_desservie
 		summarizeBy: none
 		sourceColumn: pop_nouvellement_desservie
@@ -120,7 +124,7 @@ table gold_selection
 	column cout_par_habitant
 		dataType: double
 		formatString: #,0.0 €
-		lineageTag: 76d082e8-5017-4df8-97bf-b17a94de14ad
+		lineageTag: 30b5026f-1b32-4fe8-93b1-0dc831beca0f
 		sourceLineageTag: cout_par_habitant
 		summarizeBy: none
 		sourceColumn: cout_par_habitant
@@ -130,7 +134,7 @@ table gold_selection
 	column budget_cumule
 		dataType: double
 		formatString: #,0 €
-		lineageTag: f1f1f7af-03b5-49cb-8e59-f1b69b217481
+		lineageTag: 90eb60c7-4313-474b-826d-f8aef6d3b751
 		sourceLineageTag: budget_cumule
 		summarizeBy: none
 		sourceColumn: budget_cumule
@@ -139,7 +143,7 @@ table gold_selection
 
 	column methode
 		dataType: string
-		lineageTag: bca19840-baab-4381-87f3-441e42dabca8
+		lineageTag: 2abce478-4ab6-4953-b83c-e0df1cae5fcd
 		sourceLineageTag: methode
 		summarizeBy: none
 		sourceColumn: methode
@@ -149,7 +153,7 @@ table gold_selection
 	column budget
 		dataType: int64
 		formatString: #,0 €
-		lineageTag: cad73a07-ed92-4c0e-979e-fd61c51ee7ef
+		lineageTag: 95223d49-10d0-4bc9-97a7-15017cfb0a66
 		sourceLineageTag: budget
 		summarizeBy: none
 		sourceColumn: budget
@@ -158,7 +162,7 @@ table gold_selection
 
 	column equite
 		dataType: double
-		lineageTag: 21a66bcd-3ccd-4da9-8ccd-0902e132ac61
+		lineageTag: dee51a11-964f-4de2-b9af-78eea0bd6e7d
 		sourceLineageTag: equite
 		summarizeBy: none
 		sourceColumn: equite
@@ -167,7 +171,7 @@ table gold_selection
 
 	column perimetre
 		dataType: string
-		lineageTag: 49601f08-11bc-469b-bbdd-daa2073c7119
+		lineageTag: eb5fcc10-4d87-4a00-91b3-2821356aad24
 		sourceLineageTag: perimetre
 		summarizeBy: none
 		sourceColumn: perimetre
@@ -176,7 +180,7 @@ table gold_selection
 
 	column risque_vol
 		dataType: string
-		lineageTag: 731e2471-6755-40aa-a9dd-81ea24d13a2a
+		lineageTag: f0d5aacb-bbea-4df3-9320-236c3290ce7a
 		sourceLineageTag: risque_vol
 		summarizeBy: none
 		sourceColumn: risque_vol
@@ -185,7 +189,7 @@ table gold_selection
 
 	column co2_evite_t_an
 		dataType: double
-		lineageTag: a75cd82f-96eb-4295-8694-eed178f1d9a9
+		lineageTag: c33898f8-6294-4b19-b83a-de7ee2ba47fe
 		sourceLineageTag: co2_evite_t_an
 		summarizeBy: none
 		sourceColumn: co2_evite_t_an
@@ -194,7 +198,7 @@ table gold_selection
 
 	column scenario
 		dataType: string
-		lineageTag: 909855dd-8393-48c0-a3b4-b4518ca387e6
+		lineageTag: 18b2cc02-5a05-49bf-aa1b-f6aeb10ac2c4
 		sourceLineageTag: scenario
 		summarizeBy: none
 		sourceColumn: scenario
@@ -204,7 +208,7 @@ table gold_selection
 	column proba_citiz
 		dataType: double
 		formatString: 0.0%
-		lineageTag: 5aea726f-c4db-4d7e-9f4a-28c60f6ae7cd
+		lineageTag: 66525369-d9ee-4f33-82d9-08f41512b7eb
 		sourceLineageTag: proba_citiz
 		summarizeBy: none
 		sourceColumn: proba_citiz
@@ -213,7 +217,7 @@ table gold_selection
 
 	column commune_code
 		dataType: string
-		lineageTag: 30f22e00-c671-4166-9f9a-9bc466605bbf
+		lineageTag: 3ff4cb83-9a85-45c1-a168-bc9cbe7d17c6
 		sourceLineageTag: commune_code
 		summarizeBy: none
 		sourceColumn: commune_code
