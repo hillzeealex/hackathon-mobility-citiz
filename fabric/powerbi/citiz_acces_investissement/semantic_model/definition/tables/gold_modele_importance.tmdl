@@ -1,10 +1,10 @@
 table gold_modele_importance
-	lineageTag: 13bdc30c-de4c-4c42-8aa5-6ca33e80ec82
+	lineageTag: f22eb812-f34d-4799-83f4-d4345bb672d1
 	sourceLineageTag: [dbo].[gold_modele_importance]
 
 	column variable
 		dataType: string
-		lineageTag: 1565122b-e4ca-4bf6-9acf-34460a0c25f8
+		lineageTag: 95ba6ee3-61ff-4be9-889a-399ee333cf20
 		sourceLineageTag: variable
 		summarizeBy: none
 		sourceColumn: variable
@@ -14,7 +14,7 @@ table gold_modele_importance
 	column part_shap
 		dataType: double
 		formatString: 0%
-		lineageTag: 9cc3cf3d-5650-4897-9f74-dcf1d4e97aa9
+		lineageTag: cc1c54d5-967c-4031-a29a-000d3032b7a9
 		sourceLineageTag: part_shap
 		summarizeBy: none
 		sourceColumn: part_shap

@@ -1,10 +1,10 @@
 table gold_projection_commune
-	lineageTag: cbc67a8d-dca6-497f-a6c4-3d83bc21f49a
+	lineageTag: 1606f4a4-89ba-4932-8f2f-3b326baac2ce
 	sourceLineageTag: [dbo].[gold_projection_commune]
 
 	column commune_code
 		dataType: string
-		lineageTag: 58bc2034-da88-4169-9ba4-8de49ad7d23f
+		lineageTag: 1dc4e146-c2da-4917-9a88-cd62a0495f58
 		sourceLineageTag: commune_code
 		summarizeBy: none
 		sourceColumn: commune_code
@@ -13,7 +13,7 @@ table gold_projection_commune
 
 	column horizon_ans
 		dataType: int64
-		lineageTag: 97722d52-3bbb-4441-b359-a0411f76941d
+		lineageTag: 2f0e645f-c45e-42a5-b37f-1cbeba77475d
 		sourceLineageTag: horizon_ans
 		summarizeBy: none
 		sourceColumn: horizon_ans
@@ -22,7 +22,7 @@ table gold_projection_commune
 
 	column annee
 		dataType: int64
-		lineageTag: 029e675b-3d5c-4008-a0e4-dbda55fa2bec
+		lineageTag: 97492d67-040a-4f53-9e7b-d561c1d7ada9
 		sourceLineageTag: annee
 		summarizeBy: none
 		sourceColumn: annee
@@ -31,7 +31,7 @@ table gold_projection_commune
 
 	column facteur
 		dataType: double
-		lineageTag: a18f11b2-5803-4c37-9102-d152552472ac
+		lineageTag: 4e0efde7-acf5-436d-8106-e58ca18839ae
 		sourceLineageTag: facteur
 		summarizeBy: none
 		sourceColumn: facteur

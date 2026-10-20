@@ -1,0 +1,35 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "13c313b9ad9742f6a255",
+  "position": {
+    "x": 640,
+    "y": 620,
+    "z": 21,
+    "width": 620,
+    "height": 90,
+    "tabOrder": 21
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Ces saisies ne sont pas enregistrées : chaque collaborateur fait sa simulation. Couverture du seuil = réservations prévues / seuil.",
+                    "textStyle": {
+                      "fontSize": "9pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
