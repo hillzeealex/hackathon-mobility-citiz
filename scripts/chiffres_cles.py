@@ -89,6 +89,48 @@ def equity_sensitivity(budget: int = 500_000) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def official_box(nat: dict, g: dict, val: dict, r2: dict, n: dict, nantes_off: pd.DataFrame) -> list[str]:
+    """Encadré des chiffres à citer dans les slides et à l'oral : tous en V2 (marche réelle), sauf la France entière."""
+    ilp = {sc["budget_eur"]: sc for sc in r2["scenarios"] if sc["methode"] == "ILP"}
+    b5, b10 = ilp[500_000], ilp[1_000_000]
+    t = val["test_aveugle_grenoble"]
+    ex = r2["stations_autopartage_existantes"]
+    rows = [
+        ("Nantes : habitants", fr(r2["population"])),
+        ("Nantes : au moins une option de mobilité à 5 min à pied", f"**{pc(n['v2']['part_pop_au_moins_1_option'])}**"),
+        ("Nantes : options pondérées accessibles par habitant", fr(n["v2"]["options_moyennes_par_habitant"], 1)),
+        (f"Nantes : à 5 min à pied d'un autopartage ({ex['citiz']} Citiz, {ex['autopartage']} Marguerite)",
+         f"**{pc(r2['part_deja_couverte'])}**"),
+        ("Nantes : habitants dont la seule option à 5 min est un unique arrêt ou station",
+         fr(nantes_off["pop_seule_option"].sum())),
+        ("500 000 € : stations Citiz recommandées", f"**{b5['stations']}**"),
+        ("500 000 € : habitants gagnés (nouvellement à 5 min à pied d'un autopartage)",
+         f"**+{fr(b5['habitants_nouvellement_couverts'])}**"),
+        ("500 000 € : couverture autopartage avant → après",
+         f"**{pc(r2['part_deja_couverte'])} → {pc(b5['part_population_couverte_apres'])}**"),
+        ("500 000 € : coût par habitant gagné (sur 3 ans)", f"**{fr(b5['eur_par_habitant'], 1)} €**"),
+        ("500 000 € : CO2 évité (estimation prudente)", f"{fr(b5['co2_evite_t_an'], 1)} t/an"),
+        ("1 000 000 € : stations · habitants gagnés · couverture après",
+         f"{b10['stations']} · +{fr(b10['habitants_nouvellement_couverts'])} · {pc(b10['part_population_couverte_apres'])}"),
+        (f"Test à l'aveugle Grenoble : stations Citiz ({t['stations']}) retrouvées dans le top 20 % des carreaux",
+         f"**{pc(t['modele']['stations']['top_20pct'])}** (densité seule {pc(t['baseline_densite']['stations']['top_20pct'])})"),
+        ("AUC : test à l'aveugle Grenoble · validation sur les 15 réseaux",
+         f"{fr(t['modele']['carreaux']['auc'], 3)} · {fr(val['modele_oof']['auc'], 3)} (densité seule "
+         f"{fr(t['baseline_densite']['carreaux']['auc'], 3)} · {fr(val['baseline_densite']['auc'], 3)})"),
+        ("Grenoble : au moins une option à 5 min à pied · à 5 min d'une station Citiz",
+         f"{pc(g['v2']['part_pop_au_moins_1_option'])} · {pc(g['v2']['part_pop_citiz'])}"),
+        ("Grenoble : surestimation des options si l'on calcule à vol d'oiseau",
+         f"+{fr(g['surestimation_options_moyennes_pct'], 0)} %"),
+        ("France entière : sans aucune option à 5 min (V1 seule disponible : le dire, c'est une borne haute)",
+         pc(nat["part_pop_sans_option"])),
+    ]
+    return (["> ### CHIFFRES OFFICIELS POUR LES SLIDES (V2, marche réelle)", ">",
+             "> Seuls ces chiffres vont dans les slides et à l'oral. Tous sont calculés en **V2** (5 minutes de marche "
+             "réelle), sauf la France entière, qui n'existe qu'en V1. Les chiffres V1 plus bas servent uniquement à la "
+             "comparaison.", ">", "> | Message | Chiffre officiel |", "> |---|---:|"]
+            + [f"> | {a} | {b} |" for a, b in rows] + [""])
+
+
 def main() -> None:
     IMG.mkdir(parents=True, exist_ok=True)
     s = load_settings()
@@ -112,8 +154,10 @@ def main() -> None:
          "Généré par `python -m scripts.chiffres_cles` à partir des fichiers du pipeline : **ne pas modifier à la main**.",
          f"Accessibilité « 5 min à pied » = {s['walk']['radius_m']} m ({s['walk']['speed_kmh']} km/h). "
          f"Jour type des horaires de TC : mardi {s['offer']['typical_weekday']}. Population : Filosofi 2021 recalée sur le "
-         "recensement 2023. V1 = vol d'oiseau (borne haute), V2 = marche réelle sur le réseau OpenStreetMap.", "",
-         "## 1. France entière (V1)", "",
+         "recensement 2023. V2 = marche réelle sur le réseau OpenStreetMap (méthode de référence) ; V1 = 400 m à vol "
+         "d'oiseau, **méthode simplifiée, pour comparaison uniquement** (borne haute).", ""]
+    L += official_box(nat, g, val, j("nantes", "reco_resume_v2.json"), n, nantes_off)
+    L += ["## 1. France entière (V1 : méthode simplifiée, seule disponible à cette échelle ; borne haute)", "",
          "| Chiffre | Valeur | Source (fichier · commande) |", "|---|---:|---|",
          f"| Habitants couverts (carreaux de 200 m) | {fr(nat['population'])} | `data/processed/national/agg_rapport.json` · `{CMD['national']}` |",
          f"| Sans aucune option à 5 min | **{pc(nat['part_pop_sans_option'])}** | idem |",
@@ -124,20 +168,21 @@ def main() -> None:
          f"| Flux GTFS lus | {off['flux_gtfs']} ({off['flux_gtfs_en_erreur']} illisibles, {off['flux_gtfs_hors_periode']} lus sur leur dernier mardi valide) | idem |",
          ""]
     L += ["## 2. Choix des villes (classement de 276 EPCI ≥ 50 000 hab.)", "",
-          "| | Rang potentiel Citiz | Habitants | Stations Citiz | Pop. à 5 min de Citiz (V1) | Vols liés aux véhicules / 1 000 hab. |",
+          "| | Rang potentiel Citiz | Habitants | Stations Citiz | Pop. à 5 min de Citiz (V1 ¹) | Vols liés aux véhicules / 1 000 hab. |",
           "|---|---:|---:|---:|---:|---:|"]
     for name in ("Métropole Nice Côte d'Azur", "Nantes Métropole", "Grenoble-Alpes-Métropole"):
         r = row(name)
         L.append(f"| {name} | {int(r['rang_potentiel'])} | {fr(r['population'])} | {int(r['stations_citiz'])} | "
                  f"{pc(r['part_pop_citiz_5min'])} | {fr(r['vols_vehicules_1000'], 1)} |")
-    L += ["", f"Source : `data/processed/national/classement_epci.parquet` · `{CMD['national']}` ; argumentaire : `docs/choix_ville.md`.", ""]
+    L += ["", "¹ V1 = méthode simplifiée (400 m à vol d'oiseau), **pour comparaison uniquement** : ne pas citer dans les slides.",
+          f"Source : `data/processed/national/classement_epci.parquet` · `{CMD['national']}` ; argumentaire : `docs/choix_ville.md`.", ""]
     L += ["## 3. Grenoble, ville exemple : vol d'oiseau ou marche réelle ?", "",
-          "| Part de la population | V1 vol d'oiseau | V2 marche réelle |", "|---|---:|---:|",
+          "| Part de la population | V1 vol d'oiseau ¹ | V2 marche réelle |", "|---|---:|---:|",
           f"| Au moins une option à 5 min | {pc(g['v1']['part_pop_au_moins_1_option'])} | **{pc(g['v2']['part_pop_au_moins_1_option'])}** |",
           f"| Au moins un arrêt de TC | {pc(g['v1']['part_pop_au_moins_1_TC'])} | {pc(g['v2']['part_pop_au_moins_1_TC'])} |",
           f"| Une station Citiz à 5 min | {pc(g['v1']['part_pop_citiz'])} | **{pc(g['v2']['part_pop_citiz'])}** |",
           f"| Options pondérées par habitant | {fr(g['v1']['options_moyennes_par_habitant'], 1)} | {fr(g['v2']['options_moyennes_par_habitant'], 1)} |",
-          "", f"- La V1 surestime les options de **{fr(g['surestimation_options_moyennes_pct'], 0)} %** ; "
+          "", "¹ V1 = méthode simplifiée (400 m à vol d'oiseau), **pour comparaison uniquement** : ne pas citer dans les slides.", "", f"- La V1 surestime les options de **{fr(g['surestimation_options_moyennes_pct'], 0)} %** ; "
           f"{fr(g['pop_couverte_v1_pas_v2'])} habitants semblent desservis à vol d'oiseau mais ne le sont pas à pied.",
           f"- {fr(gp['pop_calee'])} habitants, {fr(g['carreaux'])} carreaux habités, {fr(g['points_offre'])} points d'offre.",
           f"- Source : `data/processed/grenoble/access_comparaison.json` · `{CMD['grenoble']}`.", ""]
@@ -165,7 +210,7 @@ def main() -> None:
         return f"{(b / a - 1) * 100:+.0f} %".replace("-", "−") if a else "n.d."
 
     L += ["## 5. Nantes Métropole, notre ville : diagnostic", "",
-          "| Chiffre | V1 vol d'oiseau | V2 marche réelle | Écart V2 / V1 |", "|---|---:|---:|---:|",
+          "| Chiffre | V1 vol d'oiseau ¹ | V2 marche réelle | Écart V2 / V1 |", "|---|---:|---:|---:|",
           f"| Habitants | {fr(np_['pop_calee'])} | idem | |",
           f"| Au moins une option à 5 min | {pc(n['v1']['part_pop_au_moins_1_option'])} | **{pc(n['v2']['part_pop_au_moins_1_option'])}** | "
           f"{ecart(n['v1']['part_pop_au_moins_1_option'], n['v2']['part_pop_au_moins_1_option'])} |",
@@ -177,7 +222,7 @@ def main() -> None:
           f"{ecart(n['v1']['part_pop_citiz'], n['v2']['part_pop_citiz'])} |",
           f"| À 5 min d'un autopartage (Citiz ou Marguerite) | {pc(r1['part_deja_couverte'])} | **{pc(r2['part_deja_couverte'])}** | "
           f"{ecart(r1['part_deja_couverte'], r2['part_deja_couverte'])} |",
-          "",
+          "", "¹ V1 = méthode simplifiée (400 m à vol d'oiseau), **pour comparaison uniquement** : ne pas citer dans les slides.", "",
           f"- Stations existantes : {r2['stations_autopartage_existantes']['citiz']} Citiz, "
           f"{r2['stations_autopartage_existantes']['autopartage']} Marguerite. La V1 surestime les options de "
           f"{fr(n['surestimation_options_moyennes_pct'], 0)} % ; {fr(n['pop_couverte_v1_pas_v2'])} habitants semblent desservis "
@@ -191,7 +236,7 @@ def main() -> None:
           f"5 min de marche d'un autopartage. Coût d'une station : {fr(r2['cout_station_eur'])} € sur 3 ans (scénario moyen) + "
           f"surcoût de risque de vol, **hypothèse à valider avec Citiz** (moyenne {fr(r2['surcout_risque_moyen_eur'])} €).", "",
           "**12 stations (500 000 €)**", "",
-          "| Chiffre | V1 vol d'oiseau | V2 marche réelle | Écart V2 / V1 |", "|---|---:|---:|---:|"]
+          "| Chiffre | V1 vol d'oiseau ¹ | V2 marche réelle | Écart V2 / V1 |", "|---|---:|---:|---:|"]
     a, b = s1[500_000], s2[500_000]
     rows = [("Couverture autopartage actuelle", pc(r1["part_deja_couverte"]), pc(r2["part_deja_couverte"]),
              ecart(r1["part_deja_couverte"], r2["part_deja_couverte"])),
@@ -207,7 +252,7 @@ def main() -> None:
     sel1 = pd.read_csv(processed("nantes", "recommandations_ilp_500000_v1.csv"), sep=";", decimal=",")
     sel2 = pd.read_csv(processed("nantes", "recommandations_ilp_500000_v2.csv"), sep=";", decimal=",")
     common = set(sel1["id"]) & set(sel2["id"])
-    L += ["", f"Sélection : **{len(common)} stations sur 12 communes** aux deux versions ("
+    L += ["", "¹ V1 = méthode simplifiée (400 m à vol d'oiseau), **pour comparaison uniquement** : ne pas citer dans les slides.", "", f"Sélection : **{len(common)} stations sur 12 en commun** aux deux versions ("
           + ", ".join(sel2.loc[sel2["id"].isin(common), "nom"]) + "). Liste V2 retenue : "
           + " ; ".join(f"{int(r.rang)}. {r.nom}" for r in sel2.itertuples()) + ".", "",
           "**Tous les budgets (V2, ILP)**", "",
@@ -230,12 +275,12 @@ def main() -> None:
         L.append(f"| {fr(r.equite, 1)} | {r.stations} | {fr(r.habitants_nouveaux)} | {pc(r.part_sans_voiture_nouveaux)} | {fr(r.priorite_moyenne_nouveaux, 2)} |")
     if eq["habitants_nouveaux"].nunique() == 1:
         L += ["", "Lecture : la sélection ne change pas avec le poids d'équité. À Nantes, les poches denses non couvertes "
-              "autour du centre sont aussi celles où vivent le plus de ménages pauvres ou sans voiture : efficacité et "
+              "autour du centre sont aussi celles où vivent le plus de ménages modestes ou sans voiture : efficacité et "
               f"équité vont dans le même sens (priorité d'équité moyenne des nouveaux couverts {fr(eq['priorite_moyenne_nouveaux'].iloc[0], 2)}, "
               "contre 0,5 pour l'ensemble des carreaux)."]
     else:
         L += ["", "Lecture : augmenter le poids d'équité déplace une partie des stations vers des carreaux à ménages plus "
-              "pauvres ou sans voiture, au prix de quelques habitants couverts en moins."]
+              "modestes ou sans voiture, au prix de quelques habitants couverts en moins."]
     L += ["", f"Source : calcul de `{CMD['equite']}` sur `data/processed/nantes/` (cells, candidates, coverage).", ""]
 
     imgs = {"france_sans_option.png": None,
