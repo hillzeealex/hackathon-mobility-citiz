@@ -1,0 +1,54 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "9bd159880a7c491a8a79",
+  "position": {
+    "x": 850,
+    "y": 90,
+    "z": 11,
+    "width": 200,
+    "height": 90,
+    "tabOrder": 11
+  },
+  "visual": {
+    "visualType": "card",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_axe_reservations"
+                    }
+                  },
+                  "Property": "Charges fixes mensuelles"
+                }
+              },
+              "queryRef": "gold_axe_reservations.Charges fixes mensuelles",
+              "nativeQueryRef": "Charges fixes / mois",
+              "displayName": "Charges fixes / mois"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

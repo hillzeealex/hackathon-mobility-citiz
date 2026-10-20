@@ -1,0 +1,121 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "ffe392f4a90443a498a4",
+  "position": {
+    "x": 790,
+    "y": 90,
+    "z": 2,
+    "width": 470,
+    "height": 300,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_couts"
+                    }
+                  },
+                  "Property": "libelle"
+                }
+              },
+              "queryRef": "gold_couts.libelle",
+              "nativeQueryRef": "Équipement",
+              "displayName": "Équipement"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_couts"
+                    }
+                  },
+                  "Property": "investissement"
+                }
+              },
+              "queryRef": "gold_couts.investissement",
+              "nativeQueryRef": "Investissement",
+              "displayName": "Investissement"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_couts"
+                    }
+                  },
+                  "Property": "exploitation_annuelle"
+                }
+              },
+              "queryRef": "gold_couts.exploitation_annuelle",
+              "nativeQueryRef": "Exploitation / an",
+              "displayName": "Exploitation / an"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_couts"
+                    }
+                  },
+                  "Property": "cout_total"
+                }
+              },
+              "queryRef": "gold_couts.cout_total",
+              "nativeQueryRef": "Coût sur 3 ans",
+              "displayName": "Coût sur 3 ans"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_couts"
+                    }
+                  },
+                  "Property": "source"
+                }
+              },
+              "queryRef": "gold_couts.source",
+              "nativeQueryRef": "Source",
+              "displayName": "Source"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Coûts retenus'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

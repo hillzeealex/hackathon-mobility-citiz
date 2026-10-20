@@ -1,10 +1,10 @@
 table gold_couts
-	lineageTag: c5b8c22f-b41f-473d-8444-36bcb25796ca
+	lineageTag: 6983399c-1e46-45c0-87bf-0474ab0960ee
 	sourceLineageTag: [dbo].[gold_couts]
 
 	column type
 		dataType: string
-		lineageTag: 96611524-e319-4310-801b-0c134d9aa717
+		lineageTag: 7a0e1c22-6647-4572-843c-6d0e49a89e9a
 		sourceLineageTag: type
 		summarizeBy: none
 		sourceColumn: type
@@ -13,7 +13,7 @@ table gold_couts
 
 	column libelle
 		dataType: string
-		lineageTag: f0c5d3b1-16c6-408f-aff3-a0fbd73c83f7
+		lineageTag: 15ab7a67-eb2d-48e9-8d6f-8ed21fa33587
 		sourceLineageTag: libelle
 		summarizeBy: none
 		sourceColumn: libelle
@@ -23,7 +23,7 @@ table gold_couts
 	column investissement
 		dataType: int64
 		formatString: #,0 €
-		lineageTag: 5c608e3a-2c2e-4d95-93e3-ebea8a9c73bf
+		lineageTag: 838e6f19-c6be-4b0d-8454-0ef62f4bf0fb
 		sourceLineageTag: investissement
 		summarizeBy: none
 		sourceColumn: investissement
@@ -33,7 +33,7 @@ table gold_couts
 	column exploitation_annuelle
 		dataType: int64
 		formatString: #,0 €
-		lineageTag: 2a1399a8-046d-4274-839b-d8494dec2454
+		lineageTag: bd5ad50c-32b8-41f4-8991-b10f9fc6aca4
 		sourceLineageTag: exploitation_annuelle
 		summarizeBy: none
 		sourceColumn: exploitation_annuelle
@@ -42,7 +42,7 @@ table gold_couts
 
 	column horizon_ans
 		dataType: int64
-		lineageTag: aadef949-3beb-42e0-8593-f6c3bd6d028d
+		lineageTag: eb7bb84f-23e8-4c45-8ac0-acf451c465d3
 		sourceLineageTag: horizon_ans
 		summarizeBy: none
 		sourceColumn: horizon_ans
@@ -52,7 +52,7 @@ table gold_couts
 	column cout_total
 		dataType: int64
 		formatString: #,0 €
-		lineageTag: 5554e533-fa98-4698-be9a-784587a7568d
+		lineageTag: 1fccc87e-5a54-4f7f-80ca-eedb930ae4c7
 		sourceLineageTag: cout_total
 		summarizeBy: none
 		sourceColumn: cout_total
@@ -61,7 +61,7 @@ table gold_couts
 
 	column source
 		dataType: string
-		lineageTag: 8b07039a-c361-4fa2-bed5-9067a0a49d7e
+		lineageTag: 0b760429-1fe9-422b-ab28-874d0d6ded34
 		sourceLineageTag: source
 		summarizeBy: none
 		sourceColumn: source

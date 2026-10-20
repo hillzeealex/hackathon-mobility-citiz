@@ -1,13 +1,18 @@
 table gold_saisie_cout_variable_reservation
-	lineageTag: 536ba12d-5223-4b49-ad98-a019cd5ba21f
+	lineageTag: 63d990cc-09d4-4004-9d3d-9abae7b46435
 	sourceLineageTag: [dbo].[gold_saisie_cout_variable_reservation]
 
 	column valeur
 		dataType: double
-		lineageTag: eb99dc40-cf6c-4e3a-ac4d-0e5040ee7167
+		lineageTag: 14731959-c275-40fa-b5a0-2f24c6d17107
 		sourceLineageTag: valeur
 		summarizeBy: none
 		sourceColumn: valeur
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
 
 		annotation SummarizationSetBy = Automatic
 

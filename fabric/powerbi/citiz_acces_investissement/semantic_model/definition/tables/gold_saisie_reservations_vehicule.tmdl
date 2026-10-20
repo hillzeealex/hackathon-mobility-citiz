@@ -1,13 +1,18 @@
 table gold_saisie_reservations_vehicule
-	lineageTag: d4ee9d1b-94d4-4612-9d84-d4e815e9208f
+	lineageTag: a4c3ad06-c562-45eb-a929-353309fd6304
 	sourceLineageTag: [dbo].[gold_saisie_reservations_vehicule]
 
 	column valeur
 		dataType: double
-		lineageTag: 7dcb256b-5dca-496d-98b1-4c15e4adfe35
+		lineageTag: 587a1fc7-dd4c-41ba-aae7-ed944f2f9ec5
 		sourceLineageTag: valeur
 		summarizeBy: none
 		sourceColumn: valeur
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
 
 		annotation SummarizationSetBy = Automatic
 

@@ -23,6 +23,7 @@ ref table gold_modele_validation
 ref table gold_modele_importance
 ref table gold_projection_commune
 ref table gold_horizons
+ref table gold_age_departement
 ref table gold_axe_reservations
 ref table gold_saisie_vehicules
 ref table gold_saisie_investissement
