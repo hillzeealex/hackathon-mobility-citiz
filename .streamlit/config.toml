@@ -1,0 +1,9 @@
+# Configuration de l'appli de démo (streamlit run app/app.py)
+[browser]
+gatherUsageStats = false     # aucune statistique envoyée : rien ne part sur Internet à part les fonds de carte
+
+[theme]
+base = "light"               # thème clair quel que soit le réglage du PC (lisibilité au vidéoprojecteur)
+
+[server]
+runOnSave = false

@@ -13,7 +13,6 @@ import json
 import sys
 from pathlib import Path
 
-import altair as alt
 import pandas as pd
 import pydeck as pdk
 import streamlit as st
@@ -23,8 +22,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.data import FILES, REAL, ROOT, available, city_folder, has_reco, load_all  # noqa: E402
 from app.ui import colorize, deck, fmt, fr, pct, table, walk_minutes  # noqa: E402
 from src.common.config import load_settings  # noqa: E402
-from src.optim.costs import co2_avoided_t_per_year, load_costs  # noqa: E402
-from src.optim.optimize import Problem, optimize  # noqa: E402
 
 st.set_page_config(page_title="Accès mobilité · Citiz", layout="wide")
 
@@ -72,6 +69,16 @@ def read_json(path: Path) -> dict | None:
 
 
 @st.cache_data
+def read_text(path: Path) -> str | None:
+    return path.read_text(encoding="utf-8") if path.exists() else None
+
+
+@st.cache_data
+def read_csv(path: Path) -> pd.DataFrame | None:
+    return pd.read_csv(path) if path.exists() else None
+
+
+@st.cache_data
 def precomputed(folder: str, version: str, budget: int, equity: float, method: str):
     """Scénario déjà calculé par build_reco (lecture instantanée) ; None s'il n'existe pas pour ces réglages."""
     resume = read_json(Path(folder) / f"reco_resume_{version}.json")
@@ -101,10 +108,16 @@ def demo_scenario() -> None:
 view = st.sidebar.radio("Vue", list(VIEWS),
                         help="France : accessibilité à vol d'oiseau de tous les carreaux habités. "
                              "Nantes : diagnostic et recommandations. Grenoble : ville exemple (marche réelle, validation).")
+st.sidebar.caption("Hors connexion, tout fonctionne : seul le fond de carte (CARTO / OpenStreetMap) disparaît.")
 if VIEWS[view] is None:
     from app.national import render
     render()
     st.stop()
+
+# imports utiles seulement aux vues ville (la vue France démarre ainsi plus vite)
+import altair as alt  # noqa: E402
+from src.optim.costs import co2_avoided_t_per_year, load_costs  # noqa: E402
+from src.optim.optimize import Problem, optimize  # noqa: E402
 
 ville = VIEWS[view]
 folder = city_folder(ville)
@@ -124,7 +137,7 @@ if reco:
 st.sidebar.caption(f"{meta.get('zone', '')} · accessibilité {'V2 marche réelle' if version == 'v2' else 'V1 vol d’oiseau'}"
                    f" · GTFS du {meta.get('jour_type_gtfs', '?')}")
 
-st.title(f"{meta.get('zone', ville)} : qui a accès à une option de mobilité à 5 minutes à pied ?")
+st.title(f"{meta.get('zone', ville)} · accès à la mobilité à 5 min à pied")
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["1 · Carte d'accès", "2 · Offre et population desservie", "3 · Où investir ?",
                                         "4 · Validation", "5 · Méthode et limites"])
 cells = d["cells"]
@@ -203,7 +216,7 @@ with tab2:
                                                           "<br/>Dont sans aucune autre option : {seul_txt}"))
     st.caption(" · ".join(f"<span style='color:rgb{tuple(TYPE_COLORS.get(t, [100]*3))}'>●</span> {TYPE_LABELS.get(t, t)}"
                           for t in types), unsafe_allow_html=True)
-    cov_by_type = pd.read_csv(folder / "served_by_type.csv") if (folder / "served_by_type.csv").exists() else None
+    cov_by_type = read_csv(folder / "served_by_type.csv")
     if cov_by_type is not None:
         st.subheader("Population desservie par type d'offre")
         t = cov_by_type.assign(type=cov_by_type["type"].map(lambda x: TYPE_LABELS.get(x, x)))
@@ -234,7 +247,8 @@ with tab3:
                                       format_func=lambda v: fmt(v, "€"),
                                help="Scénarios 250 000 €, 500 000 € et 1 000 000 € (équité 0,5) précalculés : affichage "
                                     "instantané. Autres réglages : calcul en direct.")
-            equity = st.slider("Poids de l'équité", 0.0, 2.0, step=0.1, key="equity",
+            equity = st.select_slider("Poids de l'équité", [round(0.1 * k, 1) for k in range(21)], key="equity",
+                                      format_func=lambda v: fr(v, 1),
                                help="0 : maximise habitants nouvellement desservis × probabilité du modèle. Plus haut : "
                                     "bonus aux quartiers où les ménages sont plus modestes ou sans voiture.")
             method = st.radio("Méthode", ["glouton", "ilp"], key="method",
@@ -252,13 +266,13 @@ with tab3:
         with right:
             m1, m2, m3, m4 = st.columns(4)
             m1.metric("Stations Citiz recommandées", len(sel))
-            m2.metric("Habitants nouvellement à 5 min d'un autopartage", fmt(new_pop),
-                      delta=f"couverture {pct(covered_pop / pop)} → {pct((covered_pop + new_pop) / pop)}", delta_color="off",
-                      help=f"Aujourd'hui : {fmt(covered_pop)} habitants à 5 min d'un autopartage ; après : "
+            m2.metric("Habitants gagnés", fmt(new_pop),
+                      delta=f"couverture {pct(covered_pop / pop)} → {pct((covered_pop + new_pop) / pop)}",
+                      help=f"Habitants nouvellement à 5 min à pied d'un autopartage. Aujourd'hui : {fmt(covered_pop)} ; après : "
                            f"{fmt(covered_pop + new_pop)}.")
-            m3.metric("Coût par nouvel habitant desservi", fr(summary["cout_total"] / max(1, new_pop), 1, "€"),
+            m3.metric("Coût par habitant gagné", fr(summary["cout_total"] / max(1, new_pop), 1, "€"),
                       help=f"Sur {load_costs()['horizon_ans']} ans (installation, véhicule, assurance, entretien).")
-            m4.metric("CO₂ évité (estimation prudente)", fr(co2, 1, "t/an"),
+            m4.metric("CO₂ évité (prudent)", fr(co2, 1, "t/an"),
                       help="1 véhicule par station : 10 000 km de voiture évités/an × 0,142 kgCO₂e/km (ADEME, bornes basses).")
             if not sel.empty:
                 s = sel.copy()
@@ -324,14 +338,14 @@ with tab4:
         mod, base = t["modele"], t["baseline_densite"]
         m1, m2, m3, m4 = st.columns(4)
         m1.metric("Stations de Grenoble retrouvées (top 20 %)", pct(mod["stations"]["top_20pct"]),
-                  delta=f"densité seule : {pct(base['stations']['top_20pct'])}", delta_color="off",
+                  delta=f"densité seule : {pct(base['stations']['top_20pct'])}", delta_color="off", delta_arrow="off",
                   help="Part des stations Citiz de Grenoble situées dans les 20 % de carreaux que le modèle juge les plus "
                        "favorables, alors qu'il n'a jamais vu ce réseau.")
         m2.metric("AUC du test à l'aveugle (Grenoble)", fr(mod["carreaux"]["auc"], 3),
-                  delta=f"densité seule : {fr(base['carreaux']['auc'], 3)}", delta_color="off",
+                  delta=f"densité seule : {fr(base['carreaux']['auc'], 3)}", delta_color="off", delta_arrow="off",
                   help="Probabilité qu'un carreau proche d'une station soit mieux classé qu'un carreau sans station (0,5 = hasard).")
         m3.metric(f"AUC sur les {val['perimetre']['reseaux']} réseaux Citiz", fr(val["modele_oof"]["auc"], 3),
-                  delta=f"densité seule : {fr(val['baseline_densite']['auc'], 3)}", delta_color="off",
+                  delta=f"densité seule : {fr(val['baseline_densite']['auc'], 3)}", delta_color="off", delta_arrow="off",
                   help="Validation croisée : chaque réseau est prédit par un modèle entraîné sans lui.")
         if comps["grenoble"]:
             m4.metric("Surestimation à vol d'oiseau (Grenoble)", f"+{fr(comps['grenoble']['surestimation_options_moyennes_pct'], 0)} %",
@@ -479,7 +493,7 @@ with tab5:
 - **Coûts et surcoût de risque** : ordres de grandeur sourcés, à valider avec Citiz.
 - **Population** : carreaux INSEE 2021 calés sur la population communale ; les carreaux de moins de 11 ménages ne
   sont jamais affichés seuls (secret statistique).
-- **Horaires** : un mardi type (17/11/2026) ; pas de soirées ni de week-ends.
+- **Horaires** : un jour de semaine type (mardi 17/11/2026) ; les week-ends et les vacances ne sont pas analysés.
 - **CO₂** : estimation prudente (1 véhicule par station, bornes basses ADEME), pas une mesure.
 """)
     st.subheader("Sources")
@@ -487,7 +501,7 @@ with tab5:
     st.caption("Liste complète avec les liens : docs/sources.md et docs/sources_hypotheses.md.")
     for title, doc in (("Méthodologie détaillée", "methodologie.md"), ("Modèle", "modele.md"), ("Éthique", "ethique.md"),
                        ("Choix des villes", "choix_ville.md")):
-        path = ROOT / "docs" / doc
-        if path.exists():
+        text = read_text(ROOT / "docs" / doc)
+        if text:
             with st.expander(title):
-                st.markdown(path.read_text(encoding="utf-8"))
+                st.markdown(text)
