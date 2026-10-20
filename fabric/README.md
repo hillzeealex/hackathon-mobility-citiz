@@ -18,3 +18,11 @@ de `bronze_notebook`** : les tables réécrites prendraient un nouvel identifian
 Pour ajouter une source à un Bronze existant, utiliser `REPRENDRE_RUN = True` (cellule Omphale).
 
 Le rapport Power BI `citiz_acces_investissement` lit les tables de `gold` en Direct Lake.
+
+## Rapport Power BI
+
+`powerbi/citiz_acces_investissement/` : modèle sémantique (TMDL, Direct Lake sur `gold`) et rapport (PBIR), 7 pages :
+France (accès à 5 min), Nantes diagnostic, Nantes desserte, Nantes potentiel prédit, Nantes où investir (budget,
+équipements, scénario, méthode, équité, horizon de population), rentabilité d'une station (saisie libre, non
+enregistrée), méthode et limites. L'expression `DirectLake - Gold` pointe vers l'identifiant du lakehouse `gold`
+de l'espace « Hackathon Citz » : à adapter dans `semantic_model/definition/expressions.tmdl` pour un autre espace.

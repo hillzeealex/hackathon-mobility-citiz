@@ -1,0 +1,228 @@
+table gold_selection
+	lineageTag: eb077024-f525-4352-b057-07e0af379bca
+	sourceLineageTag: [dbo].[gold_selection]
+
+	measure Horizon = SELECTEDVALUE(gold_horizons[horizon_ans], 0)
+		formatString: 0" ans"
+		lineageTag: 4bb6429c-803f-4550-aaac-4d8d030df715
+
+	measure 'Habitants gagnés horizon' = VAR h = [Horizon] RETURN SUMX(gold_selection, gold_selection[pop_nouvellement_desservie] * COALESCE(LOOKUPVALUE(gold_projection_commune[facteur], gold_projection_commune[commune_code], gold_selection[commune_code], gold_projection_commune[horizon_ans], h), 1))
+		formatString: #,0
+		lineageTag: f0c36a07-2822-4045-a888-96c7ffca3f7e
+
+	measure 'Coût par habitant horizon' = DIVIDE([Coût total], [Habitants gagnés horizon])
+		formatString: #,0.0 €
+		lineageTag: ebd3944f-3703-4609-8698-5b1d53f8f220
+
+	measure Emplacements = COUNTROWS(gold_selection)
+		formatString: #,0
+		lineageTag: 6169a294-8d78-42bf-a4c9-d18b1fe32919
+
+	measure 'Coût total' = SUM(gold_selection[cout])
+		formatString: #,0 €
+		lineageTag: 8a6f9f4a-8335-46d0-87db-55974f9f1d77
+
+	measure 'Habitants nouvellement desservis' = SUM(gold_selection[pop_nouvellement_desservie])
+		formatString: #,0
+		lineageTag: 089c3b2b-2856-436e-9f1d-d28d2d0c977d
+
+	measure 'Coût par habitant' = DIVIDE([Coût total], [Habitants nouvellement desservis])
+		formatString: #,0.0 €
+		lineageTag: ffd433e1-7a76-4274-ba3e-626981b3a251
+
+	measure 'CO2 évité (t par an)' = SUM(gold_selection[co2_evite_t_an])
+		formatString: #,0.0
+		lineageTag: 9e4c987a-e96b-4027-af34-985f34e4803f
+
+	column rang
+		dataType: int64
+		lineageTag: ed81885b-da29-4978-bba9-31b2045d9488
+		sourceLineageTag: rang
+		summarizeBy: none
+		sourceColumn: rang
+
+		annotation SummarizationSetBy = Automatic
+
+	column id
+		dataType: string
+		lineageTag: 2071d204-9ce6-4ebe-81ed-3cf40531de34
+		sourceLineageTag: id
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column type
+		dataType: string
+		lineageTag: 14a63c87-cdbc-4ee1-bc94-ce92560c55ce
+		sourceLineageTag: type
+		summarizeBy: none
+		sourceColumn: type
+
+		annotation SummarizationSetBy = Automatic
+
+	column nom
+		dataType: string
+		lineageTag: 09e9fc0c-3e0c-438d-b1e6-c2ae8d5eb960
+		sourceLineageTag: nom
+		summarizeBy: none
+		sourceColumn: nom
+
+		annotation SummarizationSetBy = Automatic
+
+	column commune
+		dataType: string
+		lineageTag: 0767ba4f-dc6a-42f6-bb56-9a368118a1c4
+		sourceLineageTag: commune
+		summarizeBy: none
+		sourceColumn: commune
+
+		annotation SummarizationSetBy = Automatic
+
+	column lon
+		dataType: double
+		lineageTag: 9de66873-0654-49cd-bbe3-ebd56d248dcc
+		sourceLineageTag: lon
+		summarizeBy: none
+		sourceColumn: lon
+
+		annotation SummarizationSetBy = Automatic
+
+	column lat
+		dataType: double
+		lineageTag: d17f8a96-df0b-4202-8d7c-61e1c1cb9f14
+		sourceLineageTag: lat
+		summarizeBy: none
+		sourceColumn: lat
+
+		annotation SummarizationSetBy = Automatic
+
+	column cout
+		dataType: double
+		formatString: #,0 €
+		lineageTag: f6449ce8-cbda-44de-a6b7-46b7a930d9e7
+		sourceLineageTag: cout
+		summarizeBy: none
+		sourceColumn: cout
+
+		annotation SummarizationSetBy = Automatic
+
+	column pop_nouvellement_desservie
+		dataType: double
+		formatString: #,0
+		lineageTag: d3819e6c-b7fb-4649-881f-700d40321dd9
+		sourceLineageTag: pop_nouvellement_desservie
+		summarizeBy: none
+		sourceColumn: pop_nouvellement_desservie
+
+		annotation SummarizationSetBy = Automatic
+
+	column cout_par_habitant
+		dataType: double
+		formatString: #,0.0 €
+		lineageTag: 007a4214-a00f-43b6-94fd-5b221e87101a
+		sourceLineageTag: cout_par_habitant
+		summarizeBy: none
+		sourceColumn: cout_par_habitant
+
+		annotation SummarizationSetBy = Automatic
+
+	column budget_cumule
+		dataType: double
+		formatString: #,0 €
+		lineageTag: 4fc55b6f-9173-4753-902d-f3b58a97b81e
+		sourceLineageTag: budget_cumule
+		summarizeBy: none
+		sourceColumn: budget_cumule
+
+		annotation SummarizationSetBy = Automatic
+
+	column methode
+		dataType: string
+		lineageTag: d962d669-db46-4f6a-bed4-05d4cd2d898a
+		sourceLineageTag: methode
+		summarizeBy: none
+		sourceColumn: methode
+
+		annotation SummarizationSetBy = Automatic
+
+	column budget
+		dataType: int64
+		formatString: #,0 €
+		lineageTag: cb9e3fc5-0f74-4c95-b673-4e0dd4b4a10e
+		sourceLineageTag: budget
+		summarizeBy: none
+		sourceColumn: budget
+
+		annotation SummarizationSetBy = Automatic
+
+	column equite
+		dataType: double
+		lineageTag: 47dbb18d-c5e7-49b1-b004-5d9c0bf6b61b
+		sourceLineageTag: equite
+		summarizeBy: none
+		sourceColumn: equite
+
+		annotation SummarizationSetBy = Automatic
+
+	column perimetre
+		dataType: string
+		lineageTag: 90f86cef-1fa3-43cd-a79e-1de463ca2415
+		sourceLineageTag: perimetre
+		summarizeBy: none
+		sourceColumn: perimetre
+
+		annotation SummarizationSetBy = Automatic
+
+	column risque_vol
+		dataType: string
+		lineageTag: 2debb493-d7fe-4e29-bbe9-8098240d398d
+		sourceLineageTag: risque_vol
+		summarizeBy: none
+		sourceColumn: risque_vol
+
+		annotation SummarizationSetBy = Automatic
+
+	column co2_evite_t_an
+		dataType: double
+		lineageTag: 98614d0b-d70d-471c-9e4e-6d85b7637962
+		sourceLineageTag: co2_evite_t_an
+		summarizeBy: none
+		sourceColumn: co2_evite_t_an
+
+		annotation SummarizationSetBy = Automatic
+
+	column scenario
+		dataType: string
+		lineageTag: 470e3734-a498-4fcd-ba66-9491eac2444e
+		sourceLineageTag: scenario
+		summarizeBy: none
+		sourceColumn: scenario
+
+		annotation SummarizationSetBy = Automatic
+
+	column proba_citiz
+		dataType: double
+		formatString: 0.0%
+		lineageTag: e3bb73ad-d994-4912-b700-d688cb06b506
+		sourceLineageTag: proba_citiz
+		summarizeBy: none
+		sourceColumn: proba_citiz
+
+		annotation SummarizationSetBy = Automatic
+
+	column commune_code
+		dataType: string
+		lineageTag: 6cde53c7-6538-46af-b039-499a13943416
+		sourceLineageTag: commune_code
+		summarizeBy: none
+		sourceColumn: commune_code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_selection = entity
+		mode: directLake
+		source
+			entityName: gold_selection
+			schemaName: dbo
+			expressionSource: 'DirectLake - Gold'

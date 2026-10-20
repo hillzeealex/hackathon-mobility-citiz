@@ -1,0 +1,58 @@
+table gold_axe_reservations
+	lineageTag: d8c14a7a-b715-4cc5-9a0d-d0c3cbbdb3b7
+	sourceLineageTag: [dbo].[gold_axe_reservations]
+
+	measure 'Amortissement mensuel' = DIVIDE(SELECTEDVALUE(gold_saisie_investissement[valeur]), SELECTEDVALUE(gold_saisie_duree_amortissement[valeur]) * 12)
+		formatString: #,0 €
+		lineageTag: a6b75318-9e70-4ac7-b6eb-672ccd06f220
+
+	measure 'Charges fixes mensuelles' = IF(ISBLANK(SELECTEDVALUE(gold_saisie_vehicules[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_investissement[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_duree_amortissement[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_charges_station[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_charges_vehicule[valeur])), BLANK(), SELECTEDVALUE(gold_saisie_charges_station[valeur]) + SELECTEDVALUE(gold_saisie_vehicules[valeur]) * SELECTEDVALUE(gold_saisie_charges_vehicule[valeur]) + [Amortissement mensuel])
+		formatString: #,0 €
+		lineageTag: e321ad29-4cee-411d-961e-a2347e0f2b7a
+
+	measure 'Marge par réservation' = IF(ISBLANK(SELECTEDVALUE(gold_saisie_recette_reservation[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_cout_variable_reservation[valeur])), BLANK(), SELECTEDVALUE(gold_saisie_recette_reservation[valeur]) - SELECTEDVALUE(gold_saisie_cout_variable_reservation[valeur]))
+		formatString: #,0.00 €
+		lineageTag: cce714b0-ae93-4e52-84a0-a4654843b7c9
+
+	measure 'Seuil réservations par mois' = IF([Marge par réservation] > 0, DIVIDE([Charges fixes mensuelles], [Marge par réservation]))
+		formatString: #,0
+		lineageTag: 59690a69-3a10-4b55-b08d-ffa75954af85
+
+	measure 'Seuil réservations par véhicule' = DIVIDE([Seuil réservations par mois], SELECTEDVALUE(gold_saisie_vehicules[valeur]))
+		formatString: #,0.0
+		lineageTag: 2abfc1a3-b089-4f3f-980a-00927df6c506
+
+	measure 'Réservations prévues par mois' = SELECTEDVALUE(gold_saisie_vehicules[valeur]) * SELECTEDVALUE(gold_saisie_reservations_vehicule[valeur])
+		formatString: #,0
+		lineageTag: b1c8e3b3-e2ac-4a55-b60d-e83a48dc7937
+
+	measure 'Résultat mensuel prévu' = IF(ISBLANK(SELECTEDVALUE(gold_saisie_vehicules[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_investissement[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_duree_amortissement[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_charges_station[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_charges_vehicule[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_recette_reservation[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_cout_variable_reservation[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_reservations_vehicule[valeur])), BLANK(), [Réservations prévues par mois] * [Marge par réservation] - [Charges fixes mensuelles])
+		formatString: #,0 €
+		lineageTag: 9d27aeff-5106-4e93-94d0-eed4447180f4
+
+	measure 'Couverture du seuil' = DIVIDE([Réservations prévues par mois], [Seuil réservations par mois])
+		formatString: 0%
+		lineageTag: b4e9ed9b-be06-4e8e-80c8-dd6867eb077a
+
+	measure Verdict = IF(ISBLANK(SELECTEDVALUE(gold_saisie_vehicules[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_investissement[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_duree_amortissement[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_charges_station[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_charges_vehicule[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_recette_reservation[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_cout_variable_reservation[valeur])) || ISBLANK(SELECTEDVALUE(gold_saisie_reservations_vehicule[valeur])), "À renseigner", IF([Résultat mensuel prévu] >= 0, "Rentable", "Sous le seuil de rentabilité"))
+		lineageTag: b09efc09-6d0b-4724-b669-6e7e0047b176
+
+	measure 'Résultat selon réservations' = VAR x = MAX(gold_axe_reservations[reservations_vehicule]) RETURN IF(ISBLANK([Charges fixes mensuelles]) || ISBLANK([Marge par réservation]), BLANK(), SELECTEDVALUE(gold_saisie_vehicules[valeur]) * x * [Marge par réservation] - [Charges fixes mensuelles])
+		formatString: #,0 €
+		lineageTag: fd7f3106-4b9c-408c-857d-2ec2d06b594d
+
+	column reservations_vehicule
+		dataType: int64
+		lineageTag: 5ff2b6d2-3794-4772-86f3-e85d447d1025
+		sourceLineageTag: reservations_vehicule
+		summarizeBy: none
+		sourceColumn: reservations_vehicule
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_axe_reservations = entity
+		mode: directLake
+		source
+			entityName: gold_axe_reservations
+			schemaName: dbo
+			expressionSource: 'DirectLake - Gold'

@@ -1,0 +1,34 @@
+model Model
+	culture: fr-FR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["DirectLake - Gold"]
+
+annotation PBI_ProTooling = ["DirectLakeOnOneLakeInWeb","WebModelingEdit"]
+
+ref table gold_acces_commune
+ref table gold_acces_carreau
+ref table gold_offre_desservie
+ref table gold_selection
+ref table gold_resume_optim
+ref table gold_couts
+ref table gold_modele_proba_carreau
+ref table gold_modele_validation
+ref table gold_modele_importance
+ref table gold_projection_commune
+ref table gold_horizons
+ref table gold_axe_reservations
+ref table gold_saisie_vehicules
+ref table gold_saisie_investissement
+ref table gold_saisie_duree_amortissement
+ref table gold_saisie_charges_station
+ref table gold_saisie_charges_vehicule
+ref table gold_saisie_recette_reservation
+ref table gold_saisie_cout_variable_reservation
+ref table gold_saisie_reservations_vehicule
