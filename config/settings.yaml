@@ -26,6 +26,12 @@ cities:
     # BreizhGo TER (doublon SNCF), navettes estivales, transport à la demande, autocars longue distance.
     gtfs_feeds: [reseau-de-transports-collectifs-naolib, arrets-horaires-et-circuits-des-lignes-de-transports-aleop,
                  horaires-sncf, horaires-des-bacs-de-loire-en-loire-atlantique]
+    # Autopartage hors GBFS : stations Marguerite (et Citiz, déjà dans le GBFS -> exclues ici) publiées par la ville.
+    # Getaround (free-floating entre particuliers) : aucune donnée ouverte -> limite documentée.
+    autopartage_local:
+      url: "https://data.nantesmetropole.fr/api/explore/v2.1/catalog/datasets/244400404_stations-autopartage-naolib-nantes-metropole/exports/geojson"
+      file: autopartage_local/nantes_stations_autopartage.geojson
+      exclude_operators: [Citiz]
 
 # Exclusions communes à toutes les villes
 gtfs_exclude_patterns: [covoit, flixbus, blablacar]   # covoiturage, autocars longue distance
@@ -60,6 +66,7 @@ mode_weights:
   velo: 1.0
   trottinette: 0.5
   citiz: 1.5
+  autopartage: 1.5     # autres opérateurs à stations (Marguerite à Nantes)
 # Free-floating (zones Voi) : chaque zone compte une option PAR MODE (vélo, trottinette), au poids ci-dessous
 # à la place du poids du mode ; sinon les ~700 zones de stationnement écrasent le reste de la carte.
 free_floating_weight: 0.5

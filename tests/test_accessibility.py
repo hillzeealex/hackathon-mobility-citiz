@@ -76,3 +76,13 @@ def test_split_at_shared_vertices():
     assert len(e) == 4 and e.length.sum() == pytest.approx(400)
     assert sorted(len(g.coords) for g in e.geometry) == [2, 2, 2, 3]
     assert to_graph(e).number_of_nodes() == 5
+
+
+def test_population_served_and_only_option():
+    from src.features.served import population_served
+    # carreau 0 (100 hab.) : arrêts a et b ; carreau 1 (50 hab.) : seulement b ; carreau 2 (10 hab.) : rien
+    cov = np.array([[1, 1], [0, 1], [0, 0]], bool)
+    out = population_served(cov, np.array([100.0, 50.0, 10.0]))
+    assert out.pop_desservie.tolist() == [100, 150]
+    assert out.pop_seule_option.tolist() == [0, 50]
+    assert out.part_seule_option.round(3).tolist() == [0, 0.333]
