@@ -404,6 +404,8 @@ Stations Citiz recommandées (500 000 €, ILP, équité 0,5), dans l'ordre de p
 | `code_iris` | Code IRIS contenant le centroïde (XXXXX0000 = commune non découpée en IRIS) | - | IGN, CONTOURS IRIS 2026 |
 | `surcout_risque` | Surcoût de risque de vol inclus dans cout (HYPOTHÈSE À VALIDER AVEC CITIZ) | € | config/costs.yaml |
 | `vols_vehicules_1000` | Vols de et dans les véhicules et d'accessoires, moyenne annuelle 2023-2025 pour 1 000 hab. | faits / an / 1 000 hab. | SSMSI, délinquance enregistrée par commune 2023-2025 |
+| `dist_autopartage_m` | Distance à la station d'autopartage existante la plus proche, à pied (V2) ou à vol d'oiseau (V1) ; vide au-delà de 3 km | m | calcul du projet |
+| `dist_vol_oiseau_m` | Distance à vol d'oiseau à la station d'autopartage existante la plus proche | m | calcul du projet |
 | `latitude` | Latitude du point (centroïde pour une surface) | degrés WGS84 | calcul du projet |
 | `longitude` | Longitude du point (centroïde pour une surface) | degrés WGS84 | calcul du projet |
 

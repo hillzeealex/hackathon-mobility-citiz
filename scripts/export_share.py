@@ -143,6 +143,9 @@ COLUMNS.update({
     "origine": ("Type d'emplacement candidat : carreau (centre d'un carreau habité) ou arret_tc", "-", CALC),
     "commune": ("Commune de l'emplacement", "-", IGN_ADE),
     "surcout_risque": ("Surcoût de risque de vol inclus dans cout (HYPOTHÈSE À VALIDER AVEC CITIZ)", "€", "config/costs.yaml"),
+    "dist_autopartage_m": ("Distance à la station d'autopartage existante la plus proche, à pied (V2) ou à vol d'oiseau (V1) ; "
+                           "vide au-delà de 3 km", "m", CALC),
+    "dist_vol_oiseau_m": ("Distance à vol d'oiseau à la station d'autopartage existante la plus proche", "m", CALC),
     "x": ("Coordonnée X Lambert-93", "m", CALC),
     "y": ("Coordonnée Y Lambert-93", "m", CALC),
     "budget_eur": ("Budget du scénario", "€", CALC),
