@@ -1,0 +1,19 @@
+table gold_saisie_charges_station
+	lineageTag: 36d75f20-6ecf-47c4-a586-15233df999f2
+	sourceLineageTag: [dbo].[gold_saisie_charges_station]
+
+	column valeur
+		dataType: double
+		lineageTag: 49d00bb3-e727-4565-a9a9-5b474220daff
+		sourceLineageTag: valeur
+		summarizeBy: none
+		sourceColumn: valeur
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_saisie_charges_station = entity
+		mode: directLake
+		source
+			entityName: gold_saisie_charges_station
+			schemaName: dbo
+			expressionSource: 'DirectLake - Gold'

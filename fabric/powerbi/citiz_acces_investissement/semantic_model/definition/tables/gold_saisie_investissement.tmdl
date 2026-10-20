@@ -1,0 +1,19 @@
+table gold_saisie_investissement
+	lineageTag: 15984058-8dd7-4c3f-baeb-4d06eb1e74e5
+	sourceLineageTag: [dbo].[gold_saisie_investissement]
+
+	column valeur
+		dataType: double
+		lineageTag: 74e773d0-8abb-42e4-9a94-e127edd58161
+		sourceLineageTag: valeur
+		summarizeBy: none
+		sourceColumn: valeur
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_saisie_investissement = entity
+		mode: directLake
+		source
+			entityName: gold_saisie_investissement
+			schemaName: dbo
+			expressionSource: 'DirectLake - Gold'

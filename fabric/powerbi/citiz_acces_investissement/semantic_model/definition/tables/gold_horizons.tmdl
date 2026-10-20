@@ -1,0 +1,28 @@
+table gold_horizons
+	lineageTag: a1ee58bd-c7eb-46ac-9e18-ea0d84376291
+	sourceLineageTag: [dbo].[gold_horizons]
+
+	column horizon_ans
+		dataType: int64
+		lineageTag: fd73e2e8-235c-4afb-a5ee-e52b5857c7d5
+		sourceLineageTag: horizon_ans
+		summarizeBy: none
+		sourceColumn: horizon_ans
+
+		annotation SummarizationSetBy = Automatic
+
+	column annee
+		dataType: int64
+		lineageTag: 4e9189bb-959b-4c09-9741-9c53ae5015bb
+		sourceLineageTag: annee
+		summarizeBy: none
+		sourceColumn: annee
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_horizons = entity
+		mode: directLake
+		source
+			entityName: gold_horizons
+			schemaName: dbo
+			expressionSource: 'DirectLake - Gold'

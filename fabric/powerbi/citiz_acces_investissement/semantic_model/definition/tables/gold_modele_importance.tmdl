@@ -1,0 +1,29 @@
+table gold_modele_importance
+	lineageTag: 13bdc30c-de4c-4c42-8aa5-6ca33e80ec82
+	sourceLineageTag: [dbo].[gold_modele_importance]
+
+	column variable
+		dataType: string
+		lineageTag: 1565122b-e4ca-4bf6-9acf-34460a0c25f8
+		sourceLineageTag: variable
+		summarizeBy: none
+		sourceColumn: variable
+
+		annotation SummarizationSetBy = Automatic
+
+	column part_shap
+		dataType: double
+		formatString: 0%
+		lineageTag: 9cc3cf3d-5650-4897-9f74-dcf1d4e97aa9
+		sourceLineageTag: part_shap
+		summarizeBy: none
+		sourceColumn: part_shap
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_modele_importance = entity
+		mode: directLake
+		source
+			entityName: gold_modele_importance
+			schemaName: dbo
+			expressionSource: 'DirectLake - Gold'

@@ -1,0 +1,94 @@
+table gold_resume_optim
+	lineageTag: 1b27d18c-952b-4e25-ad56-b86a18b7400e
+	sourceLineageTag: [dbo].[gold_resume_optim]
+
+	column methode
+		dataType: string
+		lineageTag: c1bd4291-9b22-4b3a-a98f-0e97d7fddeaa
+		sourceLineageTag: methode
+		summarizeBy: none
+		sourceColumn: methode
+
+		annotation SummarizationSetBy = Automatic
+
+	column budget
+		dataType: int64
+		formatString: #,0 €
+		lineageTag: fb1366af-4882-4562-9c75-f61689f12c92
+		sourceLineageTag: budget
+		summarizeBy: none
+		sourceColumn: budget
+
+		annotation SummarizationSetBy = Automatic
+
+	column equite
+		dataType: double
+		lineageTag: 92da715b-31d9-4fa8-8e23-d2c9ffcbd546
+		sourceLineageTag: equite
+		summarizeBy: none
+		sourceColumn: equite
+
+		annotation SummarizationSetBy = Automatic
+
+	column perimetre
+		dataType: string
+		lineageTag: 2ec43df5-f06d-4ebc-8ec6-3e4c75ff96c5
+		sourceLineageTag: perimetre
+		summarizeBy: none
+		sourceColumn: perimetre
+
+		annotation SummarizationSetBy = Automatic
+
+	column n_retenus
+		dataType: int64
+		lineageTag: db426db2-6dea-45af-af8a-c38f856c8a78
+		sourceLineageTag: n_retenus
+		summarizeBy: none
+		sourceColumn: n_retenus
+
+		annotation SummarizationSetBy = Automatic
+
+	column cout_total
+		dataType: double
+		formatString: #,0 €
+		lineageTag: 7fafce9a-e341-4458-8b1a-2dde7d22ae2d
+		sourceLineageTag: cout_total
+		summarizeBy: none
+		sourceColumn: cout_total
+
+		annotation SummarizationSetBy = Automatic
+
+	column pop_nouvellement_desservie
+		dataType: double
+		formatString: #,0
+		lineageTag: 256607cb-f0f6-4323-9945-f5e39acb9a6b
+		sourceLineageTag: pop_nouvellement_desservie
+		summarizeBy: none
+		sourceColumn: pop_nouvellement_desservie
+
+		annotation SummarizationSetBy = Automatic
+
+	column statut
+		dataType: string
+		lineageTag: aa98feab-b512-40b0-b9d5-87e08213e8d2
+		sourceLineageTag: statut
+		summarizeBy: none
+		sourceColumn: statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column scenario
+		dataType: string
+		lineageTag: f7a52921-6148-47ee-99bc-1b446e10def3
+		sourceLineageTag: scenario
+		summarizeBy: none
+		sourceColumn: scenario
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_resume_optim = entity
+		mode: directLake
+		source
+			entityName: gold_resume_optim
+			schemaName: dbo
+			expressionSource: 'DirectLake - Gold'

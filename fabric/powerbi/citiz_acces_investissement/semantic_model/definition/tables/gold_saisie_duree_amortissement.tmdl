@@ -1,0 +1,19 @@
+table gold_saisie_duree_amortissement
+	lineageTag: c893c78e-0593-4c3b-8b5f-1cc629eabd50
+	sourceLineageTag: [dbo].[gold_saisie_duree_amortissement]
+
+	column valeur
+		dataType: double
+		lineageTag: f3aa9be8-1997-4c96-874a-2e5c630118ea
+		sourceLineageTag: valeur
+		summarizeBy: none
+		sourceColumn: valeur
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_saisie_duree_amortissement = entity
+		mode: directLake
+		source
+			entityName: gold_saisie_duree_amortissement
+			schemaName: dbo
+			expressionSource: 'DirectLake - Gold'
