@@ -27,6 +27,7 @@ pandana>=0.7
 streamlit>=1.40
 pydeck>=0.9
 folium>=0.18          # carte HTML autonome des données partagées (scripts/export_share.py)
+streamlit-folium>=0.27
 plotly>=5.24
 # Notebook Fabric (fabric/01_ingestion.ipynb)
 ipykernel>=7.0
