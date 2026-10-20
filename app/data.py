@@ -28,6 +28,9 @@ import scipy.sparse as sp
 ROOT = Path(__file__).resolve().parents[1]
 REAL = ROOT / "data" / "processed"
 DEMO = REAL / "demo"
+NANTES = REAL / "nantes"
+NICE = REAL / "nice"
+GRENOBLE = REAL / "grenoble"
 FILES = ("cells.parquet", "iris.parquet", "offer_served.parquet", "candidates.parquet", "coverage.npz", "meta.json")
 
 
