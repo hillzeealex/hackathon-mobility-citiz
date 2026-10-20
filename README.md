@@ -28,18 +28,19 @@ Deux niveaux d'analyse :
 
 ```
 config/          settings.yaml (zone d'étude, CRS, rayon de marche, poids des modes), costs.yaml (coûts sourcés)
-src/ingest/      téléchargement, collecte de l'historique Citiz, contrôles, zone, population, offre (Grenoble)
+src/ingest/      téléchargement, collecte de l'historique Citiz, contrôles, zone, population, offre (par ville)
 src/national/    niveau 1 France entière (carreaux, offre, accessibilité, agrégats, classement, fichiers appli)
 src/features/    accessibilité V1 / V2 (réseau piéton OSM)
-src/optim/       coûts et optimiseur (glouton + ILP HiGHS)
+src/model/       modèle LightGBM « où Citiz s'installe » (docs/modele.md)
+src/optim/       coûts, optimiseur (glouton + ILP HiGHS), recommandations par ville
 src/common/      configuration, outils géographiques
-app/             application Streamlit (France entière + zoom agglomération)
-scripts/         export des données partagées, données de démo, comparatif des villes
+app/             application Streamlit (France entière, Nantes, Grenoble, validation)
+scripts/         build_all (commande unique par ville), exports partagés, données de démo, comparatif des villes
 fabric/          notebook Microsoft Fabric (ingestion)
 docs/            méthodologie, éthique, sources, guide de récupération des données
 slides/          présentation
 tests/           pytest
-data/            NON versionné : raw/ (brut), processed/ (nettoyé), share/ (exports)
+data/            NON versionné : raw/ (brut), processed/<ville>/ et processed/national/ (nettoyé), share/ (exports)
 ```
 
 ## Installation
@@ -61,17 +62,18 @@ Le dossier `data/` n'est **jamais** versionné. Guide complet (commandes, taille
 [`docs/RECUPERER_LES_DONNEES.md`](docs/RECUPERER_LES_DONNEES.md).
 
 ```bash
-# 1. Télécharger (≈ 6,5 Go ; reprend là où il s'est arrêté)
-python src/ingest/download_all.py --osm region --osm-region rhone-alpes
+# 1. Télécharger (≈ 7 Go ; reprend là où il s'est arrêté) ; OSM des régions des villes zoomées
+python src/ingest/download_all.py --osm region --osm-region rhone-alpes pays-de-la-loire
 python src/ingest/check_data.py --deep        # rapport : data/raw/check_report.md
 
-# 2. Reconstruire Grenoble (≈ 2 min)
-python -m src.ingest.zone
-python -m src.ingest.population
-python -m src.ingest.offer
-
-# 3. Reconstruire la France entière (≈ 5 min, pic mémoire ≈ 1,6 Go)
+# 2. France entière (≈ 5 à 8 min, pic mémoire ≈ 1,5 Go), puis le modèle (≈ 2,5 min)
 python -m src.national.build_all
+python -m src.model.features
+python -m src.model.train
+
+# 3. Villes zoomées (villes dans config/settings.yaml, section cities) : Grenoble ≈ 15 s, Nantes ≈ 35 s
+python -m scripts.build_all --ville grenoble     # V1 + V2, fichiers de l'appli
+python -m scripts.build_all --ville nantes       # V1, population desservie, recommandations (modèle requis)
 
 # 4. Exports partageables (CSV Excel, GPKG QGIS, cartes HTML, zips) -> data/share/
 python scripts/export_share.py
@@ -82,8 +84,8 @@ Pour collecter l'historique d'usage des stations Citiz (à laisser tourner) :
 
 ### Données partagées (sans rien installer)
 
-- **Zips de données nettoyées** : Release GitHub `donnees-v1` (Grenoble ≈ 2 Mo, France entière ≈ 20 Mo,
-  agrégats seulement), ou `data/share/` après l'export.
+- **Zips de données nettoyées** : Release GitHub `donnees-v2` (Grenoble ≈ 3,3 Mo, Nantes ≈ 2,6 Mo, France entière
+  ≈ 20 Mo, agrégats seulement ; `donnees-v1` reste disponible), ou `data/share/` après l'export.
 - **Dictionnaire des données** : [`data/share/DICTIONNAIRE_DONNEES.md`](data/share/DICTIONNAIRE_DONNEES.md).
 - **Cartes HTML** (double-clic) : `data/share/carte_apercu.html` (Grenoble),
   `data/share/france/carte_france_departements.html` (France).
@@ -94,9 +96,11 @@ Pour collecter l'historique d'usage des stations Citiz (à laisser tourner) :
 streamlit run app/app.py
 ```
 
-Barre latérale : « France entière » (carte par département / EPCI, classement, zoom département) ou
-« Zoom agglomération ». Sans données, l'appli tourne sur des données factices :
-`python scripts/make_demo_data.py`.
+Barre latérale « Vue » : **France entière** (carte par département / EPCI, classement, zoom département),
+**Nantes Métropole** (carte d'accès, population desservie par arrêt et station, recommandations Citiz sous budget),
+**Grenoble** (ville exemple). Onglet **Validation** : test à l'aveugle du modèle à Grenoble et comparaison
+vol d'oiseau / marche réelle. L'appli ne lit que des données réelles précalculées (`scripts.build_all`,
+`src.national.build_all`, `src.model.train`).
 
 ## Notebook Fabric
 

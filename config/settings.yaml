@@ -1,15 +1,42 @@
 # Paramètres centraux du projet. Chargés par src/common/config.py (load_settings()).
 # Toute valeur marquée "hypothèse à valider" doit être justifiée dans docs/methodologie.md.
 
-study_area:
-  name: Grenoble-Alpes-Métropole   # choisi en phase 1 (densité Citiz, GTFS TAG propre, 4 types d'offre)
-  insee_communes: []      # vide = toutes les communes de l'EPCI ci-dessous (ADMIN EXPRESS)
-  epci_siren: "200040715"
-  osm_region: rhone-alpes   # Geofabrik : régions d'avant 2016
-  gtfs_keywords: [grenoble, reseau-interurbain-cars-region-isere, cars-region-express, horaires-sncf]
-  citiz_networks: [citiz_auvergne_rhone_alpes]
-  # GBFS à exclure : "Dott France" duplique les flux Dott locaux
-  gbfs_exclude_datasets: [tier-dott-gbfs-france]
+# Villes zoomées (docs/decisions.md). Choix par --ville <nom> sur chaque commande, sinon default_city.
+# Sorties dans data/processed/<ville>/.
+default_city: grenoble
+cities:
+  grenoble:
+    name: Grenoble-Alpes-Métropole   # ville exemple : V1/V2 et test à l'aveugle du modèle
+    epci_siren: "200040715"
+    insee_communes: []      # vide = toutes les communes de l'EPCI (ADMIN EXPRESS)
+    osm_region: rhone-alpes   # Geofabrik : régions d'avant 2016
+    v2: true                  # accessibilité V2 (réseau piéton) dans build_all
+    # GTFS lus pour la zone (préfixe du nom de fichier dans data/raw/gtfs/). Exclus volontairement : agrégat OURA
+    # (doublon des cars Isère), Zou! PACA, navettes de ski saisonnières, autocars longue distance.
+    gtfs_feeds: [horaires-theoriques-du-reseau-tag, reseau-interurbain-cars-region-isere-38, horaires-sncf,
+                 horaires-theoriques-du-reseau-tougo, horaires-theoriques-du-reseau-transport-du-pays-voironnais,
+                 horaires-theoriques-du-telepherique-de-la-bastille]
+  nantes:
+    name: Nantes Métropole     # notre ville : diagnostic, candidats, optimisation
+    epci_siren: "244400404"
+    insee_communes: []
+    osm_region: pays-de-la-loire
+    v2: true                  # marche réelle (extrait OSM pays-de-la-loire) ; V1 gardée en option (--acces v1)
+    recommandations: true     # candidats + optimisation (src/optim/build_reco.py)
+    # Naolib (bus, tram, Navibus), cars Aléop, SNCF, bacs de Loire. Exclus : agrégat Destineo (doublon de Naolib),
+    # BreizhGo TER (doublon SNCF), navettes estivales, transport à la demande, autocars longue distance.
+    gtfs_feeds: [reseau-de-transports-collectifs-naolib, arrets-horaires-et-circuits-des-lignes-de-transports-aleop,
+                 horaires-sncf, horaires-des-bacs-de-loire-en-loire-atlantique]
+    # Autopartage hors GBFS : stations Marguerite (et Citiz, déjà dans le GBFS -> exclues ici) publiées par la ville.
+    # Getaround (free-floating entre particuliers) : aucune donnée ouverte -> limite documentée.
+    autopartage_local:
+      url: "https://data.nantesmetropole.fr/api/explore/v2.1/catalog/datasets/244400404_stations-autopartage-naolib-nantes-metropole/exports/geojson"
+      file: autopartage_local/nantes_stations_autopartage.geojson
+      exclude_operators: [Citiz]
+
+# Exclusions communes à toutes les villes
+gtfs_exclude_patterns: [covoit, flixbus, blablacar]   # covoiturage, autocars longue distance
+gbfs_exclude_datasets: [tier-dott-gbfs-france]        # "Dott France" duplique les flux Dott locaux
 
 crs:
   metric: "EPSG:2154"     # Lambert-93 : tous les calculs de distance / surface
@@ -25,7 +52,9 @@ offer:
   buffer_m: 800           # l'offre est chargée sur la zone + 800 m : les carreaux en limite voient les arrêts voisins
   dedup_m: 40             # fusion des arrêts d'un même mode distants de moins de 40 m
   dedup_m_by_type: {train: 150}   # grandes gares : quais TER / TGV distants de plus de 40 m
-  typical_weekday: null   # date GTFS de référence (AAAA-MM-JJ) ; null = mardi le plus chargé des 8 prochaines semaines
+  # Jour type GTFS FIGÉ (reproductible) : mardi hors vacances scolaires, dans la validité de tous les flux retenus.
+  # Un flux qui ne circule pas ce jour-là (expiré) est lu sur son dernier mardi valide (signalé dans le rapport).
+  typical_weekday: "2026-11-17"
   exclude_name_patterns: ["réservé", "demobox"]   # emplacements GBFS non ouverts au public (insensible à la casse)
 
 # Poids par mode dans l'indicateur d'accessibilité (hypothèse à valider).
@@ -38,6 +67,7 @@ mode_weights:
   velo: 1.0
   trottinette: 0.5
   citiz: 1.5
+  autopartage: 1.5     # autres opérateurs à stations (Marguerite à Nantes)
 # Free-floating (zones Voi) : chaque zone compte une option PAR MODE (vélo, trottinette), au poids ci-dessous
 # à la place du poids du mode ; sinon les ~700 zones de stationnement écrasent le reste de la carte.
 free_floating_weight: 0.5

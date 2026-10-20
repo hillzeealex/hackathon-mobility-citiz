@@ -51,3 +51,24 @@ def test_aggregate_population_weighted():
     assert g.n_options_moyen == pytest.approx((300 * 6 + 100 * 0.5) / 400)    # exemple de la méthodologie
     assert g.part_pop_sans_option == pytest.approx(0.25)
     assert g.part_menages_sans_voiture == pytest.approx((100 * 0.2 + 50 * 0.5) / 150)
+
+
+def test_grid_sum_disk_on_200m_grid():
+    from src.model.features import disk_kernel, grid_sum
+    assert disk_kernel(400).sum() == 13          # centre + 4 voisins à 200 m + 4 diagonales (283 m) + 4 à 400 m
+    cells = np.array([[100.0, 100.0], [300.0, 100.0], [900.0, 100.0]])   # centroïdes de carreaux 200 m
+    pop = np.array([10.0, 5.0, 7.0])
+    assert grid_sum(cells, cells, pop, 400).tolist() == [15, 15, 7]   # 600 m entre 2e et 3e : hors disque
+    pts = np.array([[150.0, 50.0], [250.0, 150.0], [950.0, 120.0]])  # équipements rangés dans leur carreau
+    assert grid_sum(cells, pts, None, 200).tolist() == [2, 2, 1]
+
+
+def test_model_capture_and_station_capture():
+    import pandas as pd
+    from src.model.train import capture, station_capture
+    y = np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 1])
+    score = np.array([0.9, 0.8, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05])
+    assert capture(y, score, tops=(0.1, 0.2, 1.0)) == {"top_10pct": 0.5, "top_20pct": 0.5, "top_100pct": 1.0}
+    cells = pd.DataFrame({"x": [0.0, 200.0, 400.0, 600.0], "y": [0.0] * 4})
+    st = np.array([[10.0, 0.0], [590.0, 5.0]])           # stations dans le 1er et le 4e carreau
+    assert station_capture(cells, np.array([0.9, 0.5, 0.4, 0.1]), st, tops=(0.25, 1.0)) == {"top_25pct": 0.5, "top_100pct": 1.0}

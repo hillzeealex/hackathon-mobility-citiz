@@ -44,6 +44,13 @@ equipements:
     exploitation_annuelle:
       entretien: {basse: 200, moyenne: 500, haute: 1000}            # hypothèse à valider
 
+# Surcoût de risque (vols, dégradations) d'une station Citiz : HYPOTHÈSE À VALIDER AVEC CITIZ (et l'assureur).
+# surcoût = horizon × assurance_entretien × élasticité × clip(ratio − 1, 0, plafond − 1)
+# ratio = vols liés aux véhicules de la commune (SSMSI) / taux médian des carreaux où Citiz est déjà présent.
+risque_vol:
+  elasticite: {basse: 0.25, moyenne: 0.5, haute: 1.0}   # hypothèse à valider
+  plafond_ratio: 3
+
 # Paramètres d'impact (estimations PRUDENTES : on retient la borne basse par défaut)
 impact:
   scenario: basse

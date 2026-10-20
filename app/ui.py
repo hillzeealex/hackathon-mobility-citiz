@@ -29,5 +29,38 @@ def deck(layers, gdf, tooltip, zoom: float = 11.3) -> pdk.Deck:
                     tooltip={"html": tooltip, "style": {"fontSize": "12px"}})
 
 
+def fr(x, digits: int = 0, unit: str = "") -> str:
+    """Nombre au format français : 12 345,6 (espace fine insécable pour les milliers)."""
+    if x is None or pd.isna(x):
+        return "n.d."
+    s = f"{x:,.{digits}f}".replace(",", " ").replace(".", ",")
+    return s + (f" {unit}" if unit else "")
+
+
 def fmt(x: float, unit: str = "") -> str:
-    return f"{x:,.0f}".replace(",", " ") + (f" {unit}" if unit else "")
+    return fr(x, 0, unit)
+
+
+def pct(v, digits: int = 1) -> str:
+    """Part (0-1) en pourcentage français : 0,259 -> « 25,9 % »."""
+    return "n.d." if v is None or pd.isna(v) else fr(100 * v, digits, "%")
+
+
+def walk_minutes(m: float, speed_kmh: float = 4.8) -> str:
+    """Distance de marche (m) -> « 7 min » (arrondi au-dessus) ; au-delà de 30 min : « plus de 30 min »."""
+    if m is None or not np.isfinite(m):
+        return "plus de 30 min"
+    minutes = int(np.ceil(m / (speed_kmh * 1000 / 60)))
+    return "plus de 30 min" if minutes > 30 else f"{minutes} min"
+
+
+def table(df: pd.DataFrame, digits: dict[str, int] | None = None, percent: dict[str, int] | None = None):
+    """Tableau au format français pour st.dataframe (les colonnes restent numériques pour le tri)."""
+    sty = df.style
+    for col, n in (digits or {}).items():
+        if col in df:
+            sty = sty.format(lambda v, n=n: fr(v, n), subset=[col])
+    for col, n in (percent or {}).items():
+        if col in df:
+            sty = sty.format(lambda v, n=n: pct(v, n), subset=[col])
+    return sty

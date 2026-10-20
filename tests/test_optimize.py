@@ -83,3 +83,10 @@ def test_invalid_problem():
         Problem(p.coverage, p.cells.drop(columns="couvert_citiz_station"), p.candidates)
     with pytest.raises(ValueError):
         optimize(p, 10, method="recuit")
+
+
+def test_equity_priority_ranks_poor_and_carless_first():
+    from src.optim.build_reco import equity_priority
+    cells = pd.DataFrame({"part_menages_pauvres": [0.05, 0.30, 0.10], "part_sans_voiture": [0.10, 0.60, None]})
+    prio = equity_priority(cells)
+    assert prio.argmax() == 1 and prio.argmin() == 0 and ((0 <= prio) & (prio <= 1)).all()

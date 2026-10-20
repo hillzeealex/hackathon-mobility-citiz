@@ -1,6 +1,6 @@
 # Sources de données
 
-Généré automatiquement par `download_all.py` le 2026-10-19.
+Généré automatiquement par `download_all.py` le 2026-10-20.
 
 Toutes les données sont ouvertes (Licence Ouverte Etalab / ODbL pour OpenStreetMap).
 
@@ -506,6 +506,7 @@ Toutes les données sont ouvertes (Licence Ouverte Etalab / ODbL pour OpenStreet
 
 ## OpenStreetMap
 
+- OpenStreetMap - pays-de-la-loire (Geofabrik) — <https://download.geofabrik.de/europe/france/pays-de-la-loire-latest.osm.pbf>
 - OpenStreetMap - rhone-alpes (Geofabrik) — <https://download.geofabrik.de/europe/france/rhone-alpes-latest.osm.pbf>
 
 ## Hypothèses de coût et d'impact (config/costs.yaml)

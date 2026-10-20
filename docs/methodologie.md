@@ -145,7 +145,34 @@ soit **400 m** à 4,8 km/h. Elle est réutilisée par tous les indicateurs, le m
 - **V2 « réseau »** : distance de marche ≤ 400 m sur le réseau piéton OpenStreetMap. Le réseau est
   construit à partir de l'extrait Geofabrik local et découpé sur la zone + 800 m. La distance compte le
   rabattement du centroïde et du point d'offre sur la voie la plus proche.
-  *(Comparaison chiffrée V1 / V2 : à venir.)*
+
+**Réseau piéton** (`python -m src.features.network`, 98 s) : extrait `rhone-alpes-latest.osm.pbf` du
+19/10/2026, filtre piéton d'osmnx (`network_type="walk"`) ; une autorisation piétonne explicite
+(`foot=yes/designated/permissive`) l'emporte sur `access=no/private` et sur `highway=cycleway`. Voies découpées
+aux intersections, plus grande composante connexe : 75 221 voies, 141 360 arêtes, 7 472 km.
+Rabattement médian : 18 m pour les centroïdes de carreaux, 2 m pour les points d'offre.
+
+**Comparaison V1 / V2 à Grenoble** (4 285 carreaux habités, 2 691 points d'offre, `data/processed/access_comparaison.json`) :
+
+| Indicateur (population calée) | V1 vol d'oiseau | V2 marche réelle | Écart |
+|---|---:|---:|---:|
+| Au moins une option à 5 min | 96,4 % | 89,2 % | −7,2 pts |
+| Au moins un arrêt de TC | 95,5 % | 83,5 % | −12,0 pts |
+| Une station Citiz à 5 min | 53,0 % | 39,7 % | −13,3 pts |
+| Options pondérées par habitant | 16,9 | 9,4 | V1 surestime de 80 % |
+| Paires carreau × point couvertes | 27 823 | 13 670 | V1 surestime de 104 % |
+
+- 32 400 habitants sont « couverts » en V1 mais n'ont aucune option à 5 min de marche réelle.
+- Toutes les paires V2 sont incluses dans la V1 (contrôle de cohérence). La V2 ne retrouve le nombre de paires de la V1
+  qu'avec un rayon de **560 m** : sinuosité effective ≈ 1,4, rabattements compris, cohérente avec les facteurs
+  de détour urbains habituels (1,2 à 1,4). À 600 m, 13 % des paires V1 restent hors d'atteinte : coupures
+  (Isère, Drac, voies ferrées, rocade, îlots fermés).
+- La surestimation se concentre dans le centre dense (cartes `docs/figures/grenoble/acces_v1_buffer.png`,
+  `acces_v2_reseau.png`, `acces_v1_moins_v2.png`) : l'écart **en options** est le plus fort là où l'offre est dense ;
+  l'écart **en couverture** (au moins une option) touche surtout les franges.
+- **Conséquence pour le niveau 1** : les chiffres France (V1) sont des bornes hautes. À Grenoble, la part de
+  population sans option passe de 3,6 % à 10,8 % (×3) ; l'extrapolation nationale du biais attend les deux
+  autres agglomérations zoomées (formes urbaines différentes).
 
 ### Indicateur principal : options accessibles
 

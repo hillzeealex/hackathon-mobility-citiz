@@ -24,10 +24,9 @@ python src/ingest/download_all.py --osm region --osm-region rhone-alpes --gtfs-f
 # c) Vérification : doit afficher "0 à corriger"
 python src/ingest/check_data.py --deep
 
-# d) Reconstruction de data/processed (≈ 2 min)
-python -m src.ingest.zone          # 49 communes de la métropole
-python -m src.ingest.population    # carreaux de 200 m, population calée, motorisation
-python -m src.ingest.offer         # arrêts, stations Citiz, zones Voi, dédoublonnés
+# d) Reconstruction d'une ville (zone, population calée, offre, accessibilité) -> data/processed/<ville>/
+python -m scripts.build_all --ville grenoble     # ≈ 30 s (V1 + V2)
+python -m scripts.build_all --ville nantes       # extrait OSM pays-de-la-loire requis pour la V2
 
 # e) France entière, niveau 1 (≈ 5 min ; GTFS de toute la France requis)
 python -m src.national.build_all

@@ -32,3 +32,6 @@ plotly>=5.24
 ipykernel>=7.0
 # Tests
 pytest>=8.0
+
+# Optionnel, captures de secours de la démo (python -m scripts.captures_demo) ; aucun navigateur téléchargé :
+# playwright>=1.64

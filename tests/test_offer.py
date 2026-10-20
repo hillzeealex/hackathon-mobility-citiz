@@ -82,3 +82,29 @@ def test_all_stops_when_no_area(tmp_path):
     assert df.passages_jour.tolist() == [1] and info["arrets_zone"] == 1
     df2, _ = gtfs_stop_frequencies(path, None, forced_day="2030-01-01")   # filtre métropole par défaut : exclu
     assert df2.empty
+
+
+def test_select_feeds_city_list_and_long_distance_excluded(tmp_path):
+    from src.ingest.offer import select_feeds
+    names = ["reseau-de-transports-collectifs-naolib__84101.zip", "flixbus-horaires__1.zip",
+             "agregat-destineo__2.zip", "horaires-sncf__3.zip"]
+    paths = [tmp_path / n for n in names]
+    keep, report = select_feeds(paths, ["reseau-de-transports-collectifs-naolib", "horaires-sncf", "absent-x"])
+    assert [p.name for p in keep] == ["horaires-sncf__3.zip", "reseau-de-transports-collectifs-naolib__84101.zip"]
+    errors = {r["fichier"]: r["erreur"] for r in report}
+    assert "flixbus-horaires__1.zip" in errors and "absent-x" in errors
+    keep_all, _ = select_feeds(paths, None)                     # sans liste : tout sauf les exclus
+    assert "flixbus-horaires__1.zip" not in [p.name for p in keep_all] and len(keep_all) == 3
+
+
+def test_fixed_day_outside_validity_falls_back(tmp_path):
+    files = {"stops.txt": "stop_id,stop_name,stop_lat,stop_lon\nA,Gare,45.19,5.72\n",
+             "routes.txt": "route_id,route_type\nB1,3\n", "trips.txt": "route_id,service_id,trip_id\nB1,sem,b1\n",
+             "calendar.txt": CAL.to_csv(index=False), "stop_times.txt": "trip_id,stop_id\nb1,A\n"}
+    path = tmp_path / "expire__1.zip"
+    with zipfile.ZipFile(path, "w") as z:
+        for name, content in files.items():
+            z.writestr(name, content)
+    out, info = gtfs_stop_frequencies(path, None, "2031-03-04")     # jour figé après la fin de validité (2030)
+    assert info.get("jour_type_hors_periode") and info["jour_type"].startswith("2030")
+    assert out["passages_jour"].tolist() == [1]

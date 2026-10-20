@@ -10,6 +10,13 @@ Chaque valeur de `config/costs.yaml` renvoie à l'une de ces sources ou est marq
 - [S6] ADEME Impact CO2, comparateur transport — <https://impactco2.fr/outils/transport>
 - [S7] Citiz, *Livre blanc de l'autopartage 2026* (non vérifié : aucun chiffre utilisé) — <https://www.citiz.coop/uploads/2026/02/2026-CITIZ-livre_blanc.pdf>
 
+## Autopartage hors GBFS
+
+- Nantes Métropole, *Localisation des stations des services d'autopartage Naolib* (85 stations : 62 Marguerite,
+  23 Citiz ; mise à jour 03/09/2024), Licence Ouverte Etalab — <https://data.nantesmetropole.fr/explore/dataset/244400404_stations-autopartage-naolib-nantes-metropole/>.
+  Les stations Citiz viennent du GBFS Citiz (plus récent) ; seules les stations Marguerite sont reprises.
+- Getaround (location entre particuliers, sans station) : aucune donnée ouverte trouvée (limite documentée).
+
 ## Services et API utilisés
 
 - geo.api.gouv.fr (API Découpage administratif, Etalab) : rattachement des stations aux communes et EPCI, contour provisoire de la zone — <https://geo.api.gouv.fr>

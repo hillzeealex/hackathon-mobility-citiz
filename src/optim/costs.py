@@ -47,3 +47,15 @@ def co2_avoided_t_per_year(n_citiz_vehicles: float, scenario: str | None = None,
     km = imp["autopartage"]["km_voiture_evites_par_vehicule_an"][scenario]
     fe = imp["facteur_emission_kgco2e_par_km"][motorisation][scenario]
     return n_citiz_vehicles * km * fe / 1000
+
+
+def risk_surcharge(ratio, scenario: str | None = None, horizon_ans: float | None = None):
+    """Surcoût de risque (€ sur l'horizon) d'une station Citiz selon le ratio de vols local / taux de référence."""
+    import numpy as np
+    c = load_costs()
+    scenario = scenario or c["scenario"]
+    horizon = c["horizon_ans"] if horizon_ans is None else horizon_ans
+    r = c["risque_vol"]
+    base = c["equipements"]["citiz_station"]["exploitation_annuelle"]["assurance_entretien"][scenario]
+    excess = np.clip(np.asarray(ratio, dtype=float) - 1, 0, r["plafond_ratio"] - 1)
+    return horizon * base * r["elasticite"][scenario] * np.nan_to_num(excess)
