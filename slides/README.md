@@ -10,7 +10,31 @@ Prévu : un deck Marp (`slides.md`, exportable en PDF / PPTX) pour un public non
 4. Le modèle et l'optimiseur : où ajouter des stations pour un budget donné.
 5. L'impact (CO2, équité) et les limites (données, éthique).
 
-Les notes de présentation de l'équipe sont sur la branche `donnees-menages-couts` (`presentation/README.md`).
+---
+
+## Périmètre : la France, DROM compris quand la donnée existe
+
+Le sujet couvre la France « DROM inclus ». La carte nationale (objectifs 1 et 2) intègre donc les DROM dès que la population au carreau existe. La recommandation (objectif 3) porte sur la métropole.
+
+| Territoire | Population au carreau 200 m | Sur la carte | Stations Citiz |
+|---|---|---|---|
+| Métropole | oui | oui | 1 617 |
+| Martinique, La Réunion | oui | oui | 0 |
+| Guadeloupe, Guyane, Mayotte | **non** | en gris, offre seule | 0 |
+
+**Phrase pour la soutenance :**
+
+> « La carte couvre la métropole, la Martinique et La Réunion. La Guadeloupe, la Guyane et Mayotte apparaissent en gris : l'INSEE n'y publie pas la population au carreau, et nous refusons d'afficher comme « mal desservis » des territoires qui sont surtout mal documentés. Citiz n'étant présent dans aucun DROM, la recommandation porte sur la métropole. »
+
+- **Lien avec la grille éthique :** c'est le point « ne pas stigmatiser un territoire ».
+- **Diapo « Limites et suite » :** la Guyane a 42 % de ménages sans voiture, le plus fort taux de France, et c'est là que la donnée manque le plus.
+
+### Sources
+
+- **Couverture des DROM :** [`docs/methodologie.md`](../docs/methodologie.md), section « Couverture des DROM ».
+- **Population au carreau :** [INSEE, Filosofi 2021](https://www.insee.fr/fr/statistiques/8735162) (métropole, Martinique, La Réunion seulement).
+- **Ménages sans voiture en Guyane :** [INSEE, recensement 2023, Logement à l'IRIS](https://www.insee.fr/fr/statistiques/9061333).
+- **Stations Citiz :** flux GBFS des réseaux Citiz, [transport.data.gouv.fr](https://transport.data.gouv.fr/datasets?type=vehicles-sharing&q=citiz).
 
 ---
 
@@ -82,3 +106,20 @@ Source : `config/costs.yaml` (scénario moyen, euros HT).
 - **Voiture, aménagement, gestion et place :** pas de source, ce sont des « hypothèses à valider » dans [`config/costs.yaml`](../config/costs.yaml).
 - **Horizon de 3 ans et répartition coopérative / collectivité :** hypothèses de l'équipe, dans [`config/costs.yaml`](../config/costs.yaml).
 - **Liste complète des sources de coûts :** [`docs/sources_hypotheses.md`](../docs/sources_hypotheses.md).
+
+---
+
+## Limites à assumer devant le jury
+
+- **Arrêts en double :** le fichier national des arrêts contient des doublons, un même arrêt pouvant apparaître dans plusieurs jeux. On les fusionne par position.
+- **Offre, pas usage :** le GBFS est une photo de l'offre à un instant. La collecte toutes les 5 minutes sert à estimer l'usage réel des stations Citiz.
+- **Autopartage invisible :** Getaround, Zity, Communauto… ne publient pas de données ouvertes. Le classement surestime le potentiel des villes où ils sont présents.
+- **Coûts hypothétiques :** la plupart des coûts sont des hypothèses sourcées, pas les coûts réels de Citiz.
+- **Échelle :** les voitures par ménage sont connues à l'IRIS, une échelle plus grossière que les carreaux de 200 m.
+- **Accès à vol d'oiseau au niveau national :** 400 m à vol d'oiseau surestime l'accès. La marche réelle sur le réseau OpenStreetMap n'est calculée que sur les agglomérations zoomées.
+
+### Sources
+
+- **Doublons, rayon de fusion et accès à vol d'oiseau :** [`docs/methodologie.md`](../docs/methodologie.md) et [`config/settings.yaml`](../config/settings.yaml).
+- **Arrêts de transport :** [Arrêts de transport en France](https://www.data.gouv.fr/datasets/arrets-de-transport-en-france) (« non dédupliqué », selon le producteur).
+- **Opérateurs d'autopartage sans données ouvertes :** [`docs/methodologie.md`](../docs/methodologie.md), section du classement des EPCI.
