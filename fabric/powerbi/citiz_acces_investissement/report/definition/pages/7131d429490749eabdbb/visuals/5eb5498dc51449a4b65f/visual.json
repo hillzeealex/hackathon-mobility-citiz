@@ -1,0 +1,116 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "5eb5498dc51449a4b65f",
+  "position": {
+    "x": 854,
+    "y": 95,
+    "z": 3,
+    "width": 406,
+    "height": 615,
+    "tabOrder": 3
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Hypothèses et choix",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• 5 minutes est un seuil net : à 401 m, un habitant n’est plus desservi. Les poids des options (1,5, 1 et 0,5) sont un choix de l’équipe.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• France entière à vol d’oiseau : borne haute (+80 % d’options à Grenoble).",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Coûts publics (ADEME, scénario moyen sur 3 ans, 1 véhicule par station), sans foncier ni disponibilité réelle des places.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Un emplacement est le centre d’un carreau de 200 m : une piste à vérifier sur le terrain, pas une place.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• CO₂ : estimation prudente, sans effet rebond ni fabrication des véhicules.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Croissance de la population : projection INSEE Omphale, scénario central, par département, déclinée par commune.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Rentabilité : dépend des valeurs saisies ; recette, coût variable et réservations sont à fournir par Citiz.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Risque de vol ou de dégradation volontairement ignoré (données sensibles) : il n’est pas chiffré.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

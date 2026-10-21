@@ -1,0 +1,54 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "848ddc7caa4343dcbca2",
+  "position": {
+    "x": 644,
+    "y": 90,
+    "z": 4,
+    "width": 200,
+    "height": 90,
+    "tabOrder": 4
+  },
+  "visual": {
+    "visualType": "card",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_carreau"
+                    }
+                  },
+                  "Property": "Part à 5 min TC (marche)"
+                }
+              },
+              "queryRef": "gold_acces_carreau.Part à 5 min TC (marche)",
+              "nativeQueryRef": "À 5 min d’un arrêt TC",
+              "displayName": "À 5 min d’un arrêt TC"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

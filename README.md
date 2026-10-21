@@ -108,6 +108,15 @@ au moins une option à 5 min, contre 80,6 % ; 19,0 % à 5 min d'un autopartage d
 statistiques de vols). Pour Nantes, le modèle donne une probabilité prédite sans avoir vu la région, afin de ne pas
 dévaloriser les zones que Citiz ne couvre pas encore.
 
+**Le modèle de prédiction reste à vol d'oiseau (V1), même pour Nantes.** Il apprend sur les 2,3 M carreaux de toute
+la France, où le réseau piéton n'est pas calculé : ses variables (population, transports, vélos à 400 m et 1 km) et
+sa cible (station Citiz à 400 m) sont donc mesurées en ligne droite. Lui donner des variables de Nantes en marche
+réelle fausserait ses prédictions : sur les 6 739 carreaux de Nantes, le vol d'oiseau compte en moyenne 1,9 fois plus
+d'options que la marche réelle. Ce choix pèse peu sur les recommandations : le modèle ne sert qu'à **départager** les
+emplacements (sa probabilité est rapportée à la moyenne des candidats), et l'ordre des carreaux reste proche entre
+V1 et V2 (corrélation de rang de 0,82). Les **habitants gagnés et la couverture sont comptés en marche réelle**. Un
+modèle entièrement en V2 demanderait le réseau piéton des 12 régions Citiz (voir Prochaines étapes).
+
 Import des notebooks, dépendances et détails : [`fabric/README.md`](fabric/README.md).
 
 ---
@@ -119,7 +128,7 @@ Import des notebooks, dépendances et détails : [`fabric/README.md`](fabric/REA
 - **Modèle sémantique** (`semantic_model/`, format TMDL) : 21 tables `gold_*` en mode **Direct Lake**. Les données
   sont lues directement dans OneLake, sans import ni rafraîchissement planifié : dès que le pipeline réécrit `gold`,
   le rapport est à jour.
-- **Rapport** (`report/`, format PBIR) : 7 pages, cartes Azure Maps, segments, tableaux et cartes de chiffres.
+- **Rapport** (`report/`, format PBIR) : 8 pages, cartes Azure Maps, segments, tableaux et cartes de chiffres.
 - **Simulation de rentabilité** : les tables `gold_saisie_*` (investissement, véhicules, recettes, charges, durée
   d'amortissement…) servent de paramètres de saisie libre ; le calcul se fait dans les mesures DAX, rien n'est
   enregistré.
@@ -133,6 +142,7 @@ Import des notebooks, dépendances et détails : [`fabric/README.md`](fabric/REA
 | 5 · Nantes : où investir | Curseur de budget, liste priorisée, équipements, glouton / ILP, équité, horizon de population |
 | 6 · Rentabilité d'une station | Simulation à partir des valeurs saisies |
 | 7 · Méthode et limites | Hypothèses, V1 / V2, secret statistique |
+| 8 · Limites | Limites du modèle de prédiction, des données, des hypothèses et des choix |
 
 Pour un autre espace Fabric : remplacer l'identifiant du lakehouse dans
 `semantic_model/definition/expressions.tmdl` (expression `DirectLake - Gold`), puis ouvrir le `.pbir` dans
@@ -142,6 +152,8 @@ Power BI Desktop ou synchroniser l'espace avec Git.
 
 ## 4. Prochaines étapes
 
+- **Modèle en marche réelle** : calculer le réseau piéton OpenStreetMap des 12 régions Citiz pour apprendre le modèle
+  en V2 (plusieurs Go à télécharger, plusieurs heures de calcul).
 - **MLflow** dans Fabric : enregistrer chaque entraînement du modèle (métriques, version) dans une expérience.
 - **Planification** de `citiz_pipeline` (par exemple chaque semaine) pour une chaîne qui tourne seule.
 - Collecte GBFS planifiée chez Citiz pour constituer un historique d'usage (cible plus fine que la présence).

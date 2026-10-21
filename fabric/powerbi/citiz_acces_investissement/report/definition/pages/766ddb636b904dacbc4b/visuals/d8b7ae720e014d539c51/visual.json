@@ -1,0 +1,54 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "d8b7ae720e014d539c51",
+  "position": {
+    "x": 436,
+    "y": 90,
+    "z": 3,
+    "width": 200,
+    "height": 90,
+    "tabOrder": 3
+  },
+  "visual": {
+    "visualType": "card",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_carreau"
+                    }
+                  },
+                  "Property": "Part sans option (marche)"
+                }
+              },
+              "queryRef": "gold_acces_carreau.Part sans option (marche)",
+              "nativeQueryRef": "Sans aucune option",
+              "displayName": "Sans aucune option"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

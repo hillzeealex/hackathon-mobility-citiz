@@ -1,0 +1,96 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "6e65d17e3e204fea8834",
+  "position": {
+    "x": 437,
+    "y": 95,
+    "z": 2,
+    "width": 405,
+    "height": 615,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Données",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Seuls les habitants comptent : ni emplois, ni trajets domicile-travail, ni visiteurs. Un quartier de bureaux paraît vide.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Autopartage mal connu : Getaround, Zity, Free2Move ou Ubeeqo ne publient pas de données ouvertes. « Peu d’autopartage » veut dire « peu d’autopartage visible ».",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Mode et fréquence des lignes absents : un tram et un bus rare valent chacun un arrêt.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Population 2021 (Filosofi) calée sur le recensement 2023 par commune : la répartition dans la commune reste celle de 2021.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Horaires de transport d’un seul jour type ; free-floating : une photo prise à un instant.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Effet de bord : l’offre est chargée jusqu’à 800 m autour de la zone, mais seuls les habitants de la zone sont comptés.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

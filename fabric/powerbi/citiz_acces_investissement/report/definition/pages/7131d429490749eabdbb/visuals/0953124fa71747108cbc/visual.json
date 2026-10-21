@@ -1,0 +1,106 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "0953124fa71747108cbc",
+  "position": {
+    "x": 20,
+    "y": 95,
+    "z": 1,
+    "width": 405,
+    "height": 615,
+    "tabOrder": 1
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Modèle de prédiction",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Il apprend où Citiz s’est déjà installé, pas la demande réelle : il reproduit les choix passés de l’opérateur (centres-villes) et ne voit pas une demande non servie ailleurs.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Au test à l’aveugle de Grenoble, il fait à peine mieux que la densité seule (page 4).",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Aucune donnée d’usage : l’historique Citiz est trop court (34 photos). Ni fréquentation ni réservations prédites.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Il reste à vol d’oiseau : il apprend sur les carreaux de toute la France, où le réseau piéton n’est pas calculé. À Nantes, il ne sert qu’à départager les emplacements ; les habitants gagnés sont comptés en marche réelle.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Sans les équipements (écoles, commerces, santé) que le modèle local utilisait.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Des associations, pas des causes. Les régions sans Citiz sont des extrapolations.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Arrêts de bus et stations de vélos : potentiel non prédit (identique pour tous).",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

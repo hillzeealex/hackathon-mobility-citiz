@@ -21,8 +21,8 @@ Le rapport Power BI `citiz_acces_investissement` lit les tables de `gold` en Dir
 
 ## Rapport Power BI
 
-`powerbi/citiz_acces_investissement/` : modèle sémantique (TMDL, Direct Lake sur `gold`) et rapport (PBIR), 7 pages :
+`powerbi/citiz_acces_investissement/` : modèle sémantique (TMDL, Direct Lake sur `gold`) et rapport (PBIR), 8 pages :
 France (accès à 5 min), Nantes diagnostic, Nantes desserte, Nantes potentiel prédit, Nantes où investir (budget,
 équipements, scénario, méthode, équité, horizon de population), rentabilité d'une station (saisie libre, non
-enregistrée), méthode et limites. L'expression `DirectLake - Gold` pointe vers l'identifiant du lakehouse `gold`
+enregistrée), méthode, limites (modèle, données, hypothèses). L'expression `DirectLake - Gold` pointe vers l'identifiant du lakehouse `gold`
 de l'espace « Hackathon Citz » : à adapter dans `semantic_model/definition/expressions.tmdl` pour un autre espace.

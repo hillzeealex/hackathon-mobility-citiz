@@ -1,0 +1,54 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "b0471f176a7e4821a5f2",
+  "position": {
+    "x": 228,
+    "y": 90,
+    "z": 2,
+    "width": 200,
+    "height": 90,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "card",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_carreau"
+                    }
+                  },
+                  "Property": "Options par habitant (marche)"
+                }
+              },
+              "queryRef": "gold_acces_carreau.Options par habitant (marche)",
+              "nativeQueryRef": "Options / habitant",
+              "displayName": "Options / habitant"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
