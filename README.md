@@ -207,16 +207,155 @@ La définition du pipeline vit dans l'espace Fabric, pas dans le dépôt. Import
 - **Simulation de rentabilité** : les tables `gold_saisie_*` servent de champs de saisie libre (investissement,
   véhicules, recettes, charges, durée d'amortissement). Le calcul se fait dans les mesures DAX ; rien n'est enregistré.
 
-| Page | Contenu |
-|---|---|
-| 1 · France : accès à 5 min | Carte des communes par options par habitant (vol d'oiseau, borne haute) |
-| 2 · Nantes : diagnostic | Carte d'accès en marche réelle, chiffres clés |
-| 3 · Nantes : qui est desservi | Population desservie par arrêt et station, habitants à une seule option |
-| 4 · Nantes : potentiel prédit | Probabilité du modèle par carreau, validation, importance des variables |
-| 5 · Nantes : où investir | Budget, liste priorisée, type d'équipement, glouton / ILP, équité, horizon de population |
-| 6 · Rentabilité d'une station | Seuil de rentabilité à partir des valeurs saisies |
-| 7 · Méthode et limites | Hypothèses, vol d'oiseau / marche réelle, secret statistique |
-| 8 · Limites | Limites du modèle, des données, des hypothèses et des choix |
+### Les 8 pages du rapport
+
+Le rapport se lit comme un récit : du constat national à la décision d'investir à Nantes, puis la méthode et ses
+limites. Chaque page rappelle en en-tête la mesure utilisée (marche réelle à Nantes, vol d'oiseau en France).
+
+```mermaid
+flowchart LR
+    P1["1 · France<br/>le constat"] --> P2["2 · Nantes<br/>le diagnostic"] --> P3["3 · Nantes<br/>qui est desservi"]
+    P3 --> P4["4 · Nantes<br/>le potentiel prédit"] --> P5["5 · Nantes<br/>où investir"] --> P6["6 · Rentabilité<br/>d'une station"]
+    P6 --> P7["7 · Méthode"] --> P8["8 · Limites"]
+```
+
+| Page | Question | Objectif du brief |
+|---|---|---|
+| 1 · France : accès à 5 min | Qui a une option de mobilité à 5 min à pied en France ? | 1 |
+| 2 · Nantes : diagnostic | Où l'accès est-il faible à Nantes ? | 1 |
+| 3 · Nantes : qui est desservi | Quels arrêts et stations desservent qui ? | 2 |
+| 4 · Nantes : potentiel prédit | Où Citiz s'installerait-il ? | 3 (modèle) |
+| 5 · Nantes : où investir | Où investir pour desservir le plus d'habitants au moindre coût ? | 3 (liste priorisée) |
+| 6 · Rentabilité d'une station | À partir de combien de réservations une station est-elle rentable ? | 3 (complément) |
+| 7 · Méthode et limites | Comment les chiffres sont-ils calculés ? | |
+| 8 · Limites | Que ne disent pas les chiffres ? | |
+
+#### 1 · France : accès à 5 min
+
+Le constat national, **à vol d'oiseau** (400 m autour du carreau) : c'est une borne haute, qui surestime l'accès.
+
+- **4 chiffres clés** : habitants (population 2023), options par habitant, part des habitants **sans aucune
+  option**, part à 5 min d'une station Citiz.
+- **Carte des communes**, du plus froid (bleu, peu d'options par habitant) au plus chaud (rouge). La taille d'un
+  point est la population de la commune.
+- **Segment Département** (Loire-Atlantique par défaut) et **tableau des communes** : habitants, options par
+  habitant, part sans option, part à 5 min de Citiz.
+
+Tables : `gold_acces_commune`, `gold_acces_carreau`.
+
+#### 2 · Nantes : diagnostic
+
+Le même indicateur à Nantes Métropole, mais en **marche réelle** sur le réseau piéton OpenStreetMap.
+
+- **6 chiffres clés** : habitants, options par habitant, part sans aucune option, part à 5 min d'un arrêt de
+  transport en commun, d'une station Citiz, et d'un autopartage (Citiz ou Marguerite).
+- **Carte des carreaux de 200 m**, colorés par nombre d'options à 5 min de marche. Les carreaux imputés (moins de
+  11 ménages) sont masqués, par secret statistique.
+- **Classement des communes** par options par habitant.
+- **Profil social** de chaque commune (Filosofi 2021) : niveau de vie, part de ménages pauvres, part des 18-24 ans
+  et des 65 ans et plus. Il sert à repérer les communes où un manque d'accès pèse le plus.
+
+Tables : `gold_acces_carreau` (colonnes `*_v2`), `gold_acces_commune`.
+
+#### 3 · Nantes : qui est desservi
+
+L'objectif 2 : la population servie par **chaque** arrêt et station.
+
+- **Carte des points d'offre** (arrêts, stations Citiz, Marguerite, vélos, free-floating), colorés par type. La
+  taille d'un point est le nombre d'habitants à 5 min de marche.
+- **Nombre de points par type**.
+- **Tableau des points les plus utiles** : habitants desservis et **« seule option »**, c'est-à-dire les habitants
+  pour qui ce point est l'unique option à 5 min. Ce sont les points à ne surtout pas supprimer.
+- Les zones desservies se recouvrent : additionner les habitants de plusieurs points compte certains habitants
+  plusieurs fois.
+
+Table : `gold_offre_desservie`.
+
+#### 4 · Nantes : potentiel prédit
+
+Le modèle de prédiction : où Citiz s'installerait-il, d'après les quelque 1 600 stations qu'il a déjà en France ?
+
+- **Carte du potentiel Citiz** par carreau, en 5 classes de très faible à très fort (quintiles). Pour Nantes, la
+  probabilité vient d'un modèle qui n'a pas vu sa région.
+- **Tableau de validation** : AUC et précision moyenne (PR-AUC) du modèle, comparées à celles de la densité de
+  population seule, région par région et sur Grenoble à l'aveugle.
+- **Importance des variables** (SHAP) : ce qui compte le plus pour le modèle.
+- **Encadré « Lecture »** : la densité seule fait presque aussi bien ; le modèle classe mieux le haut de liste et
+  fournit le potentiel utilisé page 5.
+
+Tables : `gold_modele_proba_carreau`, `gold_modele_validation`, `gold_modele_importance`.
+
+#### 5 · Nantes : où investir
+
+La page de décision (objectif 3) : la liste priorisée des emplacements, sous budget.
+
+- **6 segments** :
+
+  | Segment | Rôle | Valeur par défaut |
+  |---|---|---|
+  | Budget | Enveloppe sur 3 ans, de 50 k€ à 1 M€ par pas de 50 k€ (ILP à 100 k€, 250 k€, 500 k€ et 1 M€) | 500 000 € |
+  | Équipements | Stations Citiz, arrêts de bus, stations de vélos, ou tous | Stations Citiz |
+  | Usage potentiel | Avec le modèle, ou population seule | Avec le modèle |
+  | Méthode | Glouton (rapide) ou ILP (optimal) | ILP |
+  | Poids équité | 0 (efficacité pure) ou 0,5 (bonus aux ménages pauvres et sans voiture) | 0,5 |
+  | Horizon (ans) | Population projetée à 0, 5, 10 … 30 ans | 0 (2023) |
+
+- **6 chiffres clés** : emplacements retenus, coût sur 3 ans, habitants gagnés (nouvellement à 5 min à pied), coût par
+  habitant gagné, CO₂ évité par an, part des 65 ans et plus en Loire-Atlantique à l'horizon choisi.
+- **Carte des emplacements retenus**. La taille d'un point est le nombre d'habitants gagnés.
+- **Liste priorisée** : rang, équipement, commune, coût, habitants gagnés, coût par habitant, potentiel Citiz,
+  habitants gagnés à l'horizon.
+- **Courbe des habitants gagnés selon le budget** (glouton, tous équipements), avec le modèle et avec la population
+  seule.
+- **L'horizon ne change pas les stations choisies**, calculées sur la population 2023. Il multiplie les habitants
+  gagnés de chaque emplacement par la croissance projetée de sa commune : tendance 2017-2023, recalée sur la
+  projection INSEE Omphale (scénario central) du département.
+
+Tables : `gold_selection`, `gold_resume_optim`, `gold_projection_commune`, `gold_horizons`, `gold_age_departement`.
+
+#### 6 · Rentabilité d'une station
+
+Un simulateur, pour que Citiz teste ses propres chiffres. **Aucune valeur par défaut** : les recettes et les coûts
+réels sont ceux de Citiz.
+
+- **8 champs à saisir** (taper la valeur puis Entrée) : nombre de véhicules, investissement net, durée
+  d'amortissement, charges de la station par mois, charges par véhicule par mois, recette par réservation, coût
+  variable par réservation, réservations par véhicule et par mois.
+- **Calculs** :
+  - charges fixes par mois = charges de la station + véhicules × charges par véhicule + investissement amorti par mois ;
+  - marge par réservation = recette − coût variable ;
+  - **seuil de rentabilité** = charges fixes par mois ÷ marge par réservation, en réservations par mois et par véhicule ;
+  - résultat mensuel prévu = réservations prévues × marge − charges fixes.
+- **Verdict** : « Rentable », « Non rentable », « Marge négative », ou « À renseigner » tant qu'un champ est vide.
+- **Courbe du résultat mensuel** selon les réservations par véhicule : le seuil est le passage à 0 €.
+- Les saisies **ne sont pas enregistrées** : chaque collaborateur fait sa propre simulation.
+
+Tables : `gold_saisie_*` (une par champ), `gold_axe_reservations`.
+
+#### 7 · Méthode et limites
+
+La méthode en une page, pour répondre aux questions :
+
+- **Accès** : carreaux de 200 m, calage de la population sur le recensement 2023, poids de chaque option, vol
+  d'oiseau ou marche réelle.
+- **Desserte**, **investissement** (score, glouton et ILP, équité, pas de délinquance) et **modèle** (variables, cible,
+  validation).
+- **Secret statistique** : carreaux imputés jamais affichés seuls, populations arrondies à 5 et masquées sous 20.
+- **Tableau des coûts retenus** par équipement (investissement, exploitation par an, coût sur 3 ans, source).
+
+Table : `gold_couts`.
+
+#### 8 · Limites
+
+Les limites du projet en trois colonnes, pour les assumer avant qu'on nous les oppose :
+
+- **Modèle de prédiction** : il apprend où Citiz est déjà, pas la demande ; il fait à peine mieux que la densité
+  seule ; aucune donnée d'usage ; il reste à vol d'oiseau ; il n'utilise pas les équipements (écoles, commerces,
+  santé) ; ce sont des corrélations, pas des causes.
+- **Données** : seuls les habitants comptent ; l'autopartage existant est mal connu ; le mode et la fréquence des
+  lignes manquent ; population 2021 calée sur 2023 ; un seul jour d'horaires ; effet de bord en limite de zone.
+- **Hypothèses et choix** : seuil net de 5 minutes, poids des options, coûts publics, centre de carreau plutôt que
+  place réelle, CO₂ prudent, projection de population, rentabilité selon les saisies, risque de vol non chiffré.
 
 Pour un autre espace Fabric : remplacer l'identifiant du lakehouse dans
 `semantic_model/definition/expressions.tmdl` (expression `DirectLake - Gold`), puis ouvrir le `.pbir` dans
