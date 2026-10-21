@@ -1,10 +1,10 @@
 table gold_age_departement
-	lineageTag: 96bc6835-b72d-459c-a1dc-199c77415e1c
+	lineageTag: 241ced06-9852-46fc-a332-e828abbe8189
 	sourceLineageTag: [dbo].[gold_age_departement]
 
 	column code_dept
 		dataType: string
-		lineageTag: e77013f5-97bd-4f5c-b3b6-10888eb796c2
+		lineageTag: 340e8547-69f0-47f2-a2fb-5c3b8382b4e4
 		sourceLineageTag: code_dept
 		summarizeBy: none
 		sourceColumn: code_dept
@@ -13,7 +13,7 @@ table gold_age_departement
 
 	column horizon_ans
 		dataType: int64
-		lineageTag: 2290526b-d005-415b-b248-1407f07f802c
+		lineageTag: a44c3a68-54d2-408e-a1fe-bb97d29f5ac5
 		sourceLineageTag: horizon_ans
 		summarizeBy: none
 		sourceColumn: horizon_ans
@@ -22,7 +22,7 @@ table gold_age_departement
 
 	column annee
 		dataType: int64
-		lineageTag: 73a23b19-a778-4579-a0f8-a147c115757a
+		lineageTag: 35a2563f-2f64-4567-8967-d3e05accd4e7
 		sourceLineageTag: annee
 		summarizeBy: none
 		sourceColumn: annee
@@ -32,7 +32,7 @@ table gold_age_departement
 	column part_65_plus
 		dataType: double
 		formatString: 0.0%
-		lineageTag: c703892c-257e-4a84-9d4f-da0e75c27205
+		lineageTag: 32878bb9-739e-490c-b2ac-474ba84b6e32
 		sourceLineageTag: part_65_plus
 		summarizeBy: none
 		sourceColumn: part_65_plus
@@ -42,7 +42,7 @@ table gold_age_departement
 	column part_20_39
 		dataType: double
 		formatString: 0.0%
-		lineageTag: d70d15ad-aeea-45e6-bdde-2be8beb6953c
+		lineageTag: 32fe75a7-eef2-4241-832b-b59cf66a5a1e
 		sourceLineageTag: part_20_39
 		summarizeBy: none
 		sourceColumn: part_20_39
@@ -52,7 +52,7 @@ table gold_age_departement
 	column age_moyen
 		dataType: double
 		formatString: 0.0
-		lineageTag: 6e85b45b-1241-4dd3-9e85-9ef5dcda8a51
+		lineageTag: 38eee8a0-9993-48a7-aa58-683ffcc24517
 		sourceLineageTag: age_moyen
 		summarizeBy: none
 		sourceColumn: age_moyen

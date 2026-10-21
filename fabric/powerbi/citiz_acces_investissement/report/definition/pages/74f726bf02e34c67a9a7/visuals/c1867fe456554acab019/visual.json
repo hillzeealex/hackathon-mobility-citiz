@@ -1,0 +1,57 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "c1867fe456554acab019",
+  "position": {
+    "x": 20,
+    "y": 4,
+    "z": 0,
+    "width": 1240,
+    "height": 82,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Où Citiz s’installerait-il à Nantes ? Le modèle de prédiction",
+                    "textStyle": {
+                      "fontSize": "18pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "LightGBM appris sur les 1 600 stations Citiz de France ; pour Nantes, prédit sans avoir vu sa région. Classes : quintiles.",
+                    "textStyle": {
+                      "fontSize": "9pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Nantes Métropole : 5 minutes de marche réelle sur le réseau piéton OpenStreetMap (V2). France entière : 400 m à vol d’oiseau (V1, borne haute).",
+                    "textStyle": {
+                      "fontSize": "8pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,10 +1,10 @@
 table gold_resume_optim
-	lineageTag: 839c1614-381d-472b-a34c-05ed14dce61d
+	lineageTag: 444e25fe-b2bd-4dac-9ded-f144bd718923
 	sourceLineageTag: [dbo].[gold_resume_optim]
 
 	column methode
 		dataType: string
-		lineageTag: 6e66c7bd-20c3-4411-a1cd-30933a38c906
+		lineageTag: b33e01fa-f585-4288-8862-debad6dcd020
 		sourceLineageTag: methode
 		summarizeBy: none
 		sourceColumn: methode
@@ -14,7 +14,7 @@ table gold_resume_optim
 	column budget
 		dataType: int64
 		formatString: #,0 €
-		lineageTag: 58256e21-0813-478c-bb86-3f7eb9671696
+		lineageTag: a08a37e4-ccc7-49ab-8b8d-5d15c12fa140
 		sourceLineageTag: budget
 		summarizeBy: none
 		sourceColumn: budget
@@ -23,7 +23,7 @@ table gold_resume_optim
 
 	column equite
 		dataType: double
-		lineageTag: 17be2d7d-7707-4ce2-a54e-5b771827eee1
+		lineageTag: 87b645b1-e053-4731-90f8-a4c6f0964d8f
 		sourceLineageTag: equite
 		summarizeBy: none
 		sourceColumn: equite
@@ -32,7 +32,7 @@ table gold_resume_optim
 
 	column perimetre
 		dataType: string
-		lineageTag: e6803eca-e05e-4552-b925-311883744cbf
+		lineageTag: 628a8b3f-9068-44cc-afd4-9fed1a62a38a
 		sourceLineageTag: perimetre
 		summarizeBy: none
 		sourceColumn: perimetre
@@ -41,7 +41,7 @@ table gold_resume_optim
 
 	column n_retenus
 		dataType: int64
-		lineageTag: f6906867-ff91-4757-99bf-d6c0259c2b31
+		lineageTag: 96131059-03bb-48a4-90a7-8ac4282b38bc
 		sourceLineageTag: n_retenus
 		summarizeBy: none
 		sourceColumn: n_retenus
@@ -51,7 +51,7 @@ table gold_resume_optim
 	column cout_total
 		dataType: double
 		formatString: #,0 €
-		lineageTag: 9737a027-162b-472d-9c30-eadb4c76dbd4
+		lineageTag: 04fe6dec-19a4-4294-9d1c-5ea5810bb01e
 		sourceLineageTag: cout_total
 		summarizeBy: none
 		sourceColumn: cout_total
@@ -61,7 +61,7 @@ table gold_resume_optim
 	column pop_nouvellement_desservie
 		dataType: double
 		formatString: #,0
-		lineageTag: a04dc65d-197a-4533-96ca-ec9ee50131ed
+		lineageTag: 351b5274-a0d1-44a0-9157-8331fe7b9a09
 		sourceLineageTag: pop_nouvellement_desservie
 		summarizeBy: none
 		sourceColumn: pop_nouvellement_desservie
@@ -70,7 +70,7 @@ table gold_resume_optim
 
 	column statut
 		dataType: string
-		lineageTag: 61c25835-b69a-4c2e-a3bd-9455d817c570
+		lineageTag: 5e8a7165-ccc1-4794-a7a9-df16c90f4848
 		sourceLineageTag: statut
 		summarizeBy: none
 		sourceColumn: statut
@@ -79,7 +79,7 @@ table gold_resume_optim
 
 	column scenario
 		dataType: string
-		lineageTag: 6744a103-f287-4c19-94c0-e3fe0175ebd0
+		lineageTag: 76bce40a-f2c7-45c9-8b77-47fcbb841dfc
 		sourceLineageTag: scenario
 		summarizeBy: none
 		sourceColumn: scenario

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "5ea446bcd5604bd6b4bd",
+  "position": {
+    "x": 852,
+    "y": 182,
+    "z": 9,
+    "width": 200,
+    "height": 90,
+    "tabOrder": 9
+  },
+  "visual": {
+    "visualType": "card",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_selection"
+                    }
+                  },
+                  "Property": "CO2 évité (t par an)"
+                }
+              },
+              "queryRef": "gold_selection.CO2 évité (t par an)",
+              "nativeQueryRef": "CO2 évité (t/an)",
+              "displayName": "CO2 évité (t/an)"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

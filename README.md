@@ -34,8 +34,9 @@ On a d'abord tout développé et vérifié en Python sur un portable (≈ 7 Go d
 | Optimisation | `src/optim/` | Glouton + ILP (HiGHS), 3 types d'équipement, coûts sourcés (`config/costs.yaml`), poids d'équité |
 | Appli | `app/` | Streamlit : France, Nantes, Grenoble, onglet Validation |
 
-Méthode complète : [`docs/methodologie.md`](docs/methodologie.md). Chiffres officiels :
-[`docs/chiffres_cles.md`](docs/chiffres_cles.md).
+Méthode complète : [`docs/methodologie.md`](docs/methodologie.md). Chiffres du pipeline local :
+[`docs/chiffres_cles.md`](docs/chiffres_cles.md). **Chiffres officiels de la soutenance : ceux de Fabric**,
+[`docs/chiffres_officiels.md`](docs/chiffres_officiels.md).
 
 Pourquoi V1 et V2 : le vol d'oiseau surestime fortement l'accès (+80 % d'options à Grenoble). Les chiffres
 officiels de Nantes sont donc en V2 (marche réelle).
@@ -98,8 +99,14 @@ table `pipeline_run`. L'étape suivante relit le **dernier run complet** de l'é
 modification, on relance seulement à partir du premier notebook modifié. Ne jamais relancer une partie de
 `bronze_notebook` seule (voir [`fabric/README.md`](fabric/README.md)).
 
-**Mêmes chiffres qu'en local** : Fabric retrouve les chiffres officiels de Nantes, par exemple 80,7 % des habitants
-avec au moins une option à 5 min (80,6 % en local) et 19,0 % à 5 min d'un autopartage (19,0 % en local).
+**Fabric est la source des chiffres officiels** ([`docs/chiffres_officiels.md`](docs/chiffres_officiels.md)).
+Nantes y est calculée en **marche réelle** : le réseau piéton OpenStreetMap est lu et découpé dans `acces_notebook`, et
+l'optimisation couvre les candidats à pied. Le diagnostic retrouve celui du pipeline local (80,7 % des habitants avec
+au moins une option à 5 min, contre 80,6 % ; 19,0 % à 5 min d'un autopartage dans les deux cas).
+
+**Aucune donnée de délinquance n'entre dans les calculs** (choix de l'équipe : ne pas pénaliser un territoire sur ses
+statistiques de vols). Pour Nantes, le modèle donne une probabilité prédite sans avoir vu la région, afin de ne pas
+dévaloriser les zones que Citiz ne couvre pas encore.
 
 Import des notebooks, dépendances et détails : [`fabric/README.md`](fabric/README.md).
 
@@ -222,7 +229,8 @@ data/            NON versionné : raw/, processed/<ville>/, processed/national/,
 |---|---|
 | Méthode (indicateurs, V1 / V2, 2SFCA, calage) | [`docs/methodologie.md`](docs/methodologie.md) |
 | Modèle | [`docs/modele.md`](docs/modele.md) |
-| Chiffres officiels | [`docs/chiffres_cles.md`](docs/chiffres_cles.md) |
+| Chiffres officiels (Fabric) | [`docs/chiffres_officiels.md`](docs/chiffres_officiels.md) |
+| Chiffres du pipeline local | [`docs/chiffres_cles.md`](docs/chiffres_cles.md) |
 | Décisions | [`docs/decisions.md`](docs/decisions.md) |
 | Éthique, secret statistique | [`docs/ethique.md`](docs/ethique.md) |
 | Sources | [`docs/sources.md`](docs/sources.md), [`SOURCES.md`](SOURCES.md) |

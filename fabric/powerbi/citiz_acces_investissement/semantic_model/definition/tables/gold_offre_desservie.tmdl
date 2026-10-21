@@ -1,14 +1,14 @@
 table gold_offre_desservie
-	lineageTag: 178ea510-1276-42dd-a80b-e8294b808e74
+	lineageTag: ea940f95-ebdc-4189-9e01-3ad6658ed5af
 	sourceLineageTag: [dbo].[gold_offre_desservie]
 
 	measure Points = COUNTROWS(gold_offre_desservie)
 		formatString: #,0
-		lineageTag: eeec3603-95bc-4055-a8b9-7e36fc718cfb
+		lineageTag: ed4bf8e1-d4a8-4fde-9ca4-527cb64c6ba4
 
 	column point_id
 		dataType: string
-		lineageTag: bf677708-ebee-4461-a0d1-0fc0ccd939de
+		lineageTag: cfbfc617-f4e8-4b14-a8d2-1f200684fb02
 		sourceLineageTag: point_id
 		summarizeBy: none
 		sourceColumn: point_id
@@ -17,7 +17,7 @@ table gold_offre_desservie
 
 	column famille
 		dataType: string
-		lineageTag: c14906b4-cf9d-451b-b534-b90e7f229db2
+		lineageTag: e6ebcad0-48a8-4364-a097-51fd863f04ca
 		sourceLineageTag: famille
 		summarizeBy: none
 		sourceColumn: famille
@@ -26,7 +26,7 @@ table gold_offre_desservie
 
 	column operateur
 		dataType: string
-		lineageTag: 783327fb-62fa-403e-a9f4-16293e69d72d
+		lineageTag: 9fd873be-43f8-4807-bdbf-eb9c929ca78a
 		sourceLineageTag: operateur
 		summarizeBy: none
 		sourceColumn: operateur
@@ -35,7 +35,7 @@ table gold_offre_desservie
 
 	column nom
 		dataType: string
-		lineageTag: c7425990-1d02-4f93-95fe-a56316742212
+		lineageTag: c1fe788a-53ea-4351-bcd8-9a3103c811f7
 		sourceLineageTag: nom
 		summarizeBy: none
 		sourceColumn: nom
@@ -44,7 +44,7 @@ table gold_offre_desservie
 
 	column lat
 		dataType: double
-		lineageTag: c2cedfaa-6c26-4da6-9d31-f9cec32b2de8
+		lineageTag: c4f67694-bd2f-4111-a4fc-c50c59b03f3f
 		sourceLineageTag: lat
 		summarizeBy: none
 		sourceColumn: lat
@@ -53,7 +53,7 @@ table gold_offre_desservie
 
 	column lon
 		dataType: double
-		lineageTag: 940332c6-ccca-447c-b0b1-306b5d0d7450
+		lineageTag: 6b13c51b-b15d-4d09-b3b7-0729f8d9bf29
 		sourceLineageTag: lon
 		summarizeBy: none
 		sourceColumn: lon
@@ -62,7 +62,7 @@ table gold_offre_desservie
 
 	column commune
 		dataType: string
-		lineageTag: 824ad981-175d-4259-a55f-182e891ab9a0
+		lineageTag: a4bd65ba-5eb9-4022-9a6b-89da76d945e2
 		sourceLineageTag: commune
 		summarizeBy: none
 		sourceColumn: commune
@@ -71,7 +71,7 @@ table gold_offre_desservie
 
 	column code_dept
 		dataType: string
-		lineageTag: 5c9ec830-2eec-4c4e-81f6-6b2ab805dc09
+		lineageTag: 35cba254-d05e-4282-b302-e2718215dbde
 		sourceLineageTag: code_dept
 		summarizeBy: none
 		sourceColumn: code_dept
@@ -80,7 +80,7 @@ table gold_offre_desservie
 
 	column poids
 		dataType: double
-		lineageTag: 309bf87d-e7da-4df6-8c36-894bb9bd74fd
+		lineageTag: 0931e61a-45fa-4a90-8192-75de85b97e06
 		sourceLineageTag: poids
 		summarizeBy: none
 		sourceColumn: poids
@@ -90,7 +90,7 @@ table gold_offre_desservie
 	column pop_desservie
 		dataType: double
 		formatString: #,0
-		lineageTag: 5871136a-7a3d-41da-8dd0-b77c0fc8f56f
+		lineageTag: 9c72a4fa-3871-40a7-8af6-292a6443b128
 		sourceLineageTag: pop_desservie
 		summarizeBy: none
 		sourceColumn: pop_desservie
@@ -100,7 +100,7 @@ table gold_offre_desservie
 	column pop_seule_option
 		dataType: double
 		formatString: #,0
-		lineageTag: 0aaf3a09-8f8d-4183-9afd-9748a829d2c4
+		lineageTag: 8cd83b75-de86-4eb3-8028-1ca0de61b395
 		sourceLineageTag: pop_seule_option
 		summarizeBy: none
 		sourceColumn: pop_seule_option
@@ -109,10 +109,30 @@ table gold_offre_desservie
 
 	column zone_focus
 		dataType: string
-		lineageTag: a0463cf5-aa92-4c6c-9c47-05901a6599b3
+		lineageTag: af22cfc5-9a18-4837-b28f-470dd1e08c95
 		sourceLineageTag: zone_focus
 		summarizeBy: none
 		sourceColumn: zone_focus
+
+		annotation SummarizationSetBy = Automatic
+
+	column pop_desservie_v2
+		dataType: double
+		formatString: #,0
+		lineageTag: 14fce3d4-7815-4675-8663-5df29be4de3f
+		sourceLineageTag: pop_desservie_v2
+		summarizeBy: none
+		sourceColumn: pop_desservie_v2
+
+		annotation SummarizationSetBy = Automatic
+
+	column pop_seule_option_v2
+		dataType: double
+		formatString: #,0
+		lineageTag: 68fb0f7b-301c-495c-9f58-883c16f4e651
+		sourceLineageTag: pop_seule_option_v2
+		summarizeBy: none
+		sourceColumn: pop_seule_option_v2
 
 		annotation SummarizationSetBy = Automatic
 
