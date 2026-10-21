@@ -28,3 +28,6 @@ __pycache__/
 .env.*
 .DS_Store
 .superpowers/
+
+# Fichiers de travail locaux (jamais versionnés)
+~$*
