@@ -1,0 +1,138 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "2d04a8ad768547f7b9da",
+  "position": {
+    "x": 830,
+    "y": 450,
+    "z": 10,
+    "width": 430,
+    "height": 260,
+    "tabOrder": 10
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_commune"
+                    }
+                  },
+                  "Property": "nom"
+                }
+              },
+              "queryRef": "gold_acces_commune.nom",
+              "nativeQueryRef": "Commune",
+              "displayName": "Commune"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_commune"
+                    }
+                  },
+                  "Property": "niveau_vie_moyen"
+                }
+              },
+              "queryRef": "gold_acces_commune.niveau_vie_moyen",
+              "nativeQueryRef": "Niveau de vie",
+              "displayName": "Niveau de vie"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_commune"
+                    }
+                  },
+                  "Property": "part_menages_pauvres"
+                }
+              },
+              "queryRef": "gold_acces_commune.part_menages_pauvres",
+              "nativeQueryRef": "Ménages pauvres",
+              "displayName": "Ménages pauvres"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_commune"
+                    }
+                  },
+                  "Property": "part_18_24"
+                }
+              },
+              "queryRef": "gold_acces_commune.part_18_24",
+              "nativeQueryRef": "18-24 ans",
+              "displayName": "18-24 ans"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_commune"
+                    }
+                  },
+                  "Property": "part_65_plus"
+                }
+              },
+              "queryRef": "gold_acces_commune.part_65_plus",
+              "nativeQueryRef": "65 ans et +",
+              "displayName": "65 ans et +"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "gold_acces_commune"
+                  }
+                },
+                "Property": "part_menages_pauvres"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Profil social (Filosofi 2021)'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

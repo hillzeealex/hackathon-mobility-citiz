@@ -1,0 +1,54 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "67d107e8cf364fc69dee",
+  "position": {
+    "x": 950,
+    "y": 90,
+    "z": 4,
+    "width": 310,
+    "height": 90,
+    "tabOrder": 4
+  },
+  "visual": {
+    "visualType": "card",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_acces_carreau"
+                    }
+                  },
+                  "Property": "Part à 5 min Citiz"
+                }
+              },
+              "queryRef": "gold_acces_carreau.Part à 5 min Citiz",
+              "nativeQueryRef": "À 5 min d’une station Citiz",
+              "displayName": "À 5 min d’une station Citiz"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

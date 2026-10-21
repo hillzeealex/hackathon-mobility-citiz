@@ -1,0 +1,57 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "2a70e3b629734fa48b86",
+  "position": {
+    "x": 20,
+    "y": 4,
+    "z": 0,
+    "width": 1240,
+    "height": 82,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Nantes Métropole : où investir pour desservir le plus d’habitants au moindre coût ?",
+                    "textStyle": {
+                      "fontSize": "18pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Coûts sur 3 ans. ILP optimal à 100 k€, 250 k€, 500 k€ et 1 M€, glouton à tous les paliers. Horizon : population projetée (Omphale).",
+                    "textStyle": {
+                      "fontSize": "9pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Nantes Métropole : 5 minutes de marche réelle sur le réseau piéton OpenStreetMap (V2). France entière : 400 m à vol d’oiseau (V1, borne haute).",
+                    "textStyle": {
+                      "fontSize": "8pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
