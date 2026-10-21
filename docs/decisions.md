@@ -1,7 +1,20 @@
 # Décisions du projet
 
 Journal des décisions de l'équipe. La plus récente prime en cas de contradiction.
-Comparatif chiffré des villes : [`choix_ville.md`](choix_ville.md). État vérifié du code : [`ETAT_DES_LIEUX.md`](ETAT_DES_LIEUX.md).
+Comparatif chiffré des villes : [`choix_ville.md`](choix_ville.md). Chiffres de la soutenance :
+[`chiffres_officiels.md`](chiffres_officiels.md).
+
+## 21/10/2026 : Fabric devient la source officielle
+
+| Sujet | Décision |
+|---|---|
+| **Source des chiffres** | Les chiffres de la soutenance sortent de **Microsoft Fabric** (`citiz_pipeline`) : [`chiffres_officiels.md`](chiffres_officiels.md). [`chiffres_cles.md`](chiffres_cles.md) reste la référence du pipeline local. |
+| **Marche réelle** | Nantes Métropole est calculée en **V2 dans Fabric** (réseau piéton OpenStreetMap Pays de la Loire, zone + 800 m) ; la France reste en V1 (borne haute). Grenoble en V2 est cité depuis le pipeline local, comme validation de la méthode. |
+| **Délinquance** | **Retirée** : ni variable du modèle, ni surcoût d'une station. On ne pénalise pas un territoire sur ses statistiques de vols. |
+| **Modèle** | Pour Nantes, probabilité prédite par un modèle qui n'a **pas vu sa région** (équivalent de `proba_oof` en local). Niveau de vie ajouté aux variables ; tranches d'âge testées, non retenues. |
+| **Équité** | Moyenne des rangs des ménages pauvres et sans voiture ; scénarios 0 et 0,5 (0,5 par défaut, comme en local). |
+| **Rentabilité** | Page de simulation dans Power BI : 8 valeurs saisies par les collaborateurs, non enregistrées ; recette, coût variable et réservations à fournir par Citiz. |
+| **Fabric** | Remplace la ligne « Fabric : paragraphe de justification seulement » du 20/10 : la chaîne complète tourne dans Fabric (bronze → silver → gold, pipeline, Power BI en Direct Lake). |
 
 ## 20/10/2026 : stratégie finale
 
@@ -18,7 +31,7 @@ Comparatif chiffré des villes : [`choix_ville.md`](choix_ville.md). État véri
 | **Fabric** | Paragraphe de justification seulement (ci-dessous). |
 | **Ordre de travail** | 1 correctifs (multi-ville, GTFS, jour type figé, commande unique) · 2 Nantes · 3 modèle · 4 optimisation · 5 appli · 6 chiffres clés. Un commit et un point court par étape. |
 
-### Pourquoi Microsoft Fabric n'est pas au cœur du pipeline
+### Pourquoi Microsoft Fabric n'est pas au cœur du pipeline (décision du 20/10, remplacée le 21/10)
 
 Le pipeline tourne en local en moins de 10 minutes sur un PC portable (8 Go de RAM, pic mesuré 1,5 Go pour toute la
 France) avec des fichiers GeoParquet : le volume (≈ 7 Go bruts, 2,3 M carreaux) ne justifie pas un cluster Spark, et
