@@ -178,8 +178,9 @@ flowchart LR
 | `optimisation_notebook` | `gold`, `silver` | `gold` | Objectif 3 : liste priorisée sous budget, projections de population, rentabilité |
 | `gold_notebook` | `silver` | `gold` | Indicateurs par commune et score de présélection à 8 critères |
 
-- **Bronze ne sert qu'à rafraîchir les sources** (≈ 1 h). Le reste du temps, on le désactive dans le pipeline :
-  l'activité compte alors comme réussie, et la chaîne repart de Silver en 15 à 20 minutes.
+- **Bronze est actif** (choix de l'équipe pour la démo) : une exécution retélécharge toutes les sources (≈ 1 h de
+  plus). Pour aller plus vite, le désactiver dans le pipeline : l'activité compte alors comme réussie, et la chaîne
+  repart de Silver en 15 à 20 minutes.
 - **Nouvelles tentatives** : chaque activité réessaie 2 fois, à 2 minutes d'intervalle, si la capacité Fabric est
   saturée (`TooManyRequestsForCapacity`). Une capacité chargée ralentit aussi les notebooks : ne pas relancer juste
   avant une démo.
