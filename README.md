@@ -4,6 +4,14 @@
 
 > **Qui a réellement accès à une option de mobilité à 5 minutes à pied, et où faut-il en ajouter ?**
 
+<a href="https://app.fabric.microsoft.com/groups/505711de-ffb1-4f70-a8f3-f5d746623813/"><img src="docs/img/qr_fabric.png" width="140" align="right" alt="QR code vers l'espace Microsoft Fabric « Hackathon Citz »"></a>
+
+**Espace Microsoft Fabric « Hackathon Citz »** : pipeline, lakehouses, notebooks et rapport Power BI.
+[Ouvrir dans Fabric](https://app.fabric.microsoft.com/groups/505711de-ffb1-4f70-a8f3-f5d746623813/) ou scanner le
+QR code (accès réservé aux membres de l'espace).
+
+<br clear="right">
+
 Une option de mobilité, c'est un arrêt de bus, tram ou train, une station de vélos, de la trottinette ou du vélo en
 free-floating, ou une voiture Citiz. Le projet répond à trois questions :
 
