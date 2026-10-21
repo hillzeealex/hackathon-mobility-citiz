@@ -1,10 +1,10 @@
 table gold_saisie_duree_amortissement
-	lineageTag: 07ab96e1-e92a-4554-9a2f-ab733afce3ba
+	lineageTag: 6ab7f64c-ac78-494f-a801-6982c8b0598b
 	sourceLineageTag: [dbo].[gold_saisie_duree_amortissement]
 
 	column valeur
 		dataType: double
-		lineageTag: a7bfcaa7-ea25-4fc0-9bc6-6a564c86f0c3
+		lineageTag: 9a6b3bff-9ee3-4cfe-bfa3-d0114b9ce8dd
 		sourceLineageTag: valeur
 		summarizeBy: none
 		sourceColumn: valeur

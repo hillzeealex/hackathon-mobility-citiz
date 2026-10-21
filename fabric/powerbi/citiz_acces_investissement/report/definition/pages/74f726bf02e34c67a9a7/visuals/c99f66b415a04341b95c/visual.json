@@ -1,0 +1,46 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "c99f66b415a04341b95c",
+  "position": {
+    "x": 730,
+    "y": 590,
+    "z": 4,
+    "width": 530,
+    "height": 120,
+    "tabOrder": 4
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Lecture",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Citiz s’installe d’abord là où il y a du monde à pied : la densité seule fait presque aussi bien. Le modèle classe mieux le haut de liste à Grenoble (67 % de carreaux Citiz parmi les plus probables, contre 64 %) et fournit une probabilité que l’optimiseur utilise.",
+                    "textStyle": {
+                      "fontSize": "9pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "3e0cde9d77f441d5ba41",
-  "displayName": "6 · Rentabilité d’une station",
-  "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
-}

@@ -1,54 +1,78 @@
 table gold_acces_carreau
-	lineageTag: 765d2fae-e974-470a-94fa-3a65f8197cd9
+	lineageTag: 90d8d651-71b9-4dae-91fd-54bf0d71825e
 	sourceLineageTag: [dbo].[gold_acces_carreau]
 
 	measure Habitants = SUM(gold_acces_carreau[pop_calee])
 		formatString: #,0
-		lineageTag: f8ca5a0f-561e-47b4-a7c9-3cf31c14aaa2
+		lineageTag: 24b73462-655f-4c3e-9520-2a4d271e76ac
 
 	measure 'Options par habitant' = DIVIDE(SUMX(gold_acces_carreau, gold_acces_carreau[pop_calee] * gold_acces_carreau[options_ponderees]), SUM(gold_acces_carreau[pop_calee]))
 		formatString: 0.0
-		lineageTag: 6d2babf7-285f-4333-b3d7-398c2bcff8c3
+		lineageTag: e0adce93-85f0-4d0c-84e8-b172fae0fe7a
 
 	measure 'Part sans option' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[sans_option] = TRUE()), SUM(gold_acces_carreau[pop_calee]))
 		formatString: 0.0%
-		lineageTag: af4f131b-fd8f-46c9-9f62-1a880bdb091c
+		lineageTag: 33c96255-06e4-4dc3-bfa2-ed818ab08fae
 
 	measure 'Part à 5 min TC' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[couvert_tc] = TRUE()), SUM(gold_acces_carreau[pop_calee]))
 		formatString: 0.0%
-		lineageTag: d777e0c1-495e-4ec1-999c-62feabcb561b
+		lineageTag: b170a930-d380-4b76-99df-dc9d92416925
 
 	measure 'Part à 5 min Citiz' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[couvert_citiz] = TRUE()), SUM(gold_acces_carreau[pop_calee]))
 		formatString: 0.0%
-		lineageTag: c6048ab8-e7f5-43af-8ebc-6e6618c1947f
+		lineageTag: 5ee2f262-89d7-49d7-addb-15b1294e1d63
 
 	measure 'Part à 5 min autopartage' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[couvert_autopartage] = TRUE()), SUM(gold_acces_carreau[pop_calee]))
 		formatString: 0.0%
-		lineageTag: f98f8cfd-4631-45df-bd82-533809ae1082
+		lineageTag: ff443751-db97-4ad5-9839-31caf1f65c9d
 
 	measure 'Part à 5 min vélo' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[couvert_velo] = TRUE()), SUM(gold_acces_carreau[pop_calee]))
 		formatString: 0.0%
-		lineageTag: 11a15a59-a85f-4ddd-9bed-142883fcb4a8
+		lineageTag: f35986fb-1d67-4d8d-bc0e-042d413877b3
+
+	measure 'Options par habitant (marche)' = DIVIDE(SUMX(gold_acces_carreau, gold_acces_carreau[pop_calee] * gold_acces_carreau[options_v2]), SUMX(gold_acces_carreau, IF(ISBLANK(gold_acces_carreau[options_v2]), 0, gold_acces_carreau[pop_calee])))
+		formatString: 0.0
+		lineageTag: 5c787f38-33df-4684-a3c6-26440bd86ef8
+
+	measure 'Part sans option (marche)' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[sans_option_v2] = TRUE()), CALCULATE(SUM(gold_acces_carreau[pop_calee]), NOT ISBLANK(gold_acces_carreau[sans_option_v2])))
+		formatString: 0.0%
+		lineageTag: 3c6a8065-cfa9-4ec1-bd4f-80ad15ae91af
+
+	measure 'Part à 5 min TC (marche)' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[couvert_tc_v2] = TRUE()), CALCULATE(SUM(gold_acces_carreau[pop_calee]), NOT ISBLANK(gold_acces_carreau[couvert_tc_v2])))
+		formatString: 0.0%
+		lineageTag: 6fe3d95f-fc8f-4744-a9ca-a43a45d97e80
+
+	measure 'Part à 5 min Citiz (marche)' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[couvert_citiz_v2] = TRUE()), CALCULATE(SUM(gold_acces_carreau[pop_calee]), NOT ISBLANK(gold_acces_carreau[couvert_citiz_v2])))
+		formatString: 0.0%
+		lineageTag: a2c64fad-aa05-4359-8a6e-ec159acb74da
+
+	measure 'Part à 5 min autopartage (marche)' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[couvert_autopartage_v2] = TRUE()), CALCULATE(SUM(gold_acces_carreau[pop_calee]), NOT ISBLANK(gold_acces_carreau[couvert_autopartage_v2])))
+		formatString: 0.0%
+		lineageTag: 67340bc6-3c55-43dc-850d-906226a8cb77
+
+	measure 'Part à 5 min vélo (marche)' = DIVIDE(CALCULATE(SUM(gold_acces_carreau[pop_calee]), gold_acces_carreau[couvert_velo_v2] = TRUE()), CALCULATE(SUM(gold_acces_carreau[pop_calee]), NOT ISBLANK(gold_acces_carreau[couvert_velo_v2])))
+		formatString: 0.0%
+		lineageTag: 2ee1baa2-c533-424c-bfd2-87f2788022df
 
 	measure 'Niveau de vie moyen' = DIVIDE(SUMX(gold_acces_carreau, gold_acces_carreau[pop_calee] * gold_acces_carreau[niveau_vie_moyen]), SUMX(gold_acces_carreau, IF(ISBLANK(gold_acces_carreau[niveau_vie_moyen]), 0, gold_acces_carreau[pop_calee])))
 		formatString: #,0 €
-		lineageTag: fafd8293-ab27-407e-a85b-10135cb47f28
+		lineageTag: b99286bc-9fe1-4a92-92ad-7a3ab9be2b6c
 
 	measure 'Part de ménages pauvres' = DIVIDE(SUMX(gold_acces_carreau, gold_acces_carreau[pop_calee] * gold_acces_carreau[part_menages_pauvres]), SUMX(gold_acces_carreau, IF(ISBLANK(gold_acces_carreau[part_menages_pauvres]), 0, gold_acces_carreau[pop_calee])))
 		formatString: 0.0%
-		lineageTag: 40c3714b-1a48-45b3-937f-a00f0a0352c8
+		lineageTag: 1963fac3-b634-4aaf-af58-b4cc34338f6b
 
 	measure 'Part des 18-24 ans' = DIVIDE(SUMX(gold_acces_carreau, gold_acces_carreau[pop_calee] * gold_acces_carreau[part_18_24]), SUMX(gold_acces_carreau, IF(ISBLANK(gold_acces_carreau[part_18_24]), 0, gold_acces_carreau[pop_calee])))
 		formatString: 0.0%
-		lineageTag: e5310d11-b11e-4ef1-b5a8-81c0cac967ca
+		lineageTag: 5a826571-34da-436f-a85c-78707fff0d8c
 
 	measure 'Part des 65 ans et plus' = DIVIDE(SUMX(gold_acces_carreau, gold_acces_carreau[pop_calee] * gold_acces_carreau[part_65_plus]), SUMX(gold_acces_carreau, IF(ISBLANK(gold_acces_carreau[part_65_plus]), 0, gold_acces_carreau[pop_calee])))
 		formatString: 0.0%
-		lineageTag: b113c1c3-618c-4f1f-817f-535cad38bf53
+		lineageTag: 0f7e85c8-8903-4e0c-83f7-7f9430a8ba31
 
 	column carreau_id
 		dataType: string
-		lineageTag: 0c7b7d96-bea0-4981-8f7f-12f6a9abd03e
+		lineageTag: cc684d5e-e146-456d-8c60-5897eac30a24
 		sourceLineageTag: carreau_id
 		summarizeBy: none
 		sourceColumn: carreau_id
@@ -57,7 +81,7 @@ table gold_acces_carreau
 
 	column commune_code
 		dataType: string
-		lineageTag: 4faaa3bb-3b5e-4794-a5c8-7b67e3152b41
+		lineageTag: f0bd2967-8c6b-4369-b7b2-80adac4ea29f
 		sourceLineageTag: commune_code
 		summarizeBy: none
 		sourceColumn: commune_code
@@ -66,7 +90,7 @@ table gold_acces_carreau
 
 	column lat
 		dataType: double
-		lineageTag: 54eb7621-0dec-40ca-b0ba-a7ae4254dd09
+		lineageTag: aaaa74a7-aad8-40a7-b523-e6321700d440
 		sourceLineageTag: lat
 		summarizeBy: none
 		sourceColumn: lat
@@ -75,7 +99,7 @@ table gold_acces_carreau
 
 	column lon
 		dataType: double
-		lineageTag: 863c1ea4-a13a-4e6b-a0c5-2fafc8e13c75
+		lineageTag: 4b87a6e3-dba4-47d0-99de-fbf2be49a5f8
 		sourceLineageTag: lon
 		summarizeBy: none
 		sourceColumn: lon
@@ -85,7 +109,7 @@ table gold_acces_carreau
 	column pop_calee
 		dataType: double
 		formatString: #,0
-		lineageTag: b29c37b3-f9bf-47c1-a695-e0618b5319b6
+		lineageTag: 2516e410-5fee-4f2b-a646-9a37a0f6c671
 		sourceLineageTag: pop_calee
 		summarizeBy: none
 		sourceColumn: pop_calee
@@ -95,7 +119,7 @@ table gold_acces_carreau
 	column options_ponderees
 		dataType: double
 		formatString: 0.0
-		lineageTag: 7abb561d-0239-4418-9348-d3917fdd3c2a
+		lineageTag: eee8b56f-105d-4cc0-8e9f-430255e88e7b
 		sourceLineageTag: options_ponderees
 		summarizeBy: none
 		sourceColumn: options_ponderees
@@ -104,7 +128,7 @@ table gold_acces_carreau
 
 	column classe_acces
 		dataType: string
-		lineageTag: 432e60d5-32ad-4410-8878-e392cbc30223
+		lineageTag: b43c4ce1-6370-4ff3-9fd6-4650578a8282
 		sourceLineageTag: classe_acces
 		summarizeBy: none
 		sourceColumn: classe_acces
@@ -113,7 +137,7 @@ table gold_acces_carreau
 
 	column sans_option
 		dataType: boolean
-		lineageTag: 33a3d2d0-f24d-4519-9d58-4ff06668b75d
+		lineageTag: 57927e75-b1e2-4763-a14f-7b563a40314b
 		sourceLineageTag: sans_option
 		summarizeBy: none
 		sourceColumn: sans_option
@@ -122,7 +146,7 @@ table gold_acces_carreau
 
 	column couvert_tc
 		dataType: boolean
-		lineageTag: ca287a0b-60aa-4d86-82cb-530fbc36e83c
+		lineageTag: 0775dd34-9b08-4efd-b668-1b41ae542a28
 		sourceLineageTag: couvert_tc
 		summarizeBy: none
 		sourceColumn: couvert_tc
@@ -131,7 +155,7 @@ table gold_acces_carreau
 
 	column couvert_citiz
 		dataType: boolean
-		lineageTag: 23728fd4-1533-40d1-8adc-a5be5b66a042
+		lineageTag: 36e243f8-41b1-4d8f-af1d-e2531abfbd85
 		sourceLineageTag: couvert_citiz
 		summarizeBy: none
 		sourceColumn: couvert_citiz
@@ -140,7 +164,7 @@ table gold_acces_carreau
 
 	column couvert_autopartage
 		dataType: boolean
-		lineageTag: 6dd0347e-1f90-440f-8ae3-5293331a5379
+		lineageTag: 0e1b6a1d-d690-4450-b9ce-ef02cdd9a19b
 		sourceLineageTag: couvert_autopartage
 		summarizeBy: none
 		sourceColumn: couvert_autopartage
@@ -149,7 +173,7 @@ table gold_acces_carreau
 
 	column couvert_velo
 		dataType: boolean
-		lineageTag: 31caf7e4-d5b4-4049-bb92-9084bda4e7a2
+		lineageTag: f69f9cf6-f32a-4470-a1f6-8166fa965a2d
 		sourceLineageTag: couvert_velo
 		summarizeBy: none
 		sourceColumn: couvert_velo
@@ -158,7 +182,7 @@ table gold_acces_carreau
 
 	column affichable
 		dataType: boolean
-		lineageTag: 37e85b34-2220-4a49-a856-9bd346ba2f3d
+		lineageTag: c8846287-66bd-46ac-8cb7-52029e360fae
 		sourceLineageTag: affichable
 		summarizeBy: none
 		sourceColumn: affichable
@@ -167,7 +191,7 @@ table gold_acces_carreau
 
 	column zone_focus
 		dataType: string
-		lineageTag: 3963fb3b-89e3-4612-8677-6e30c37b2ac4
+		lineageTag: 0fdbe097-ec86-4591-bace-3994041530ee
 		sourceLineageTag: zone_focus
 		summarizeBy: none
 		sourceColumn: zone_focus
@@ -177,7 +201,7 @@ table gold_acces_carreau
 	column niveau_vie_moyen
 		dataType: double
 		formatString: #,0 €
-		lineageTag: ef92e7d4-fc7b-4b81-b1af-a33514715207
+		lineageTag: d4c7dcfe-77a2-46e7-b2b9-70f55459929d
 		sourceLineageTag: niveau_vie_moyen
 		summarizeBy: none
 		sourceColumn: niveau_vie_moyen
@@ -187,7 +211,7 @@ table gold_acces_carreau
 	column part_menages_pauvres
 		dataType: double
 		formatString: 0.0%
-		lineageTag: f6c1037b-7434-4a86-8799-f9318009c131
+		lineageTag: 1092a580-e23c-46b3-a75a-663b833837ab
 		sourceLineageTag: part_menages_pauvres
 		summarizeBy: none
 		sourceColumn: part_menages_pauvres
@@ -197,7 +221,7 @@ table gold_acces_carreau
 	column part_18_24
 		dataType: double
 		formatString: 0.0%
-		lineageTag: cbe31f9b-5a58-40db-966a-38434cb06078
+		lineageTag: 2795db8d-c74b-4d1c-bb03-24d57e4eb460
 		sourceLineageTag: part_18_24
 		summarizeBy: none
 		sourceColumn: part_18_24
@@ -207,10 +231,74 @@ table gold_acces_carreau
 	column part_65_plus
 		dataType: double
 		formatString: 0.0%
-		lineageTag: edab0f37-e7d5-4727-ab74-bcc8ff548c9d
+		lineageTag: 98f9d971-b7e0-4643-88c9-85660e1af7c1
 		sourceLineageTag: part_65_plus
 		summarizeBy: none
 		sourceColumn: part_65_plus
+
+		annotation SummarizationSetBy = Automatic
+
+	column options_v2
+		dataType: double
+		formatString: 0.0
+		lineageTag: 862b466d-08b6-48bd-b00b-0a76c0a70879
+		sourceLineageTag: options_v2
+		summarizeBy: none
+		sourceColumn: options_v2
+
+		annotation SummarizationSetBy = Automatic
+
+	column classe_acces_v2
+		dataType: string
+		lineageTag: 6c7d8ca1-53da-40b0-bd22-be4c11eee09c
+		sourceLineageTag: classe_acces_v2
+		summarizeBy: none
+		sourceColumn: classe_acces_v2
+
+		annotation SummarizationSetBy = Automatic
+
+	column sans_option_v2
+		dataType: boolean
+		lineageTag: 9c1800cc-0e66-4161-9ba5-8777d3df4834
+		sourceLineageTag: sans_option_v2
+		summarizeBy: none
+		sourceColumn: sans_option_v2
+
+		annotation SummarizationSetBy = Automatic
+
+	column couvert_tc_v2
+		dataType: boolean
+		lineageTag: 404d0e2b-1d05-4c91-8c5e-46d9ac94dfee
+		sourceLineageTag: couvert_tc_v2
+		summarizeBy: none
+		sourceColumn: couvert_tc_v2
+
+		annotation SummarizationSetBy = Automatic
+
+	column couvert_citiz_v2
+		dataType: boolean
+		lineageTag: 82b3aacf-ed32-4e8b-993e-ebd5246bfb2d
+		sourceLineageTag: couvert_citiz_v2
+		summarizeBy: none
+		sourceColumn: couvert_citiz_v2
+
+		annotation SummarizationSetBy = Automatic
+
+	column couvert_autopartage_v2
+		dataType: boolean
+		lineageTag: a2debab1-19bb-412c-b8d7-e18d60e5de9d
+		sourceLineageTag: couvert_autopartage_v2
+		summarizeBy: none
+		sourceColumn: couvert_autopartage_v2
+
+		annotation SummarizationSetBy = Automatic
+
+	column couvert_velo_v2
+		dataType: boolean
+		lineageTag: 536a4a45-4c52-4c77-b01e-96ab42e0f443
+		sourceLineageTag: couvert_velo_v2
+		summarizeBy: none
+		sourceColumn: couvert_velo_v2
 
 		annotation SummarizationSetBy = Automatic
 

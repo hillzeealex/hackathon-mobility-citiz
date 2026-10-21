@@ -1,0 +1,80 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "606f009e683c49579bf7",
+  "position": {
+    "x": 640,
+    "y": 300,
+    "z": 20,
+    "width": 620,
+    "height": 310,
+    "tabOrder": 20
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_axe_reservations"
+                    }
+                  },
+                  "Property": "reservations_vehicule"
+                }
+              },
+              "queryRef": "gold_axe_reservations.reservations_vehicule",
+              "nativeQueryRef": "Réservations par véhicule et par mois",
+              "displayName": "Réservations par véhicule et par mois"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_axe_reservations"
+                    }
+                  },
+                  "Property": "Résultat selon réservations"
+                }
+              },
+              "queryRef": "gold_axe_reservations.Résultat selon réservations",
+              "nativeQueryRef": "Résultat mensuel",
+              "displayName": "Résultat mensuel"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Résultat mensuel selon les réservations par véhicule (le seuil est le passage à 0 €)'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
